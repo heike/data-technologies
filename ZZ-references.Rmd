@@ -8,6 +8,6 @@ knit: bookdown::preview_chapter
 # automatically create a bib database for R packages
 knitr::write_bib(c(
   .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'references.bib')
+), 'packages.bib')
 ```
 
