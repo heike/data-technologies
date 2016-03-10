@@ -1,0 +1,24 @@
+--- 
+title: "Data Technologies in Statistics"
+author: "Dianne Cook and Heike Hofmann"
+date: "`r Sys.Date()`"
+knit: "bookdown::render_book"
+documentclass: book
+bibliography: references.bib
+biblio-style: apalike
+link-citations: yes
+---
+
+# Prerequisites
+
+***I am using Yihui's minimal example for right now. Thanks, Yihui!***
+
+This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
+
+For now, you have to install the development versions of **bookdown** from Github:
+
+```{r eval=FALSE}
+devtools::install_github("rstudio/bookdown")
+```
+
+Remember each Rmd file contains one and only one chapter. ***HH: note that the chapters are included in alphabetical order***
