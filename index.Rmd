@@ -4,7 +4,7 @@ author: "Dianne Cook and Heike Hofmann"
 date: "`r Sys.Date()`"
 knit: "bookdown::render_book"
 documentclass: book
-bibliography:[packages.bib, references.bib]
+bibliography: [packages.bib, references.bib]
 biblio-style: apalike
 link-citations: yes
 ---
