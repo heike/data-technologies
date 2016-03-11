@@ -1,8 +1,6 @@
 bookdown::gitbook:
   css: style.css
   config:
-    toolbar:
-      position: fixed
     toc:
       collapse: no
       before: |
@@ -10,7 +8,7 @@ bookdown::gitbook:
       after: |
         <li><a href="https://www.rstudio.com" target="blank">Published with RStudio Press</a></li>
     edit:
-      link: https://github.com/heike/data-technologies/edit/master/index.Rmd
+      link: https://github.com/heike/data-technologies/edit/master/%s
       text: "Edit"
 bookdown::pdf_book:
   includes:
