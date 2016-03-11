@@ -10,7 +10,7 @@ bookdown::gitbook:
       after: |
         <li><a href="https://www.rstudio.com" target="blank">Published with RStudio Press</a></li>
     edit:
-      link: https://github.com/heike/data-technologies/
+      link: https://github.com/heike/data-technologies/edit/master/index.Rmd
       text: "Edit"
 bookdown::pdf_book:
   includes:
