@@ -10,6 +10,8 @@ knit: bookdown::preview_chapter
 
 What does today's temperature tell us about tomorrow's?
 
+This question is inspired by Rob Hyndman's answer to it for temperatures in Melbourne as detailed in [@hyndman????].
+
 #### Data source
 
 The website Weather Underground [https://www.wunderground.com/](https://www.wunderground.com/)
@@ -79,7 +81,7 @@ for (dateIDX in length(days):1) {
 }
 ```
 
-And now it's time for the analysis:
+And now it's time for the analysis. Create a vector of the previous days temperatures and plot in a scatterplot. Alternatively, a two-dimensional histogram (using hex binning) also works well in this example, because the focus here is on the high density areas:
 ```{r, warning=FALSE}
 weather <- read.csv("data/KAMW.csv", stringsAsFactors = FALSE)
 weather$Actual <- as.numeric(weather$Actual)
@@ -98,9 +100,9 @@ qplot(data=temps, Previous, Actual, geom="jitter", alpha=I(0.5)) +
 qplot(data=temps, Previous, Actual, geom="hex") + 
   xlab("Yesterday's maximum temperature") +
   ylab("Today's maximum temperature") +
-  coord_equal()
+  coord_equal() 
 ```
-What we see is a strong linear pattern, i.e. tomorrow's maximum temperature is close to what we see today. There is a peak in density at temperatures around 30 degree Celsius. With higher temperatures we see less variability, while at lower temperatures this relationship is more variable. 
+What we see is a strong linear pattern, i.e. tomorrow's maximum temperature is close to what we see today, making it a very strong predictor. There is a peak in density at temperatures around 30 degree Celsius (shown in the binned scatterplot by the light blue tiles). With higher temperatures we see less variability, while at lower temperatures this relationship is more variable. 
 
 
 #### Your turn
@@ -112,3 +114,24 @@ What we see is a strong linear pattern, i.e. tomorrow's maximum temperature is c
 + How do temperatures behave over the course of a year? Organize the data correspondingly and plot.
 
 + How does the temperature pattern compare to another place in the world, say e.g. Melbourne, Australia?
+
+```{r, eval=FALSE}
+last <- as.Date("2016-03-01")
+
+last <- as.Date(days[dateIDX])
+first <- as.Date("2008-02-21")
+days <- seq(first, last, "day")
+
+filename <- "data/YMML.csv"
+station <- "YMML"
+for (dateIDX in length(days):1) {
+#  browser()
+  date <- days[dateIDX]
+  res <- getWeather(station, year(date), month(date), mday(date))
+
+  write.table(res, file=filename, append=file.exists(filename),
+              col.names=!file.exists(filename),
+              row.names=F, sep=",")
+}
+
+```
