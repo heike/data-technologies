@@ -115,11 +115,17 @@ What we see is a strong linear pattern, i.e. tomorrow's maximum temperature is c
 
 + How does the temperature pattern compare to another place in the world, say e.g. Melbourne, Australia?
 
+
+***Solution for last question***
+
+Scrape the data
 ```{r, eval=FALSE}
 last <- as.Date("2016-03-01")
+first <- as.Date("2005-01-01")
 
-last <- as.Date(days[dateIDX])
-first <- as.Date("2008-02-21")
+
+last <- days[dateIDX]
+first <- as.Date("2004-01-01")
 days <- seq(first, last, "day")
 
 filename <- "data/YMML.csv"
@@ -133,5 +139,20 @@ for (dateIDX in length(days):1) {
               col.names=!file.exists(filename),
               row.names=F, sep=",")
 }
+
+```
+and plot the data:
+
+```{r, warning=FALSE}
+weather <- read.csv("data/YMML.csv", stringsAsFactors = FALSE)
+
+temps <- subset(weather, Statistics=="Max Temperature")
+temps$Previous <- c(temps$Actual[-1], NA)
+library(ggplot2)
+
+qplot(data=temps , Previous, Actual, geom="hex") + 
+  xlab("Yesterday's maximum temperature") +
+  ylab("Today's maximum temperature") +
+  coord_equal() 
 
 ```
