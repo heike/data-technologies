@@ -1,0 +1,9 @@
+---
+knit: bookdown::preview_chapter
+---
+
+## Wrangling Data
+
+There are a lot of different packages available in R that allow us to scrape data.
+
+

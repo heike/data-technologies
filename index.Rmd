@@ -1,5 +1,5 @@
 --- 
-title: "Data Technologies in Statistics"
+title: "Exploratory Data Analysis Today"
 author: "Dianne Cook and Heike Hofmann"
 date: "`r Sys.Date()`"
 knit: "bookdown::render_book"
@@ -9,7 +9,7 @@ biblio-style: apalike
 link-citations: yes
 ---
 
-# Prerequisites
+# Preamble
 
 ***I am using Yihui's minimal example for right now. Thanks, Yihui!***
 
