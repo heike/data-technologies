@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# US filghts
+# US flights
 
 
 
