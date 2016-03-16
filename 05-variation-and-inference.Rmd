@@ -1,0 +1,10 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Variation and inference
+
+Using randomization tests
+
+Visual inference
+
