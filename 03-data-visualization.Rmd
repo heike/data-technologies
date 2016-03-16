@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-## Data Visualization
+# Data Visualization
 
 There are a lot of different packages available in R that allow us to scrape data.
 
