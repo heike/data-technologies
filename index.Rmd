@@ -14,14 +14,3 @@ link-citations: yes
 
 tools of the trade that have moved on from paper and pencil: RStudio, markdown, ...
 
-***I am using Yihui's minimal example for right now. Thanks, Yihui!***
-
-This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
-
-For now, you have to install the development versions of **bookdown** from Github:
-
-```{r eval=FALSE}
-devtools::install_github("rstudio/bookdown")
-```
-
-Remember each Rmd file contains one and only one chapter. ***HH: note that the chapters are included in alphabetical order***
