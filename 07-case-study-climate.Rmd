@@ -4,5 +4,98 @@ knit: bookdown::preview_chapter
 
 # Climate change
 
-CO$_2$
+## CO$_2$
+
+### About the data
+
+### Temporal trend
+
+***Note to self: Need to update the code to use readr, and get all the stations, acknowledge Halldor***
+
+```{r load_packages, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, results='hide'}
+library(dplyr)
+library(plyr)
+library(stringr)
+library(reshape2)
+library(ggplot2)
+library(lubridate)
+library(maps)
+library(ggmap)
+library(htmltools)
+library(rworldmap)
+library(grid)    
+library(scales)
+library(gridExtra)
+library(forecast)
+```
+
+Get the data:
+
+```{r CO2-data, eval=FALSE}
+CO2.ptb<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ptb.csv", sep=",", skip=69)
+colnames(CO2.ptb)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.ptb$lat<-71.3
+CO2.ptb$lon<-(-156.6)
+CO2.ptb$stn<-"ptb"
+```
+
+```{r CO2, out.width='99%', fig.align='center', fig.cap='Carbon dioxide levels from each of the measurements: (left) stations ordered from north to south, (right) overlaid.', warning=FALSE, message=FALSE, echo=FALSE, cache=FALSE}
+CO2.ptb<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ptb.csv", sep=",", skip=69)
+colnames(CO2.ptb)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.ptb$lat<-71.3
+CO2.ptb$lon<-(-156.6)
+CO2.ptb$stn<-"ptb"
+
+CO2.ljo<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ljo.csv", sep=",", skip=69)
+colnames(CO2.ljo)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.ljo$lat<-32.9
+CO2.ljo$lon<-(-117.3)
+CO2.ljo$stn<-"ljo"
+
+CO2.mlf<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_mlf.csv", sep=",", skip=69)
+colnames(CO2.mlf)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.mlf$lat<-19.5
+CO2.mlf$lon<-(-155.6)
+CO2.mlf$stn<-"mlf"
+
+CO2.spo<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", sep=",", skip=69)
+colnames(CO2.spo)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.spo$lat<- (-90.0)
+CO2.spo$lon<-0
+CO2.spo$stn<-"spo"
+
+CO2.ker<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ker.csv", sep=",", skip=69)
+colnames(CO2.ker)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.ker$lat<-(-29.2)
+CO2.ker$lon<-(-177.9)
+CO2.ker$stn<-"ker"
+
+CO2.all<-rbind(CO2.ker,CO2.ljo,CO2.mlf,CO2.ptb,CO2.spo)
+CO2.all$date<-as.Date(CO2.all$date)
+
+CO2.all$invlat=-1*CO2.all$lat
+CO2.all$stn=reorder(CO2.all$stn,CO2.all$invlat)
+
+CO2.all.loc <- rbind(CO2.ker[1,],CO2.ljo[1,],CO2.mlf[1,],CO2.ptb[1,],CO2.spo[1,])
+
+p1 <- qplot(date, co2, data=subset(CO2.all, flg < 2), colour=stn, geom="line",xlab="Year",ylab="CO2 (ppm)") + 
+		facet_wrap(~stn, ncol=1) + theme(axis.text.y=element_text(size = 6), legend.position="none")
+p2 <- qplot(date, co2, data=subset(CO2.all, flg < 2), colour=stn, geom="line",xlab="Year",ylab="CO2 (ppm)") + 
+  theme(axis.text.y=element_text(size = 6), legend.position="none")
+grid.arrange(p1, p2, ncol=2)
+```
+
+```{r CO2-map, out.width='99%', fig.align='center', fig.cap='Locations of stations.', warning=FALSE, message=FALSE, echo=FALSE, cache=FALSE}
+world <- map_data("world")
+worldmap <- ggplot(world, aes(x=long, y=lat, group=group)) +
+  geom_path(color="grey80", size=0.5) + xlab("") + ylab("") +
+  scale_y_continuous(breaks=(-2:2) * 30) +
+  scale_x_continuous(breaks=(-4:4) * 45) +
+  theme_bw() + theme(aspect.ratio=0.6)
+worldmap + 
+  geom_point(data=CO2.all.loc, aes(x=lon, y=lat, group=1), colour="red", size=2, alpha=0) +
+  geom_text(data=CO2.all.loc, aes(x=lon, y=lat, label=stn, group=1), colour="orange", size=5)
+```
+
+
 
