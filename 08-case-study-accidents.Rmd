@@ -9,7 +9,7 @@ Accident forms change over time, and the corresponding databases with them - e.g
 
 Here, we  first focus on a single year's worth of data. The data is released in different formats. Besides SAS, DBF seems to be a staple at the DOT. DBF stands for 'data base format', and in R we can read files in this format using the function ```read.dbf```, which is part of the package ```foreign``` [@R-foreign]. Figure \@ref(fig:map-2014) gives an overview of all geographical locations where an accident resulting in at least one fatality was recording in 2014. A pretty detailed roadmap of the US is the result.
 
-```{r, map-2014, message=FALSE, warning = FALSE}
+```{r map-2014, fig.cap='Overview of where fatal accidents occurred in 2014', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 library(ggplot2)
 library(foreign)
 
@@ -22,7 +22,7 @@ qplot(LONGITUD, LATITUDE, data=subset(accidents, dplyr::between(LONGITUD, -130, 
 The variable ```DRUNK_DR``` is the number of drivers involved in the crash who tested as being above the legal limit of alcohol, i.e. were legally drunk. 
 Days of the week are encoded as 1 for Sunday through 7 for Saturday, the dots in Figure \@ref(fig:drunk) show the percentage of accidents in which at least one of the drivers was drunk. On Saturdays and Sundays the percentage of drunk drivers is generally higher, but on all days of the week, fatal accidents that occur after 8 pm and before 5 am have an over 30% chance of involving a drunk driver. During the very early hours of the morning this rate spikes to well over 50% even on weekdays!
 
-```{r, drunk, message=FALSE, warning = FALSE}
+```{r drunk, message=FALSE, warning = FALSE, fig.cap='Percentage of accidents where at least one of the drivers was legally drunk by day of the week and time of the day. Late nights and early mornings have particularly high frequencies.', out.width='80%', fig.asp=.75, fig.align='center'}
 library(dplyr)
 drunk_by_day <- accidents %>% group_by(DAY_WEEK, HOUR) %>% 
   summarize(
@@ -45,8 +45,8 @@ table(accidents$CF1)
 
 ## Who is driving drunk?
 
-Assuming, individuals on the front left seat are drivers, we see that on weekdays there is not a big difference in the drunk driving pattern between male and female drivers, but starting Friday afternoon and early evening a gap opens up: a higher percentage of men involved in a fata accident are driving drunk than women in the evenings and early morning hours until during Monday mornings the gap closes again.
-```{r, warning = FALSE}
+Assuming, individuals on the front left seat are drivers, we see in Figure \@ref(fig:drivers) that on weekdays there is not a big difference in the drunk driving pattern between male and female drivers, but starting Friday afternoon and early evening a gap opens up: a higher percentage of men involved in a fata accident are driving drunk than women in the evenings and early morning hours until during Monday mornings the gap closes again.
+```{r drivers, fig.cap='Percentages of drunk drivers involved in a fatal accident by gender, time of the day and day of the week.', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 person <- read.dbf("data/person.dbf")
 driver <- subset(person, SEAT_POS == 11) # front left seat
 driver$Date <- with(driver, as.Date(sprintf("2014/%s/%s", MONTH, DAY)))
