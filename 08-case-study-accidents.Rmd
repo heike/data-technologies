@@ -36,3 +36,8 @@ drunk_by_day$DAY_WEEK <- factor(drunk_by_day$DAY_WEEK)
 levels(drunk_by_day$DAY_WEEK) <- c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
 qplot(HOUR, drunkPerc, data=drunk_by_day, colour=DAY_WEEK, geom="point", group=DAY_WEEK) + theme_bw() + geom_smooth(se=FALSE)
 ```
+
+```CF``` is a variable encoding contributing factors. For more than 90% of all accidents no contributing factors are recorded, but for the remainder, the most frequent factors are (14) falling cargo followed by (20) police pursuit.
+```{r}
+table(accidents$CF1)
+```
