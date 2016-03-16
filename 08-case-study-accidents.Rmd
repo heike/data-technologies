@@ -17,12 +17,11 @@ accidents <- read.dbf("data/accident.dbf")
 qplot(LONGITUD, LATITUDE, data=subset(accidents, dplyr::between(LONGITUD, -130, 0)), size=I(.5), alpha=I(0.5))
 ```
 
-## When do accidents occur? 
+## When do people die on the roads? 
 
-The variable ```DRUNK_DR``` is the number of drivers involved in the crash who tested as being above the legal limit of alcohol, i.e. were legally drunk. 
-Days of the week are encoded as 1 for Sunday through 7 for Saturday, the dots in Figure \@ref(fig:drunk) show the percentage of accidents in which at least one of the drivers was drunk. On Saturdays and Sundays the percentage of drunk drivers is generally higher, but on all days of the week, fatal accidents that occur after 8 pm and before 5 am have an over 30% chance of involving a drunk driver. During the very early hours of the morning this rate spikes to well over 50% even on weekdays!
+Figure \@ref(fig:when) gives an overview of when fatal accidents happen on the road: on weekdays, the number of deaths peaks twice a day during times when people commute. During the morning commute the number of deaths shows a small peak with a mode around 6am. A second, much bigger mode follows the afternoon commute with a peak at around 6pm. These peaks in the number of detahs is by far outdone by the number of deaths from fatal accidents on weekend nights and early mornings starting with Friday afternoon and lasting until Sunday around 10pm. 
 
-```{r drunk, message=FALSE, warning = FALSE, fig.cap='Percentage of accidents where at least one of the drivers was legally drunk by day of the week and time of the day. Late nights and early mornings have particularly high frequencies.', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r when, message=FALSE, warning = FALSE, fig.cap='Number of fatalities from car accidents by time of the day and hour of the week.', out.width='100%', fig.asp=.65, fig.align='center'}
 library(dplyr)
 drunk_by_day <- accidents %>% group_by(DAY_WEEK, HOUR) %>% 
   summarize(
@@ -30,11 +29,21 @@ drunk_by_day <- accidents %>% group_by(DAY_WEEK, HOUR) %>%
     deaths = sum(FATALS),
     drunk = sum(DRUNK_DR*FATALS > 0)
   )
-
 drunk_by_day$drunkPerc <- with(drunk_by_day, drunk/deaths*100)
 drunk_by_day$HOUR[drunk_by_day$HOUR == 99] <- NA
 drunk_by_day$DAY_WEEK <- factor(drunk_by_day$DAY_WEEK)
 levels(drunk_by_day$DAY_WEEK) <- c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+drunk_by_day$DAY_WEEK <- factor(drunk_by_day$DAY_WEEK, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+qplot(data=drunk_by_day, geom="bar", x=HOUR, weight=deaths, colour=I(NA)) + facet_wrap(~DAY_WEEK, ncol=4)
+```
+
+
+The variable ```DRUNK_DR``` is the number of drivers involved in the crash who tested as being above the legal limit of alcohol, i.e. were legally drunk. 
+Days of the week are encoded as 1 for Sunday through 7 for Saturday, the dots in Figure \@ref(fig:drunk) show the percentage of accidents in which at least one of the drivers was drunk. On Saturdays and Sundays the percentage of drunk drivers is generally higher, but on all days of the week, fatal accidents that occur after 8 pm and before 5 am have an over 30% chance of involving a drunk driver. During the very early hours of the morning this rate spikes to well over 50% even on weekdays!
+
+```{r drunk, message=FALSE, warning = FALSE, fig.cap='Percentage of accidents where at least one of the drivers was legally drunk by day of the week and time of the day. Late nights and early mornings have particularly high frequencies.', out.width='80%', fig.asp=.75, fig.align='center'}
+
 qplot(HOUR, drunkPerc, data=drunk_by_day, colour=DAY_WEEK, geom="point", group=DAY_WEEK) + theme_bw() + geom_smooth(se=FALSE)
 ```
 
