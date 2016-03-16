@@ -12,5 +12,5 @@ link-citations: yes
 # Preamble
 
 
-tools of the trade that have moved on from paper and pencil: RStudio, markdown, ...
+tools of the trade that have moved on from paper and pencil: RStudio, markdown, ... and why reproducibility is making any data exploration or  analysis more ethical
 
