@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Montoring polls
+# Monitoring polls
 
 
 
