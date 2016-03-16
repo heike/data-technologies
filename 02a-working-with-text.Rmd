@@ -2,7 +2,6 @@
 knit: bookdown::preview_chapter
 ---
 
-## Scraping Data
+## Working with text
 
-lots of ways to read  in data: flat file, databases, scraping, json, shape files, netcdfs,  ...
 
