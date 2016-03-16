@@ -1,0 +1,8 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Climate change
+
+CO$_2$
+
