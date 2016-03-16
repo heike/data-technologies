@@ -4,6 +4,5 @@ knit: bookdown::preview_chapter
 
 ## Scraping Data
 
-There are a lot of different packages available in R that allow us to scrape data.
-
+lots of ways to read  in data: flat file, databases, scraping, json, shape files, netcdfs,  ...
 
