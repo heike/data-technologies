@@ -4,5 +4,35 @@ knit: bookdown::preview_chapter
 
 # Accidents
 
+The US Department of transportation is keeping track in detail on every accident that results in a fatality. This data are part of FARS, the [Fatality Analysis Reporting System](http://www.nhtsa.gov/FARS). Data is available in annual releases going back to 1975. 
+Accident forms change over time, and the corresponding databases with them - e.g. cell phones as a potnetial contributor to an accident were not on the list back in the 80s. This often makes an analysis of trends over time a bit tricky. 
 
+Here, we  first focus on a single year's worth of data. The data is released in different formats. Besides SAS, DBF seems to be a staple at the DOT. DBF stands for 'data base format', and in R we can read files in this format using the function ```read.dbf```, which is part of the package ```foreign``` [@R-foreign]. Figure \@ref(fig:map-2014) gives an overview of all geographical locations where an accident resulting in at least one fatality was recording in 2014. A pretty detailed roadmap of the US is the result.
 
+```{r, map-2014, message=FALSE}
+library(ggplot2)
+library(foreign)
+
+accidents <- read.dbf("data/accident.dbf")
+qplot(LONGITUD, LATITUDE, data=subset(accidents, dplyr::between(LONGITUD, -130, 0)), size=I(.5), alpha=I(0.5))
+```
+
+## When do accidents occur? 
+
+The variable ```DRUNK_DR``` is the number of drivers involved in the crash who tested as being above the legal limit of alcohol, i.e. were legally drunk. 
+Days of the week are encoded as 1 for Sunday through 7 for Saturday, the dots in Figure \@ref(fig:drunk) show the percentage of accidents in which at least one of the drivers was drunk. On Saturdays and Sundays the percentage of drunk drivers is generally higher, but on all days of the week, fatal accidents that occur after 8 pm and before 5 am have an over 30% chance of involving a drunk driver. During the very early hours of the morning this rate spikes to well over 50% even on weekdays!
+
+```{r, drunk, message=FALSE}
+library(dplyr)
+drunk_by_day <- accidents %>% group_by(DAY_WEEK, HOUR) %>% 
+  summarize(
+    deaths = sum(FATALS),
+    drunk = sum(DRUNK_DR > 0)
+  )
+
+drunk_by_day$drunkPerc <- with(drunk_by_day, drunk/deaths*100)
+drunk_by_day$HOUR[drunk_by_day$HOUR == 99] <- NA
+drunk_by_day$DAY_WEEK <- factor(drunk_by_day$DAY_WEEK)
+levels(drunk_by_day$DAY_WEEK) <- c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+qplot(HOUR, drunkPerc, data=drunk_by_day, colour=DAY_WEEK, geom="point", group=DAY_WEEK) + theme_bw() + geom_smooth(se=FALSE)
+```

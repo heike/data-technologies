@@ -4,10 +4,12 @@ knit: bookdown::preview_chapter
 
 `r if (knitr:::is_html_output()) '# References'`
 
+<-- Let's keep this list of packages in alphabetical order, so we can find packages again -->
+
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+  .packages(), 'bookdown', 'knitr', 'foreign',  'rmarkdown' 
 ), 'packages.bib')
 ```
 
