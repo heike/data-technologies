@@ -1,0 +1,8 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# PISA
+
+Categorical variables, plus continuous and maps
+
