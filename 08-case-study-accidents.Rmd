@@ -164,12 +164,17 @@ ggplot(data=frontseats) +
 ```
 
 
-Figure @\ref(fig:seats-perc) 
+Figure \@ref(fig:seats-perc) 
+
 ```{r seats-perc, fig.cap='Number of men and women involved in fatal accidents grouped by number of people in the car and seat.', out.width='100%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 ggplot(data=frontseats) +
   geom_bar(aes(x = DRINKING, fill= factor(SEX)), position="fill") + 
   facet_grid(PERSON~SEAT_POS, labeller="label_both") +
   theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5))
+```
+
+```{r}
+ggplot(aes(AGE, fill=factor(SEX)), data=subset(person, AGE < 199)) + geom_histogram(position="fill", binwidth=1)
 ```
 
 ## Are roads getting safer?
