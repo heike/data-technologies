@@ -8,7 +8,7 @@ The US Department of transportation is keeping a detailed track of every acciden
 Accident forms change over time, and the corresponding databases with them - e.g. cell phones as a potential contributor to an accident were not on the list back in the 80s. This often makes an analysis of trends over time a bit tricky. 
 
 Here, we  first focus on a single year's worth of data. The data is released in different formats. Besides SAS, DBF seems to be a staple at the DOT. DBF stands for 'data base format', and in R we can read files in this format using the function ```read.dbf```, which is part of the package ```foreign``` [@R-foreign]. Files in SAS format can be read with package ```sas7bdat``` [@R-sas7bdat]. Generally, files in SAS format are a bit smaller than the ones in DBF, but the ```read.dbf``` function is much faster than the ```read.sas7bdat``` function. However, the SAS files come with a file called ```Format.sas```, which contains a translation of numerical codes to string values, making results much easier to interpret. Using a bit of our magical text skills, we can get the relevant information out of this file (see Your Turn question #1).
-***the annoying thing about this database is that the dbf variable names have nothing to do with DBF variable names***
+***the annoying thing about this database is that in Format14.sas the SAS variable names are used, which have not much to do with the DBF variable names, so the applicability of the getLevels function is a bit limited here. ***
 
 
 ***Give some idea of the complexity of the data files***
@@ -135,6 +135,44 @@ levels(drunk$SEX) <- c("Male", "Female")
 qplot(HOUR, drunkPerc, data=na.omit(drunk), colour=factor(SEX),  geom="point", group=interaction(SEX, DAY_WEEK)) + theme_bw() + geom_smooth(se=FALSE) + facet_wrap(~DAY_WEEK)
 ```
 
+Do we see this gap between genders because women are more sensible with alcohol or do they just let somebody else drive?
+Figure \@ref(fig:seats) gives a comparison of the number of men and women involved in fatal accidents. There are about twice as many men involved in a fata accident than there are women. On the driver seat, this difference is even more pronounced: 
+
+```{r seats, fig.cap='Number of men and women involved in fatal accidents grouped by number of people in the car and seat.', out.width='100%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+person <- read.dbf("data/FARS2014-DBF/person.dbf")
+frontseats <- subset(person, SEAT_POS %in% c(11, 13))
+frontseats$SEX[frontseats$SEX > 2] <- NA
+frontseats$SEX <- factor(frontseats$SEX)
+levels(frontseats$SEX) <- c("Male", "Female")
+enc4 <- getLevels("DRINK14F", "data/FARS2014-DBF/Format14.sas")
+names(enc4) <- c("DRINKING", "DRINKINGR")
+
+frontseats <- frontseats %>% group_by(ST_CASE, VEH_NO) %>% mutate(PERSON=n())
+frontseats <- subset(frontseats, PERSON < 3)
+frontseats <- subset(frontseats, SEX %in% c("Male", "Female"))
+frontseats <- subset(frontseats, (SEAT_POS == 11) | (PERSON == 2 & SEAT_POS ==13) )
+frontseats$SEAT_POS <- factor(frontseats$SEAT_POS)
+levels(frontseats$SEAT_POS) <- c("Driver's seat", "Passenger seat")
+
+frontseats$DRINKING <- factor(frontseats$DRINKING)
+levels(frontseats$DRINKING) <- as.vector(enc4$DRINKINGR)
+
+ggplot(data=frontseats) +
+  geom_bar(aes(x = DRINKING, fill= SEX), position="dodge") + 
+  facet_grid(PERSON~SEAT_POS, labeller="label_both") +
+  theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5))
+```
+
+
+Figure @\ref(fig:seats-perc) 
+```{r seats-perc, fig.cap='Number of men and women involved in fatal accidents grouped by number of people in the car and seat.', out.width='100%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+ggplot(data=frontseats) +
+  geom_bar(aes(x = DRINKING, fill= factor(SEX)), position="fill") + 
+  facet_grid(PERSON~SEAT_POS, labeller="label_both") +
+  theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5))
+```
+
+## Are roads getting safer?
 
 ## Your Turn
 
