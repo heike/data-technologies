@@ -47,9 +47,13 @@ Days of the week are encoded as 1 for Sunday through 7 for Saturday, the dots in
 qplot(HOUR, drunkPerc, data=drunk_by_day, colour=DAY_WEEK, geom="point", group=DAY_WEEK) + theme_bw() + geom_smooth(se=FALSE)
 ```
 
-```CF``` is a variable encoding contributing factors. For more than 90% of all accidents no contributing factors are recorded, but for the remainder, the most frequent factors are (14) falling cargo followed by (20) police pursuit.
-```{r}
-table(accidents$CF1)
+## What contributes to fatal accidents?
+
+```CF``` is a variable encoding contributing factors. For more than 90% of all accidents no contributing factors are recorded, but for the remainder, the most frequent factors are (14) falling cargo followed by (20) police pursuit (see Figure \@ref(fig:what) ).
+
+***can we get the labels?***
+```{r what, fig.cap='Number of accidents by contributing factor. Contributing factor 0 stands for "none".', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+qplot(reorder(CF1, CF1, length), data=accidents, geom="bar") + coord_flip()
 ```
 
 ## Who is driving drunk?
