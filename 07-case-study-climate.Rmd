@@ -14,7 +14,6 @@ knit: bookdown::preview_chapter
 
 ```{r load_packages, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, results='hide'}
 library(dplyr)
-library(plyr)
 library(stringr)
 library(reshape2)
 library(ggplot2)
