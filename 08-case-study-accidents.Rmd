@@ -174,8 +174,43 @@ ggplot(data=frontseats) +
   theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5))
 ```
 
-```{r}
-ggplot(aes(AGE, fill=factor(SEX)), data=subset(person, AGE < 199)) + geom_histogram(position="fill", binwidth=1)
+```{r age, fig.keep=TRUE, fig.cap='Age of persons involved in fatal accidents. Color shows gender and outcome. Both genders show a huge spike in numbers at around age 18. The second spike around age 50 is more pronounced in men than in women. ', out.width='80%', fig.asp=.5, fig.align='center', message=FALSE, warning = FALSE}
+person$Alive <- person$DEATH_YR > 2015
+person$SEX[person$SEX > 2] <- NA
+person$AGE[person$AGE > 199] <- NA
+
+
+person$GenderAlive <- with(person, interaction(SEX,Alive))
+levels(person$GenderAlive) <- c("Male/died", "Female/died", "Male/alive", "Female/alive")
+
+person$SEX <- factor(person$SEX)
+levels(person$SEX) <- c("Male", "Female")
+
+cols <- RColorBrewer::brewer.pal(n=6, name="Paired")
+ggplot(aes(AGE, fill=GenderAlive), data=subset(person, !is.na(GenderAlive))) + 
+  geom_histogram( binwidth=1) + 
+  scale_fill_manual(values=cols[c(2,6,1,5)]) + 
+  theme(legend.position="none") + 
+  geom_hline(yintercept=0.5, colour="white") + facet_wrap(~SEX)
+```
+
+
+```{r age-b, fig.keep=TRUE, fig.cap='Death rates of persons involved in fatal accidents by age and gender. For both genders there is a huge increase in the rate at age 18. Starting around age 50 the rates of death increase. Generally, the rate for a man dying are higher than for a woman.', out.width='80%', fig.asp=.5, fig.align='center', message=FALSE, warning = FALSE}
+ggplot(aes(AGE, fill=GenderAlive), data=subset(person, !is.na(GenderAlive))) + 
+  geom_histogram( binwidth=1, position="fill", alpha=0.8) + 
+  scale_fill_manual(values=cols[c(2,6,1,5)]) + 
+  theme(legend.position="none") + facet_wrap(~SEX) 
+```
+
+
+```{r age2, fig.keep=TRUE, fig.cap='Age of persons involved in fatal accidents. Color shows gender and outcome.', out.width='80%', fig.asp=.5, fig.align='center', message=FALSE, warning = FALSE}
+person$GenderAlive <- factor(person$GenderAlive, levels=c("Male/died",  "Male/alive", "Female/alive", "Female/died"))
+
+ggplot(aes(AGE, fill=GenderAlive), data=person) + 
+  geom_histogram(position="fill", binwidth=1, alpha=0.8) + 
+  scale_fill_manual(values=cols[c(2,1,5,6)]) + 
+  theme(legend.position="none") + 
+  geom_hline(yintercept=0.5, colour="white")
 ```
 
 ## Are roads getting safer?
@@ -184,6 +219,6 @@ ggplot(aes(AGE, fill=factor(SEX)), data=subset(person, AGE < 199)) + geom_histog
 
 + Use the structure you find in file [Format14.sas](data/FARS2014-DBF/Format14.sas) as the basis to write a function ```getLevels(varname, file)``` that takes a variable name and a sas file, and returns a dataframe with all levels of the variable in a numeric format and the level names as strings. 
 
-
++ Include gender in the discussion of Figure \@ref(fig:when). (Warning! This question looks harmless, but needs some work.)
 
 
