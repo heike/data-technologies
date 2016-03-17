@@ -114,7 +114,7 @@ qplot(reorder(MFACTOR, MFACTOR, length), data=factor, geom="bar") + coord_flip()
 ```
 
 
-## Who is driving drunk?
+## Who is involved in fatal accidents?
 
 Assuming, individuals on the front left seat are drivers, we see in Figure \@ref(fig:drivers) that on weekdays there is not a big difference in the drunk driving pattern between male and female drivers, but starting Friday afternoon and early evening a gap opens up: a higher percentage of men involved in a fata accident are driving drunk than women in the evenings and early morning hours until during Monday mornings the gap closes again.
 ```{r drivers, fig.cap='Percentages of drunk drivers involved in a fatal accident by gender, time of the day and day of the week.', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
@@ -174,6 +174,7 @@ ggplot(data=frontseats) +
   theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5))
 ```
 
+When we further investigate the demographics of persons involved in fatal accidents, we find some more imbalances between the genders. Figure \@ref(fig:age) shows the marginal distributions of people involved by age. Once somebody can get a licens (at around age 18), there are huge spikes in the numbers for both genders. A secondary spike at around age 50 is much more pronounced in men than women. 
 ```{r age, fig.keep=TRUE, fig.cap='Age of persons involved in fatal accidents. Color shows gender and outcome. Both genders show a huge spike in numbers at around age 18. The second spike around age 50 is more pronounced in men than in women. ', out.width='80%', fig.asp=.5, fig.align='center', message=FALSE, warning = FALSE}
 person$Alive <- person$DEATH_YR > 2015
 person$SEX[person$SEX > 2] <- NA
@@ -194,16 +195,18 @@ ggplot(aes(AGE, fill=GenderAlive), data=subset(person, !is.na(GenderAlive))) +
   geom_hline(yintercept=0.5, colour="white") + facet_wrap(~SEX)
 ```
 
+Figure \@ref(fig:age-b) shows essentially the same picture, but focuses on outcome of the accident. Light colors indicate survival. Death rates vary a lot by age, and there are some interesting differences between genders: for the first 17 years, death rates for both genders are low and very similar (and probably related to position in the car). Rates then jump to much higher rates: for men aged between 20 and 50 the chance of dying in the car accident when involved in a fatal car crash is almost 50%. For women this probability is about 40%. After age 50 the rates go up steeply. Rates for men stay above the rates for women up to about age 80, when the gender differences disappear again (but there is also not much data to support this statement).
 
 ```{r age-b, fig.keep=TRUE, fig.cap='Death rates of persons involved in fatal accidents by age and gender. For both genders there is a huge increase in the rate at age 18. Starting around age 50 the rates of death increase. Generally, the rate for a man dying are higher than for a woman.', out.width='80%', fig.asp=.5, fig.align='center', message=FALSE, warning = FALSE}
 ggplot(aes(AGE, fill=GenderAlive), data=subset(person, !is.na(GenderAlive))) + 
-  geom_histogram( binwidth=1, position="fill", alpha=0.8) + 
-  scale_fill_manual(values=cols[c(2,6,1,5)]) + 
+  geom_histogram( binwidth=1, position="fill", alpha=0.8) +
+  scale_fill_manual(values=cols[c(2,6,1,5)]) + ylab("proportion") + 
   theme(legend.position="none") + facet_wrap(~SEX) 
 ```
 
+Figure \@ref(fig:age-c) puts all of these percentages together. The figure gives an overview of the multinomial distributions conditioned on age. Between ages 20 and 50 men are by far overrepresented in fatal accidents.
 
-```{r age2, fig.keep=TRUE, fig.cap='Age of persons involved in fatal accidents. Color shows gender and outcome.', out.width='80%', fig.asp=.5, fig.align='center', message=FALSE, warning = FALSE}
+```{r age-c, fig.keep=TRUE, fig.cap='Age of persons involved in fatal accidents. Color shows gender and outcome.', out.width='80%', fig.asp=.5, fig.align='center', message=FALSE, warning = FALSE}
 person$GenderAlive <- factor(person$GenderAlive, levels=c("Male/died",  "Male/alive", "Female/alive", "Female/died"))
 
 ggplot(aes(AGE, fill=GenderAlive), data=person) + 
@@ -212,6 +215,8 @@ ggplot(aes(AGE, fill=GenderAlive), data=person) +
   theme(legend.position="none") + 
   geom_hline(yintercept=0.5, colour="white")
 ```
+
+
 
 ## Are roads getting safer?
 
