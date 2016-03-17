@@ -9,7 +9,7 @@ knit: bookdown::preview_chapter
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'foreign',  'rmarkdown' 
+  .packages(), 'bookdown', 'knitr', 'foreign',  'rmarkdown', 'sas7bdat' 
 ), 'packages.bib')
 ```
 
