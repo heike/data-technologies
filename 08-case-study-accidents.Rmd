@@ -4,16 +4,19 @@ knit: bookdown::preview_chapter
 
 # Accidents
 
-The US Department of transportation is keeping track in detail on every accident that results in a fatality. This data are part of FARS, the [Fatality Analysis Reporting System](http://www.nhtsa.gov/FARS). Data is available in annual releases going back to 1975. 
+The US Department of transportation is keeping a detailed track of every accident that results in a fatality. This data are part of FARS, the [Fatality Analysis Reporting System](http://www.nhtsa.gov/FARS). Data is available in annual releases going back to 1975. 
 Accident forms change over time, and the corresponding databases with them - e.g. cell phones as a potnetial contributor to an accident were not on the list back in the 80s. This often makes an analysis of trends over time a bit tricky. 
 
-Here, we  first focus on a single year's worth of data. The data is released in different formats. Besides SAS, DBF seems to be a staple at the DOT. DBF stands for 'data base format', and in R we can read files in this format using the function ```read.dbf```, which is part of the package ```foreign``` [@R-foreign]. Figure \@ref(fig:map-2014) gives an overview of all geographical locations where an accident resulting in at least one fatality was recording in 2014. A pretty detailed roadmap of the US is the result.
+Here, we  first focus on a single year's worth of data. The data is released in different formats. Besides SAS, DBF seems to be a staple at the DOT. DBF stands for 'data base format', and in R we can read files in this format using the function ```read.dbf```, which is part of the package ```foreign``` [@R-foreign].
+***Give some idea of the complexity of the data files***
+
+Figure \@ref(fig:map-2014) gives an overview of all geographical locations where an accident resulting in at least one fatality was recording in 2014. A pretty detailed roadmap of the US is the result.
 
 ```{r map-2014, fig.cap='Overview of where fatal accidents occurred in 2014', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 library(ggplot2)
 library(foreign)
 
-accidents <- read.dbf("data/accident.dbf")
+accidents <- read.dbf("data/FARS2014-DBF/accident.dbf")
 qplot(LONGITUD, LATITUDE, data=subset(accidents, dplyr::between(LONGITUD, -130, 0)), size=I(.5), alpha=I(0.5))
 ```
 
@@ -47,16 +50,39 @@ Days of the week are encoded as 1 for Sunday through 7 for Saturday, the dots in
 qplot(HOUR, drunkPerc, data=drunk_by_day, colour=DAY_WEEK, geom="point", group=DAY_WEEK) + theme_bw() + geom_smooth(se=FALSE)
 ```
 
-```CF``` is a variable encoding contributing factors. For more than 90% of all accidents no contributing factors are recorded, but for the remainder, the most frequent factors are (14) falling cargo followed by (20) police pursuit.
-```{r}
-table(accidents$CF1)
+## What contributes to fatal accidents?
+
+```CF``` is a variable encoding contributing factors. For more than 90% of all accidents no contributing factors are recorded, but for the remainder, the most frequent factors are (14) falling cargo followed by (20) police pursuit (see Figure \@ref(fig:what) ).
+
+***can we get the labels?***
+```{r what, fig.cap='Number of accidents by contributing factor. Contributing factor 0 stands for "none".', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+qplot(reorder(CF1, CF1, length), data=accidents, geom="bar") + coord_flip()
 ```
+
+Was the driver distracted? - The answer to this question is recorded in the variable ```MDRDSTRD``` and summarised in Figure @\ref(fig:MDRDSTRD).
+
+```{r MDRDSTRD, fig.cap='Number of accidents by factors distracting the driver', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+distract <- read.dbf("data/FARS2014-DBF/Distract.dbf")
+qplot(reorder(MDRDSTRD, MDRDSTRD, length), data=distract, geom="bar", fill=MDRDSTRD %in% c("05","06","15")) + coord_flip() + 
+  scale_fill_discrete("Cell phone related distraction")
+```
+
+0 stands for 'Not distracted'. 99 is code for 'unkown',
+96 is a non-report, and 93 stands for a non-specific 'inattention'.
+
+Was there somethings wrong with the vehicle? Figure \@ref(fig:MFACTOR) shows tThe most common contributing factors. Besides 0 'none' and 99 'unkown', the most factors are defects to the tires (1). 
+
+```{r MFACTOR, fig.cap='Number of accidents by pre-existing conditions pertaining the vehicles involved', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+factor <- read.dbf("data/FARS2014-DBF/Factor.dbf")
+qplot(reorder(MFACTOR, MFACTOR, length), data=factor, geom="bar") + coord_flip()
+```
+
 
 ## Who is driving drunk?
 
 Assuming, individuals on the front left seat are drivers, we see in Figure \@ref(fig:drivers) that on weekdays there is not a big difference in the drunk driving pattern between male and female drivers, but starting Friday afternoon and early evening a gap opens up: a higher percentage of men involved in a fata accident are driving drunk than women in the evenings and early morning hours until during Monday mornings the gap closes again.
 ```{r drivers, fig.cap='Percentages of drunk drivers involved in a fatal accident by gender, time of the day and day of the week.', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-person <- read.dbf("data/person.dbf")
+person <- read.dbf("data/FARS2014-DBF/person.dbf")
 driver <- subset(person, SEAT_POS == 11) # front left seat
 driver$Date <- with(driver, as.Date(sprintf("2014/%s/%s", MONTH, DAY)))
 driver$DAY_WEEK <- lubridate::wday(driver$Date, label=TRUE)
@@ -72,6 +98,4 @@ drunk$SEX <- factor(drunk$SEX)
 levels(drunk$SEX) <- c("Male", "Female")
 
 qplot(HOUR, drunkPerc, data=na.omit(drunk), colour=factor(SEX),  geom="point", group=interaction(SEX, DAY_WEEK)) + theme_bw() + geom_smooth(se=FALSE) + facet_wrap(~DAY_WEEK)
-
-
 ```
