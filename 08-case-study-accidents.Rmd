@@ -7,6 +7,14 @@ knit: bookdown::preview_chapter
 The US Department of transportation is keeping a detailed track of every accident that results in a fatality. This data are part of FARS, the [Fatality Analysis Reporting System](http://www.nhtsa.gov/FARS). Data is available in annual releases going back to 1975. 
 Accident forms change over time, and the corresponding databases with them - e.g. cell phones as a potential contributor to an accident were not on the list back in the 80s. This often makes an analysis of trends over time a bit tricky. 
 
+```{r map-2014, echo=FALSE, fig.cap='Overview of where fatal accidents occurred in 2014', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+library(ggplot2)
+library(foreign)
+
+accidents <- read.dbf("data/FARS2014-DBF/accident.dbf")
+qplot(LONGITUD, LATITUDE, data=subset(accidents, dplyr::between(LONGITUD, -130, 0)), size=I(.5), alpha=I(0.5))
+```
+
 Here, we  first focus on a single year's worth of data. The data is released in different formats. Besides SAS, DBF seems to be a staple at the DOT. DBF stands for 'data base format', and in R we can read files in this format using the function ```read.dbf```, which is part of the package ```foreign``` [@R-foreign]. Files in SAS format can be read with package ```sas7bdat``` [@R-sas7bdat]. Generally, files in SAS format are a bit smaller than the ones in DBF, but the ```read.dbf``` function is much faster than the ```read.sas7bdat``` function. However, the SAS files come with a file called ```Format.sas```, which contains a translation of numerical codes to string values, making results much easier to interpret. Using a bit of our magical text skills, we can get the relevant information out of this file (see Your Turn question #1).
 ***the annoying thing about this database is that in Format14.sas the SAS variable names are used, which have not much to do with the DBF variable names, so the applicability of the getLevels function is a bit limited here. ***
 
@@ -15,13 +23,6 @@ Here, we  first focus on a single year's worth of data. The data is released in 
 
 Figure \@ref(fig:map-2014) gives an overview of all geographical locations where an accident resulting in at least one fatality was recording in 2014. A pretty detailed roadmap of the US is the result.
 
-```{r map-2014, fig.cap='Overview of where fatal accidents occurred in 2014', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-library(ggplot2)
-library(foreign)
-
-accidents <- read.dbf("data/FARS2014-DBF/accident.dbf")
-qplot(LONGITUD, LATITUDE, data=subset(accidents, dplyr::between(LONGITUD, -130, 0)), size=I(.5), alpha=I(0.5))
-```
 
 ## When do people die on the roads? 
 
@@ -136,7 +137,7 @@ qplot(HOUR, drunkPerc, data=na.omit(drunk), colour=factor(SEX),  geom="point", g
 ```
 
 Do we see this gap between genders because women are more sensible with alcohol or do they just let somebody else drive?
-Figure \@ref(fig:seats) gives a comparison of the number of men and women involved in fatal accidents. There are about twice as many men involved in a fata accident than there are women. On the driver seat, this difference is even more pronounced: 
+Figure \@ref(fig:seats) gives a comparison of the number of men and women involved in fatal accidents. Overall, there are about twice as many men involved in a fatal accident than there are women. On the driver seat, this difference is even more pronounced: if there is only one person in the car, the odds of that person being a man are about 3:1. When there are two people in the car, the ratio changes again. On the driver seat the odds of male:female change to about 2:1, while on the passenger seat more women are found than man.  
 
 ```{r seats, fig.cap='Number of men and women involved in fatal accidents grouped by number of people in the car and seat.', out.width='100%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 person <- read.dbf("data/FARS2014-DBF/person.dbf")
@@ -152,7 +153,7 @@ frontseats <- subset(frontseats, PERSON < 3)
 frontseats <- subset(frontseats, SEX %in% c("Male", "Female"))
 frontseats <- subset(frontseats, (SEAT_POS == 11) | (PERSON == 2 & SEAT_POS ==13) )
 frontseats$SEAT_POS <- factor(frontseats$SEAT_POS)
-levels(frontseats$SEAT_POS) <- c("Driver's seat", "Passenger seat")
+levels(frontseats$SEAT_POS) <- c("Driver", "Passenger")
 
 frontseats$DRINKING <- factor(frontseats$DRINKING)
 levels(frontseats$DRINKING) <- as.vector(enc4$DRINKINGR)
@@ -164,11 +165,11 @@ ggplot(data=frontseats) +
 ```
 
 
-Figure \@ref(fig:seats-perc) 
+Figure \@ref(fig:seats-perc) shows the percentages of men involved in fatal accidents by position in the car and number of persons. In all three situations, the odds of men versus women change towards a higher percentage of men if alcohol is involved.
 
 ```{r seats-perc, fig.cap='Number of men and women involved in fatal accidents grouped by number of people in the car and seat.', out.width='100%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 ggplot(data=frontseats) +
-  geom_bar(aes(x = DRINKING, fill= factor(SEX)), position="fill") + 
+  geom_bar(aes(x = DRINKING, fill= SEX), position="fill") + 
   facet_grid(PERSON~SEAT_POS, labeller="label_both") +
   theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5))
 ```
