@@ -102,16 +102,6 @@ qplot(reorder(MDRDSTRD, MDRDSTRD, length), data=distract, geom="bar", fill=MDRDS
 0 stands for 'Not distracted'. 99 is code for 'unkown',
 96 is a non-report, and 93 stands for a non-specific 'inattention'.
 
-Was there somethings wrong with the vehicle? Figure \@ref(fig:MFACTOR) shows the most common contributing factors. Besides 0 'none' and 99 'unkown', the most factors are defects to the tires (1). 
-
-```{r MFACTOR, fig.cap='Number of accidents by pre-existing conditions pertaining the vehicles involved', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-factor <- read.dbf("data/FARS2014-DBF/Factor.dbf")
-enc3 <- getLevels("FACTR14F", "data/FARS2014-DBF/Format14.sas")
-names(enc3) <- c("MFACTOR", "Label")
-
-qplot(reorder(MFACTOR, MFACTOR, length), data=factor, geom="bar") + coord_flip() +
-  geom_text(aes(label=Label), y=1000, data=enc3, hjust=0)
-```
 
 
 ## Who is involved in fatal accidents?
@@ -224,6 +214,22 @@ ggplot(aes(AGE, fill=GenderAlive), data=person) +
 
 + Use the structure you find in file [Format14.sas](data/FARS2014-DBF/Format14.sas) as the basis to write a function ```getLevels(varname, file)``` that takes a variable name and a sas file, and returns a dataframe with all levels of the variable in a numeric format and the level names as strings. 
 
++ Was there somethings wrong with the vehicle? Investigate variable ```MFACTOR``` in the ```Factor.dbf```. Make sure to re-code the numbers to strings. 
+
 + Include gender in the discussion of Figure \@ref(fig:when). (Warning! This question looks harmless, but needs some work.)
 
 
+## Solutions
+
++ ```getLevels()``` included above but not shown.
+
++ Figure \@ref(fig:MFACTOR) shows the most common contributing factors. Besides 0 'none' and 99 'unkown', the most factors are defects to the tires (1). 
+
+```{r MFACTOR, fig.cap='Number of accidents by pre-existing conditions pertaining the vehicles involved', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+factor <- read.dbf("data/FARS2014-DBF/Factor.dbf")
+enc3 <- getLevels("FACTR14F", "data/FARS2014-DBF/Format14.sas")
+names(enc3) <- c("MFACTOR", "Label")
+
+qplot(reorder(MFACTOR, MFACTOR, length), data=factor, geom="bar") + coord_flip() +
+  geom_text(aes(label=Label), y=1000, data=enc3, hjust=0)
+```
