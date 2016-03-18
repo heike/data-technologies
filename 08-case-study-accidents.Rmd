@@ -185,7 +185,7 @@ ggplot(aes(AGE, fill=GenderAlive), data=subset(person, !is.na(GenderAlive))) +
   geom_hline(yintercept=0.5, colour="white") + facet_wrap(~SEX)
 ```
 
-Figure \@ref(fig:age-b) shows essentially the same picture, but focuses on outcome of the accident. Light colors indicate survival. Death rates vary a lot by age, and there are some interesting differences between genders: for the first 17 years, death rates for both genders are low and very similar (and probably related to position in the car). Rates then jump to much higher rates: for men aged between 20 and 50 the chance of dying in the car accident when involved in a fatal car crash is almost 50%. For women this probability is about 40%. After age 50 the rates go up steeply. Rates for men stay above the rates for women up to about age 80, when the gender differences disappear again (but there is also not much data to support this statement).
+Figure \@ref(fig:age-b) shows essentially the same picture, but focuses on outcome of the accident. Light colors indicate survival. Death rates vary a lot by age, and there are some interesting differences between genders: for the first 17 years, death rates for both genders are low and very similar (and probably related to position in the car). Rates then jump to much higher rates: for men aged between 20 and 60 the chance of dying in the car accident when involved in a fatal car crash is almost 50%. For women this probability is about 40%. After age 60 the rates go up steeply. Rates for men stay above the rates for women up to about age 80, when the gender differences disappear again (but there is also not much data to support this statement).
 
 ```{r age-b, fig.keep=TRUE, fig.cap='Death rates of persons involved in fatal accidents by age and gender. For both genders there is a huge increase in the rate at age 18. Starting around age 50 the rates of death increase. Generally, the rate for a man dying are higher than for a woman.', out.width='80%', fig.asp=.5, fig.align='center', message=FALSE, warning = FALSE}
 ggplot(aes(AGE, fill=GenderAlive), data=subset(person, !is.na(GenderAlive))) + 
@@ -196,13 +196,13 @@ ggplot(aes(AGE, fill=GenderAlive), data=subset(person, !is.na(GenderAlive))) +
 
 Figure \@ref(fig:age-c) puts all of these percentages together. The figure gives an overview of the multinomial distributions conditioned on age. Between ages 20 and 50 men are by far overrepresented in fatal accidents.
 
-```{r age-c, fig.keep=TRUE, fig.cap='Age of persons involved in fatal accidents. Color shows gender and outcome.', out.width='80%', fig.asp=.5, fig.align='center', message=FALSE, warning = FALSE}
+```{r age-c, fig.keep=TRUE, fig.cap='Age of persons involved in fatal accidents. Color shows gender and outcome.', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 person$GenderAlive <- factor(person$GenderAlive, levels=c("Male/died",  "Male/alive", "Female/alive", "Female/died"))
 
 ggplot(aes(AGE, fill=GenderAlive), data=person) + 
   geom_histogram(position="fill", binwidth=1, alpha=0.8) + 
   scale_fill_manual(values=cols[c(2,1,5,6)]) + 
-  theme(legend.position="none") + 
+  theme(legend.position="none") + ylab("proportion") + 
   geom_hline(yintercept=0.5, colour="white")
 ```
 
@@ -218,6 +218,7 @@ ggplot(aes(AGE, fill=GenderAlive), data=person) +
 
 + Include gender in the discussion of Figure \@ref(fig:when). (Warning! This question looks harmless, but needs some work.)
 
++ Where people are when they get involved in an accident matters a lot. Investigate numbers and rates of death by seat position (```SEAT_POS```). How do age and gender factor into this? Make sure to investigate only combinations with enough data support.
 
 ## Solutions
 
@@ -232,4 +233,45 @@ names(enc3) <- c("MFACTOR", "Label")
 
 qplot(reorder(MFACTOR, MFACTOR, length), data=factor, geom="bar") + coord_flip() +
   geom_text(aes(label=Label), y=1000, data=enc3, hjust=0)
+```
+
++ ***Where people are when they get involved in an accident matters a lot. Investigate numbers and rates of death by seat position (```SEAT_POS```). How do age and gender factor into this? Make sure to investigate only combinations with enough data support.***
+
+Investigating seat position first: 
+
+    - change encoding to text
+    - reduce the number of categories
+    - include deaths
+  
+```{r}
+enc5 <- getLevels("SEATP14F", "data/FARS2014-DBF/Format14.sas")
+names(enc5) <- c("SEAT_POS", "Seat")
+
+person <- merge(person, enc5, by="SEAT_POS", all.x=TRUE)
+person$SEAT_POS <- with(person, reorder(SEAT_POS, SEAT_POS, length))
+qplot(x = SEAT_POS, data=person, geom="bar") + coord_flip() + 
+  geom_label(aes(label=Seat), y=1000, data=unique(person[,c("SEAT_POS", "Seat")]), hjust=0, alpha=0.5)
+```
+
+We will require each category of ```SEAT_POS``` to have at least 500 records:
+```{r}
+# SEAT_POS is already ordered by number 
+person$SEAT_POS_cat <- as.character(person$Seat)
+person$SEAT_POS_cat[as.numeric(person$SEAT_POS) < 20] <- "Other"
+person$SEAT_POS_cat <- with(person, reorder(SEAT_POS_cat, SEAT_POS_cat, length))
+```
+
+```{r}
+person$Alive <- person$DEATH_YR > 2015
+qplot(data=person, SEAT_POS_cat, fill=Alive) + coord_flip()
+ggplot(data=person, aes(x=SEAT_POS_cat, fill=Alive)) + coord_flip() +
+  geom_bar(position="fill")
+
+ggplot(data=person, aes(x=SEX, fill=Alive)) + coord_flip() +
+  geom_bar(position="fill") + facet_wrap(~SEAT_POS_cat) + xlab("proportion")
+
+person$AGE_cat <- cut(person$AGE, breaks=c(0,18, 60, 105))
+ggplot(data=person, aes(x=AGE_cat, fill=Alive)) + coord_flip() +
+  geom_bar(position="fill") + facet_wrap(~SEAT_POS_cat) + xlab("proportion")
+
 ```
