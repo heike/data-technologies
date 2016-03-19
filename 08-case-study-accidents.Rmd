@@ -224,20 +224,33 @@ accidents[[length(accidents)+1]] <- read.dbf("data/FARS2014-DBF/accident.dbf")
 library(tidyr)
 library(dplyr)
 numbers <- data.frame(
-  year = accidents %>% purrr::map(.f = function(x) {
+  year = accidents %>% purrr::map_int(.f = function(x) {
     year <- x$YEAR[1]
-    if (year < 2000) return(1900+year[1])
-    year
-  }) %>% unlist,
+    if (year < 2000) return(as.integer(1900+year[1]))
+    as.integer(year)
+  }),
   fatalities = accidents %>% purrr::map_dbl(.f = function(x) {
     sum(x$FATALS)
   }),
-  n = accidents %>% purrr::map(nrow) %>% unlist
+  n = accidents %>% purrr::map_dbl(nrow) 
 )
 write.csv(numbers, "data/numbers.csv", row.names=FALSE)
+
+state.numbers <- accidents %>% purrr:::map_df(
+  .f = function(x) x %>% group_by(STATE) %>% summarize(
+    year= YEAR[1],
+    fatalities = sum(FATALS),
+    accidents = n()
+  )
+)
+idx <- which(state.numbers$year < 1900)
+state.numbers$year[idx] <- 1900+state.numbers$year[idx]
+write.csv(numbers, "data/state-numbers.csv", row.names=FALSE)
+
+
 ```
 
-```{r fatalities-trend, fig.keep=TRUE, fig.cap="Number of accidents and fatalities over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+```{r fatalities-trend, fig.keep=TRUE, fig.cap="Number of accidents (black points) and fatalities (red points) over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 numbers <- read.csv("data/numbers.csv")
 qplot(year, n, data=numbers) + geom_point(aes(y=fatalities), colour="red")
 ```
@@ -293,7 +306,7 @@ qplot(year, fatalities/number*10^6, data=numbers) + ylab("Rate of accident fatal
 
 + Was there somethings wrong with the vehicle? Investigate variable ```MFACTOR``` in the ```Factor.dbf```. Make sure to re-code the numbers to strings. 
 
-+ Include gender in the discussion of Figure \@ref(fig:when). (Warning! This question looks harmless, but needs some work.)
++ Include gender in the discussion of Figure \@ref(fig:when). (Warning! This question looks harmless, but requires some work.)
 
 + Where people are when they get involved in an accident matters a lot. Investigate numbers and rates of death by seat position (```SEAT_POS```). How do age and gender factor into this? Make sure to investigate only combinations with enough data support.
 
