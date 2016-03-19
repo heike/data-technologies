@@ -210,6 +210,71 @@ ggplot(aes(AGE, fill=GenderAlive), data=person) +
 
 ## Are roads getting safer?
 
+First we read in data at five year intervals starting with 1975. In 2000, we switch to yearly updates, because, as can be seen in Figure \@ref(fig:fatalities-trend) during this time frame things change most dramatically in terms of the number of accidents. At the same time (see Figure \@ref(fig:fatalities-rates)), the rate at which people die in fatal accidents drops as well.
+```{r, eval=FALSE}
+require(foreign)
+files <- dir("data/FARS-allyears/", pattern="dbf", ignore.case=TRUE)
+accidents <- list()
+for (fidx in seq_along(files)) {
+  accidents[[fidx]] <- read.dbf(file.path("data/FARS-allyears", files[fidx]))
+}
+
+accidents[[length(accidents)+1]] <- read.dbf("data/FARS2014-DBF/accident.dbf")
+
+library(tidyr)
+library(dplyr)
+numbers <- data.frame(
+  year = accidents %>% purrr::map(.f = function(x) {
+    year <- x$YEAR[1]
+    if (year < 2000) return(1900+year[1])
+    year
+  }) %>% unlist,
+  fatalities = accidents %>% purrr::map_dbl(.f = function(x) {
+    sum(x$FATALS)
+  }),
+  n = accidents %>% purrr::map(nrow) %>% unlist
+)
+write.csv(numbers, "data/numbers.csv", row.names=FALSE)
+```
+
+```{r fatalities-trend, fig.keep=TRUE, fig.cap="Number of accidents and fatalities over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+numbers <- read.csv("data/numbers.csv")
+qplot(year, n, data=numbers) + geom_point(aes(y=fatalities), colour="red")
+```
+
+```{r fatalities-rates, fig.cap="Rate of fatalities per accident in which at least one fatality occurred. The rate decreases over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+qplot(year, fatalities/n, data=numbers) 
+```
+
+The drop in both numbers of fatal accidents over time and the rates of fatalities is even more dramatic, when put into the perspective of how many more cars are on the roads. This kind of information is made available by
+RITA. The [table of the number of cars on US roads](http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/publications/national_transportation_statistics/html/table_01_11.html) is available online. 
+While we can read in the data (see below), it is in a fairly awful shape:
+```{r}
+rita <- read.table("http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/table_01_11_3.csv", skip=1, header=TRUE, sep=",", na.strings="NA")
+head(rita[,1:10])
+```
+
+But after some basic cleaning, we can extract the number of vehicles registered annually:
+```{r}
+library(tidyr)
+names(rita)[1] <- "mode"
+rm <- gather(rita, key=year, value=number, -mode, na.rm=TRUE)
+rm$year <- as.numeric(gsub("X","", rm$year))
+rm$number <- gsub(",","", rm$number) # get rid of all the comma
+rm$number <- trimws(gsub("(R)", "", rm$number, fixed=TRUE))
+rm$number <- as.numeric(rm$number)
+rm <- subset(rm, !is.na(rm$number))
+vehicles <- subset(rm, mode %in% "Highway, total (registered vehicles)")
+```
+
+```{r}
+qplot(year, number, data=vehicles) + ggtitle("Number of vehicles registered")  
+numbers <- merge(numbers, vehicles, by="year", all.x=TRUE)
+qplot(year, n/number, data=numbers, colour=mode) + ggtitle("Fatal accidents by number of registered vehicles")
+```
+
+
+
 ## Your Turn
 
 + Use the structure you find in file [Format14.sas](data/FARS2014-DBF/Format14.sas) as the basis to write a function ```getLevels(varname, file)``` that takes a variable name and a sas file, and returns a dataframe with all levels of the variable in a numeric format and the level names as strings. 
