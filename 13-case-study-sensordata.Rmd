@@ -40,8 +40,54 @@ mpeds$Weekday <- lubridate::wday(mpeds$Date, label=TRUE)
 mpeds$Weekday <- factor(mpeds$Weekday, levels = levels(mpeds$Weekday)[c(2:7, 1)])
 mpeds$Day <- lubridate::mday(mpeds$Date)
 ```
+Figure \@ref(fig:peds-counts) shows the hourly tallies of pedestrians at 40 different locations across Melbourne. There is a distinct weekday/weekend pattern: during the week, the most dominant pattern is driven by the workforce, with commuters' spikes at 8am and 5pm and a lunch hour rush. These spikes are completely absent on weekends. 
 
-```{r counts}
-qplot(Hour, Count, data=mpeds) + facet_grid(.~Weekday) + geom_line(aes(group=interaction(Location, Day)))
+```{r peds-counts, fig.cap="Hourly pedestrian counts at 40 locations in Melbourne over three months.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+require(ggplot2)
+
+ggplot(aes(x=Hour, y=Count), data=mpeds) + facet_grid(.~Weekday) + geom_line(aes(group=interaction(Location, Day)), alpha=0.3)
 ```
 
+We can investigate the working force pattern a bit more closer by location. Rescaling the counts for each location reveals the difference in patterns much more clearly and shows the three workforce spikes much more pronounced (cf Figure \@ref(fig:ped_adjcounts)).
+
+```{r peds-adjcounts, fig.cap="Adjusted counts of pedestrians reveals the three workforce spikes on weekdays more clearly.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+require(dplyr)
+weekhourlies <- mpeds %>% group_by(Location, Weekday, Hour) %>% summarize(Count = median(Count))
+weekhourlies <- weekhourlies %>% group_by(Location) %>% mutate(adjCount = scale(Count))
+
+ggplot(aes(x=Hour, y=adjCount), data=weekhourlies) + facet_grid(.~Weekday) + geom_line(aes(group=Location))
+```
+
+Figure \@ref(fig:loc-cluster) gives an overview of the hourly pattern observed at each location. Locations are grouped by their pattern, resulting into three groups, that can be described mostly by their pedestrian counts at 8am, noon, and 5pm. One ofthe groups shows a strong morning and afternoon peak, with only a slight increase during lunch. The other two groups are not nearly as much affected by the pedestrian rush hours. One group shows almost the same pattern on weekdays as on weekends (with tiny spikes added on weekdays), while pedestrian traffic for the last groups is generally higher for the last group on weekdays than on weekends and increases during the day until peaking at 5pm. 
+
+```{r loc-cluster, fig.cap="Location of sensors clustered by observed patterns of pedestrian counts.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+hourlies <- weekhourlies %>% group_by(Hour, Location) %>% summarize(
+  adjCount = mean(adjCount)
+)
+adjcounts <- hourlies %>% spread(Hour, adjCount)
+dists <- dist(adjcounts[,-1])
+pedclust <- hclust(dists)
+adjcounts$Group <- cutree(pedclust, k=3)
+
+weekhourlies <- merge(weekhourlies[1:nrow(weekhourlies),], adjcounts[, c("Location", "Group")], by="Location", all.x=TRUE)
+ggplot(aes(x=Hour, y=Count), data=weekhourlies) + facet_grid(Group~Weekday) + geom_line(aes(group=Location))
+```
+
+Generally, things are quiet at 5 am, particularly on weekdays. There are, however, some notable exceptions with pedestrian counts of more than 1000 between 5 and 6 in the morning: 
+```{r}
+subset(mpeds, Hour==5 & Count > 1000)
+```
+In the current data set (Dec 2015 - Feb 2016) these counts occurred in eight locations on February 21, 2016, which is when Melbourne hosted its annual White Night in 2016.
+Besides New Year's morning on the corner of Flinders and Swanston Street, City Square was the place to be on December 28 and 29 at five in the morning. *** not sure what was going on on those two dates ***
+
+```{r}
+days <- unique(subset(mpeds, Hour==5 & Count > 1000)[, c("Date", "Location")])
+# I want to get the remaining hours for each of the locations. I also want to get the Feb 20 data.
+```
+
+```{r}
+ggplot(aes(x=Hour, y=Count, group=interaction(Location, Day)), 
+       data=mpeds) + 
+  facet_grid(.~Weekday) + 
+  geom_line(alpha=0.3) 
+```
