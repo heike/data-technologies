@@ -1,0 +1,47 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Sensor data
+
+Streams of data
+
+The City of Melbourne has sensors set up in strategic locations across the inner city to keep tallies of hourly number of pedestrians. The data is available for download in monthly and yearly chunks from [http://www.pedestrian.melbourne.vic.gov.au/datadownload.html](http://www.pedestrian.melbourne.vic.gov.au/datadownload.html).
+We are going to show how to download the data and process it. Results will vary depending on when you download the data. 
+```{r}
+library(rvest)
+url <- "http://www.pedestrian.melbourne.vic.gov.au/datadownload.html"
+
+html <- read_html(url)
+tabs <- html %>%  html_nodes("a")
+datalinks <- tabs %>% html_attr("href")
+head(datalinks)
+```
+The second link serves as the base url for the download. FIles are sorted chronologically with the tallies for the most recent month first. 
+We can download data for the three most recent months as:
+```{r}
+baseURL <- datalinks[2]
+peds <- datalinks[3:5] %>% purrr::map_df(function(x) {
+  read.csv(paste0(baseURL, x), stringsAsFactors = FALSE)
+})
+dim(peds)
+head(peds[, 1:10])
+```
+
+Each row in the data consists of the number of pedestrians counted by one of the 40 plus sensors in different locations. Each sensor is kept as a separate variable. For an analysis we want to re-organize the data to contain all numbers in a single variable:
+
+```{r}
+library(tidyr)
+mpeds <- peds %>% gather(key=Location, value=Count, 3:ncol(peds))
+mpeds$Date <- lubridate::dmy(mpeds$Date)
+mpeds$Month <- lubridate::month(mpeds$Date)
+mpeds$Weekday <- lubridate::wday(mpeds$Date, label=TRUE)
+# get Sunday from first to last position:
+mpeds$Weekday <- factor(mpeds$Weekday, levels = levels(mpeds$Weekday)[c(2:7, 1)])
+mpeds$Day <- lubridate::mday(mpeds$Date)
+```
+
+```{r counts}
+qplot(Hour, Count, data=mpeds) + facet_grid(.~Weekday) + geom_line(aes(group=interaction(Location, Day)))
+```
+
