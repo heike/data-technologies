@@ -235,19 +235,6 @@ numbers <- data.frame(
   n = accidents %>% purrr::map_dbl(nrow) 
 )
 write.csv(numbers, "data/numbers.csv", row.names=FALSE)
-
-state.numbers <- accidents %>% purrr:::map_df(
-  .f = function(x) x %>% group_by(STATE) %>% summarize(
-    year= YEAR[1],
-    fatalities = sum(FATALS),
-    accidents = n()
-  )
-)
-idx <- which(state.numbers$year < 1900)
-state.numbers$year[idx] <- 1900+state.numbers$year[idx]
-write.csv(numbers, "data/state-numbers.csv", row.names=FALSE)
-
-
 ```
 
 ```{r fatalities-trend, fig.keep=TRUE, fig.cap="Number of accidents (black points) and fatalities (red points) over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
@@ -309,6 +296,24 @@ qplot(year, fatalities/number*10^6, data=numbers) + ylab("Rate of accident fatal
 + Include gender in the discussion of Figure \@ref(fig:when). (Warning! This question looks harmless, but requires some work.)
 
 + Where people are when they get involved in an accident matters a lot. Investigate numbers and rates of death by seat position (```SEAT_POS```). How do age and gender factor into this? Make sure to investigate only combinations with enough data support.
+
++ Fatal accidents by state over time: 
+This is a two-part question. First, look at the code below and explain the pieces of the data processing pipeline:
+
+```{r, eval=FALSE}
+state.numbers <- accidents %>% purrr:::map_df(
+  .f = function(x) x %>% group_by(STATE) %>% summarize(
+    year= YEAR[1],
+    fatalities = sum(FATALS),
+    accidents = n()
+  )
+)
+idx <- which(state.numbers$year < 1900)
+state.numbers$year[idx] <- 1900+state.numbers$year[idx]
+write.csv(numbers, "data/state-numbers.csv", row.names=FALSE)
+```
+
+Second, load the data set ```state-numbers.csv``` into your R session and investigate. For interpretation, it will be much easier to change the fips codes to state names. What is the dominant pattern in this plot? How would it be possible to reveal the actual rates of fatalities in each state over time? Try to find a source and investigate how rates of fatalities change for each state over time.
 
 ## Solutions
 
