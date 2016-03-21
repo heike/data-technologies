@@ -105,7 +105,7 @@ sensors$Location[sensors$Sensor.Description %in% c("Lonsdale St-Spring St (West)
 sensors <- merge(sensors, weekhourlies[,c("Location", "Group")], by="Location")
 ```
 Now we want to put this information on a map:
-```{r}
+```{r ped-map, fig.cap="Map of inner Melbourne. Locations of sensors are indicated by dots, colour indicates their group.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 library(ggmap)
 library(ggthemes)
 melb <- get_map("Melbourne, Australia", zoom=14) # we need to set the zoom - the auto-zoom includes too much. 
@@ -113,7 +113,7 @@ ggmap(melb, extent="normal") +
   geom_point(aes(x=Longitude, y=Latitude, colour=factor(Group)), data=sensors, size=3) + theme_map() +
   scale_colour_brewer(palette="Dark2")
 ```
-***Does this grouping make sense to somebody who knows  Melbourne?***
+***Does the grouping shown in Figure \@ref(fig:ped-map) make sense to somebody who knows  Melbourne?***
 
 
 Coming back to the general pattern of the graphic we started out with in Figure \@ref(fig:peds-counts), we see that
