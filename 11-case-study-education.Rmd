@@ -4,5 +4,216 @@ knit: bookdown::preview_chapter
 
 # PISA
 
+***Need to update code***
+
 Categorical variables, plus continuous and maps
+
+
+```{r cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, results='hide'}
+library(plyr)
+library(dplyr)
+library(stringr)
+library(reshape2)
+library(ggplot2)
+library(lubridate)
+library(maps)
+library(ggmap)
+library(htmltools)
+library(rworldmap)
+library(grid)    
+library(scales)
+library(gridExtra)
+library(forecast)
+```
+
+```{r load_data, echo = FALSE, message = FALSE, warning = FALSE, results='hide', cache=FALSE}
+# This is the scaffolding to import the data
+sets <- c("item", "parent", "school", "scoredItem", "student")
+
+# function to build the file names
+fn_build <- function(file_name){
+ 
+  template <- c("2012.rda", "2012dict.rda")
+  
+  file_name %>% 
+    vapply(str_join, template, template) %>% 
+    file.path("data/PISA", .)
+}
+
+# load the data
+sets %>% fn_build %>% lapply(load, .GlobalEnv)
+
+# clean
+rm(fn_build, sets)
+
+# function to convert to data-frames
+fn_make_df <- function(named_vector){
+  data.frame(
+    variable = attr(named_vector, "names"),
+    description = named_vector,
+    row.names = NULL
+  )
+}
+
+# there's a clever way to do this, but beyond me for naw
+dict_item2012 <- fn_make_df(item2012dict) 
+dict_parent2012 <- fn_make_df(parent2012dict) 
+dict_school2012 <- fn_make_df(school2012dict) 
+dict_scoredItem2012 <- fn_make_df(scoredItem2012dict) 
+dict_student2012 <- fn_make_df(student2012dict) 
+
+# clean
+rm(fn_make_df)
+#rm(item2012dict, parent2012dict, school2012dict, scoredItem2012dict, student2012dict)
+dim(student2012)
+length(table(student2012$STIDSTD))
+```
+
+```{r mapdata, echo = FALSE, message = FALSE, warning = FALSE, results='hide', cache=FALSE}
+# Produce the maps
+extractPolygons <- function(shapes) {
+
+  dframe <- ldply(1:length(shapes@polygons), function(i) {
+    ob <- shapes@polygons[[i]]@Polygons
+    dframe <- ldply(1:length(ob), function(j) {
+      x <- ob[[j]]
+      co <- x@coords
+      data.frame(co, order=1:nrow(co), group=j)
+    })
+    dframe$region <- i
+    dframe$name <- shapes@polygons[[i]]@ID
+    dframe
+  })
+  # construct a group variable from both group and polygon:
+  dframe$group <- interaction(dframe$region, dframe$group)
+  
+  dframe
+}
+
+# To get a blank background on map
+new_theme_empty <- theme_bw()
+new_theme_empty$line <- element_blank()
+new_theme_empty$rect <- element_blank()
+new_theme_empty$strip.text <- element_blank()
+new_theme_empty$axis.text <- element_blank()
+new_theme_empty$plot.title <- element_blank()
+new_theme_empty$axis.title <- element_blank()
+new_theme_empty$plot.margin <- structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit")
+
+world <- getMap(resolution = "low")
+#library(plyr)
+world.polys <- extractPolygons(world)
+detach("package:plyr")
+```
+
+```{r dataprep, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE}
+colnames(student2012)[1] <- "name"
+student2012$name <- as.character(student2012$name)
+colnames(school2012)[1] <- "name"
+school2012$name <- as.character(school2012$name)
+
+fix_country = function(df) {
+df$name = as.character(df$name)
+df$name[df$name=="Serbia"] <- "Republic of Serbia"
+df$name[df$name=="Korea"] <- "South Korea"
+df$name[df$name=="Chinese Taipei"] <- "Taiwan"
+df$name[df$name=="Slovak Republic"] <- "Slovakia"
+df$name[df$name=="Russian Federation"] <- "Russia"
+df$name[df$name=="Perm(Russian Federation)"] <- "Russia"
+df$name[df$name=="Hong Kong-China"] <- "Hong Kong S.A.R."
+df$name[df$name=="China-Shanghai"] <- "China"
+df$name[df$name=="China-Macau"] <- "China"
+df$name[df$name=="Connecticut (USA)"] <- "United States of America"
+df$name[df$name=="Florida (USA)"] <- "United States of America"
+df$name[df$name=="Massachusetts (USA)"] <- "United States of America"
+
+df
+}
+
+shorten_countrynames = function(df) {
+df$name = as.character(df$name)
+df$name[df$name=="Hong Kong S.A.R."] <- "Hong Kong"
+df$name[df$name=="Republic of Serbia"] <- "Serbia"
+df$name[df$name=="United Arab Emirates"] <- "UAE"
+df$name[df$name=="United States of America"] <- "USA"
+df$name[df$name=="United Kingdom"] <- "UK"
+
+df
+}
+
+# Now add data
+#student2012$name[student2012$name=="Serbia"] <- "Republic of Serbia"
+#student2012$name[student2012$name=="Korea"] <- "South Korea"
+#student2012$name[student2012$name=="Chinese Taipei"] <- "Taiwan"
+#student2012$name[student2012$name=="Slovak Republic"] <- "Slovakia"
+#student2012$name[student2012$name=="Russian Federation"] <- "Russia"
+#student2012$name[student2012$name=="Perm(Russian Federation)"] <- "Russia"
+#student2012$name[student2012$name=="Hong Kong-China"] <- "Hong Kong S.A.R."
+#student2012$name[student2012$name=="China-Shanghai"] <- "China"
+#student2012$name[student2012$name=="China-Macau"] <- "China"
+#student2012$name[student2012$name=="Connecticut (USA)"] <- "United States of America"
+#student2012$name[student2012$name=="Florida (USA)"] <- "United States of America"
+#student2012$name[student2012$name=="Massachusetts (USA)"] <- "United States of America"
+student2012$ST06Q01 <- as.numeric(student2012$ST06Q01)
+student2012$PV1MATH <- as.numeric(student2012$PV1MATH)
+student2012$PV1READ <- as.numeric(student2012$PV1READ)
+student2012$PV1SCIE <- as.numeric(student2012$PV1SCIE)
+student2012$SENWGT_STU <- as.numeric(student2012$SENWGT_STU)
+school2012 = fix_country(school2012)
+student2012 = fix_country(student2012)
+```
+
+```{r gendermath, fig.width=3.5, fig.height=3.5, warning=FALSE, message=FALSE, echo=FALSE, cache=FALSE, fig.align='center'}
+#library(plyr)
+student2012.sub <- student2012[, c(1, 12, 501, 541, 546, 634)]
+student2012.sub.summary.gap <- summarise(group_by(student2012.sub, name), 
+                  mathgap=mean(PV1MATH[ST04Q01=="Male"], na.rm=T)-
+                          mean(PV1MATH[ST04Q01=="Female"], na.rm=T),
+                  wmathgap=weighted.mean(PV1MATH[ST04Q01=="Male"], w=SENWGT_STU[ST04Q01=="Male"], na.rm=T)-
+                          weighted.mean(PV1MATH[ST04Q01=="Female"], w=SENWGT_STU[ST04Q01=="Female"], na.rm=T),
+                  mtest.stat = t.test(PV1MATH[ST04Q01=="Male"], PV1MATH[ST04Q01=="Female"])$statistic, 
+                  mp.value = t.test(PV1MATH[ST04Q01=="Male"], PV1MATH[ST04Q01=="Female"])$p.value,
+                  readgap=mean(PV1READ[ST04Q01=="Male"], na.rm=T)-mean(PV1READ[ST04Q01=="Female"], na.rm=T),
+                  rtest.stat = t.test(PV1READ[ST04Q01=="Male"], PV1READ[ST04Q01=="Female"])$statistic, 
+                  rp.value = t.test(PV1READ[ST04Q01=="Male"], PV1READ[ST04Q01=="Female"])$p.value,
+                  sciencegap=mean(PV1SCIE[ST04Q01=="Male"], na.rm=T)-mean(PV1SCIE[ST04Q01=="Female"], na.rm=T),
+                  stest.stat = t.test(PV1SCIE[ST04Q01=="Male"], PV1SCIE[ST04Q01=="Female"])$statistic, 
+                  sp.value = t.test(PV1SCIE[ST04Q01=="Male"], PV1SCIE[ST04Q01=="Female"])$p.value,         
+                  minmale=min(PV1MATH[ST04Q01=="Male"], na.rm=T), 
+                  minfemale=min(PV1MATH[ST04Q01=="Female"], na.rm=T), 
+                  maxmale=max(PV1MATH[ST04Q01=="Male"], na.rm=T), 
+                  maxfemale=max(PV1MATH[ST04Q01=="Female"], na.rm=T), 
+                  propmale=length(PV1MATH[ST04Q01=="Male"])/length(PV1MATH), 
+                  propfemale=length(PV1MATH[ST04Q01=="Female"])/length(PV1MATH))
+#qplot(mathgap, wmathgap, data=student2012.sub.summary.gap, xlab="Mean", ylab="Weighted Mean",
+#      xlim=c(-30,30), ylim=c(-30,30)) + geom_abline(slope=1) + theme(aspect.ratio=1)
+student2012.sub.summary.gap$msig <- ifelse(student2012.sub.summary.gap$mp.value>0.05, "none", TRUE)
+student2012.sub.summary.gap$msig[student2012.sub.summary.gap$msig==TRUE&student2012.sub.summary.gap$mtest.stat>0] <- "male"
+student2012.sub.summary.gap$msig[student2012.sub.summary.gap$msig==TRUE&student2012.sub.summary.gap$mtest.stat<0] <- "female"
+#ddply(student2012.sub, .(name), bootfn)
+#results <- boot(data=aus, statistic=cifn, R=1000)
+student2012.sub.summary.gap$name <- factor(student2012.sub.summary.gap$name, 
+      levels=student2012.sub.summary.gap$name[order(student2012.sub.summary.gap$mathgap)])
+ggplot(data=student2012.sub.summary.gap) + 
+  geom_hline(yintercept=0, colour="grey80") + coord_flip() + theme_bw() + 
+  geom_point(aes(x=name, y=mathgap, color=msig), size=1) + 
+  xlab("") +  
+  scale_colour_manual("Significant", values=c("male"="skyblue", "female"="pink", "none"="lightgreen")) +
+  scale_y_continuous("Girls <----------> Boys", breaks=seq(-40, 40, 10), limits=c(-45, 45), 
+                     labels=c(seq(40, 0, -10), seq(10, 40, 10))) + 
+  theme(axis.text.x = element_text(size=5), axis.text.y = element_text(size=5), 
+        axis.title = element_text(size=7), legend.text = element_text(size=5),
+        legend.title = element_text(size=5))
+```
+
+```{r gendermaps, fig.width=4.5, fig.height=2.5, warning=FALSE, message=FALSE, echo=FALSE, cache=FALSE}
+student2012.sub.summary.gap$name <- as.character(student2012.sub.summary.gap$name)
+student2012.sub.map <- left_join(student2012.sub.summary.gap, world.polys)
+student2012.sub.map$msig <- factor(student2012.sub.map$msig)
+ggplot(data=world.polys) + 
+  geom_path(aes(x=X1, y=X2, order=order, group=group), colour=I("grey90"), size=0.1) + 
+  geom_polygon(data=student2012.sub.map, aes(x=X1, y=X2, order=order, group=group, fill=msig)) +
+  scale_fill_manual("Significant", values=c("male"="skyblue", "female"="pink", "none"="lightgreen")) +
+  new_theme_empty + theme(legend.position="none", panel.background=element_rect(color="grey50"))
+```
 
