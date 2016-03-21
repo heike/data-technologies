@@ -28,7 +28,7 @@ dim(peds)
 head(peds[, 1:10])
 ```
 
-Each row in the data consists of the number of pedestrians counted by one of the 40 plus sensors in different locations. Each sensor is kept as a separate variable. For an analysis we want to re-organize the data to contain all numbers in a single variable:
+Each row in the data consists of the number of pedestrians counted by one of the 40 plus sensors in different locations. Each sensor is kept as a separate variable. For an analysis we want to re-organize the data to contain all numbers in a single data variable:
 
 ```{r}
 library(tidyr)
@@ -70,10 +70,54 @@ pedclust <- hclust(dists)
 adjcounts$Group <- cutree(pedclust, k=3)
 
 weekhourlies <- merge(weekhourlies[1:nrow(weekhourlies),], adjcounts[, c("Location", "Group")], by="Location", all.x=TRUE)
-ggplot(aes(x=Hour, y=Count), data=weekhourlies) + facet_grid(Group~Weekday) + geom_line(aes(group=Location))
+ggplot(aes(x=Hour, y=Count), data=weekhourlies) + facet_grid(Group~Weekday) + geom_line(aes(group=Location, colour=factor(Group))) + scale_colour_brewer(palette="Dark2")
 ```
 
-Generally, things are quiet at 5 am, particularly on weekdays. There are, however, some notable exceptions with pedestrian counts of more than 1000 between 5 and 6 in the morning: 
+[Location of the sensors](https://data.melbourne.vic.gov.au/Transport-Movement/Pedestrian-Sensor-Locations/ygaw-6rzq) are made available through the Melbourne Data initiative. A copy of the data is available locally. What we would like to do with this data, is to plot the sensors on a map of Melbourne, coloured by the grouping that we just identified to get an idea of whether the groupings have a geographical interpretation as well. 
+```{r}
+sensors <- read.csv("data/Pedestrian_Sensor_Locations.csv")
+```
+Unfortunately, we cannot match the names of the locations directly, because they are formatted (slightly) differently between the two sources. The sensor location data set e.g. contains the string ```Lygon St (West)```, whereas the pedestrian count data contains the same location encoded as ```Lygon.St..West.``` (note the . introduced by R as a substitute for any special character such as a white space in a variable name).
+In order to match these locations, we make use of fuzzy matching as implemented in ```adist```, which is based on the generalized Levenshtein distance:
+```{r}
+src1 <- as.character(sensors$Sensor.Description)
+src2 <- as.character(unique(weekhourlies$Location))
+
+dist.name<-adist(src1,src2, partial = TRUE, ignore.case = TRUE)
+dim(dist.name)
+```
+This distance is an integer value of essentially the number of differences between two character strings. We will pick the minimum for each of the pairs to match the locations strings.
+
+```{r}
+mins <- apply(dist.name, MARGIN=1, FUN=which.min)
+sensors$Location <- unique(weekhourlies$Location)[mins]
+```
+We should also pull out the actual distance values to check that we did not accidentally match things that we should not have matched:
+```{r}
+sensors$MatchQuality <- apply(dist.name, MARGIN=1, FUN=min)
+summary(sensors$MatchQuality)
+sensors <- sensors[order(sensors$MatchQuality),]
+tail(sensors)[,c("Location", "Sensor.Description")]
+```
+These matches all look good except for two: ```Lonsdale St-Spring St (West)``` and ```Fitzroy Gardens Visitor Centre``` should probably not be matched at all (these two sensors are not actually included in the pedestrian count data at this time). We will set those two locations to NA, and then match via Location to include the grouping information:
+```{r}
+sensors$Location[sensors$Sensor.Description %in% c("Lonsdale St-Spring St (West)","Fitzroy Gardens Visitor Centre")] <- NA
+sensors <- merge(sensors, weekhourlies[,c("Location", "Group")], by="Location")
+```
+Now we want to put this information on a map:
+```{r}
+library(ggmap)
+library(ggthemes)
+melb <- get_map("Melbourne, Australia", zoom=14) # we need to set the zoom - the auto-zoom includes too much. 
+ggmap(melb, extent="normal") + 
+  geom_point(aes(x=Longitude, y=Latitude, colour=factor(Group)), data=sensors, size=3) + theme_map() +
+  scale_colour_brewer(palette="Dark2")
+```
+***Does this grouping make sense to somebody who knows  Melbourne?***
+
+
+Coming back to the general pattern of the graphic we started out with in Figure \@ref(fig:peds-counts), we see that
+generally, things are quiet at 5 am, particularly on weekdays. There are, however, some notable exceptions with pedestrian counts of more than 1000 between 5 and 6 in the morning: 
 ```{r}
 subset(mpeds, Hour==5 & Count > 1000)
 ```
