@@ -5,4 +5,11 @@ knit: bookdown::preview_chapter
 # US flights
 
 
+HH: what I like to include here:
 
+- discussion of airlines: number of passengers, centralized/de-centralization (hubs or not), fuel consumption
+- discussion of delays: by time of day, day of week, airport, airline
+- finding exceptions: delays of more than 24h, balloons at 600 mph, ...
+- making a movie of the flights
+
+I would also like to use new data rather than the Expo data.
