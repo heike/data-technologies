@@ -1,0 +1,1279 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+	<idinfo>
+		<citation>
+			<citeinfo>
+				<origin>Federal Aviation Administration (Aeronautical Information Services, ATA-100)</origin>
+				<pubdate>2011</pubdate>
+				<title Sync="TRUE">airports</title>
+				<edition>2011</edition>
+				<geoform Sync="TRUE">vector digital data</geoform>
+				<pubinfo>
+					<pubplace>Washington, DC</pubplace>
+					<publish>Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)</publish>
+				</pubinfo>
+				<onlink>http://www.bts.gov/programs/geographic_information_services/</onlink>
+				<lworkcit>
+					<citeinfo>
+						<origin>Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)</origin>
+						<pubdate>2011</pubdate>
+						<title>National Transportation Atlas Databases (NTAD) 2011</title>
+						<geoform>vector digital data</geoform>
+						<pubinfo>
+							<pubplace>Washington, DC</pubplace>
+							<publish>Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)</publish>
+						</pubinfo>
+						<onlink>http://www.bts.gov/programs/geographic_information_services/</onlink>
+					</citeinfo>
+				</lworkcit>
+				<ftname Sync="TRUE">airports</ftname></citeinfo>
+		</citation>
+		<descript>
+			<abstract>The Airports database is a geographic point database of aircraft landing facilities in the United States and U.S. Territories.  Attribute data is provided on the physical and operational characteristics of the landing facility, current usage including enplanements and aircraft operations, congestion levels and usage categories.  This geospatial data is derived from the FAA's National Airspace System Resource Aeronautical Data Product.</abstract>
+			<purpose>The dataset provides users with information about airport locations and attributes and can be used for national and regional analysis applications.</purpose>
+			<langdata Sync="TRUE">en</langdata></descript>
+		<timeperd>
+			<timeinfo>
+				<sngdate>
+					<caldate>2011</caldate>
+				</sngdate>
+			</timeinfo>
+			<current>publication date</current>
+		</timeperd>
+		<status>
+			<progress>Complete</progress>
+			<update>Annually</update>
+		</status>
+		<spdom>
+			<bounding>
+				<westbc Sync="TRUE">-177.381308</westbc>
+				<eastbc Sync="TRUE">174.113619</eastbc>
+				<northbc Sync="TRUE">76.533333</northbc>
+				<southbc Sync="TRUE">-14.331660</southbc>
+			</bounding>
+			<lboundng><leftbc Sync="TRUE">-177.381308</leftbc><rightbc Sync="TRUE">174.113619</rightbc><bottombc Sync="TRUE">-14.331660</bottombc><topbc Sync="TRUE">76.533333</topbc></lboundng></spdom>
+		<keywords>
+			<theme>
+				<themekt>location</themekt>
+				<themekey>transportation</themekey>
+				<themekey>airport</themekey>
+			</theme>
+			<place>
+				<placekey>United States</placekey>
+				<placekey>US</placekey>
+				<placekey>USA</placekey>
+				<placekey>US Territories</placekey>
+			</place>
+			<stratum>
+				<stratkey>air</stratkey>
+			</stratum>
+			<temporal>
+				<tempkey>2008</tempkey>
+				<tempkey>2009</tempkey>
+				<tempkey>2010</tempkey>
+				<tempkey>2011</tempkey></temporal>
+		</keywords>
+		<accconst>None</accconst>
+		<useconst>None.  Acknowledgment of the Federal Aviation Administration (FAA) and the Research and Innovative Technology Administration's Bureau of  Transportation Statistics (RITA/BTS) National Transportation Atlas Databases (NTAD) 2011 would be appreciated in products derived from these data.</useconst>
+		<ptcontac>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>Federal Aviation Administration (Aeronautical Information Services, ATA-100)</cntorg>
+				</cntorgp>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>FAA National Headquarters</address>
+					<city>Washington</city>
+					<state>DC</state>
+					<postal>20591</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>1-800-457-6656 x35442</cntvoice>
+			</cntinfo>
+		</ptcontac>
+		<datacred>The Federal Aviation Administration (FAA) develops and maintains the textual data from which this geospatial layer was derived.</datacred>
+		<secinfo>
+			<secclass>Unclassified</secclass>
+		</secinfo>
+		<native Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 3; ESRI ArcCatalog 9.3.1.4000</native>
+		<crossref>
+			<citeinfo>
+				<origin>Research and Innovative Technology Administration's Bureau of Transporation Statistics (RITA/BTS)</origin>
+				<pubdate>2011</pubdate>
+				<title>National Transportation Atlas Databases (NTAD) 2011</title>
+				<geoform>vector digital data</geoform>
+				<pubinfo>
+					<pubplace>Washington, DC</pubplace>
+					<publish>Research and Innovative Technology Administration's Bureau of Transporation Statistics (RITA/BTS)</publish>
+				</pubinfo>
+				<onlink>http://www.bts.gov/programs/geographic_information_services/</onlink>
+				<lworkcit>
+					<citeinfo>
+						<pubdate>2011</pubdate>
+					</citeinfo>
+				</lworkcit>
+			</citeinfo>
+		</crossref>
+		<natvform Sync="TRUE">Shapefile</natvform></idinfo>
+	<dataqual>
+		<attracc>
+			<attraccr>Airport attributes were obtained from the Federal Aviation Administration's (FAA) National Airspace System Resource Aeronautical Data and the Office of Airline Information (OAI) Enplanement Data.   The FAA Data was published by the Aeronautical Information Services with an Effective Date of March 10, 2011.   All records were assigned the accurate state name, state abbreviation and FIPS code.</attraccr>
+			<qattracc>
+				<attraccv>unknown</attraccv>
+				<attracce>N/A</attracce>
+			</qattracc>
+		</attracc>
+		<logic>
+All point records in this dataset are represented by a single coordinate pair and two unique feature identifiers -- the landing facility location identifier (LOCID) and the site number (SITE_NO) assigned by the FAA.
+
+BTS quality checks were to cross reference the place dataset with the state dataset, to determine that the spatial data and attribute data were accurate.
+</logic>
+		<complete>unknown</complete>
+		<posacc>
+			<horizpa>
+				<horizpar>Horizontal positional accuracy is based on coordinate data provided in the FAA National Airspace System Resource Aeronautical Dataset.  These coordinate data identify the approximate location of the Airport Reference Point (ARP) as reported by the landing facility on the NFDC (National Flight Data Center) 5010 form.  According to NFDC guidelines, the location of the ARP should be reported to a horizontal accuracy of one arc second of latitude and longitude.  However, the accuracy of these reported coordinates are not verified by FAA.  The records were loaded into a GIS and checked for any unusual or obviously erroneous locations.</horizpar>
+			</horizpa>
+		</posacc>
+		<lineage>
+			<srcinfo>
+				<srccite>
+					<citeinfo>
+						<origin>Federal Aviation Administration (Aeronautical Information Services, ATA-100)</origin>
+						<pubdate>2011</pubdate>
+						<title>FAA National Airspace System Resource Aeronautical Data</title>
+						<edition>FAA National Airspace System Resource Aeronautical Data</edition>
+						<pubinfo>
+							<pubplace>Washington, DC</pubplace>
+							<publish>Federal Aviation Administration (FAA)</publish>
+						</pubinfo>
+						<lworkcit>
+							<citeinfo>
+								<origin>Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)</origin>
+								<pubdate>2011</pubdate>
+								<title>National Transportation Atlas Databases (NTAD) 2011</title>
+								<geoform>vector digital data</geoform>
+								<pubinfo>
+									<pubplace>Washington DC</pubplace>
+									<publish>Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)</publish>
+								</pubinfo>
+								<onlink>http://www.bts.gov/programs/geographic_information_services/</onlink>
+							</citeinfo>
+						</lworkcit>
+					</citeinfo>
+				</srccite>
+				<typesrc>disc</typesrc>
+				<srctime>
+					<timeinfo>
+						<sngdate>
+							<caldate>2011</caldate>
+						</sngdate>
+					</timeinfo>
+					<srccurr>publication date</srccurr>
+				</srctime>
+				<srccontr>Data were obtained from the Federal Aviation Administration's (FAA) National Airspace System Resource Aeronautical Data.  This product was published by the Aeronautical Information Services.</srccontr>
+			</srcinfo>
+			<procstep>
+				<procdesc>The creation of this geospatial data layer was completed by RITA/BTS in March 2011. This Shapefile was built from textual data on the FAA National Airspace System Resource Aeronautical Data CDROM, effective March 10, 2011.</procdesc>
+				<srcused>FAA-NASRAD</srcused>
+				<procdate>2011</procdate>
+				<proccont>
+					<cntinfo>
+						<cntperp>
+							<cntper>Office of Geospatial Information Systems</cntper>
+							<cntorg>Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)</cntorg>
+						</cntperp>
+						<cntaddr>
+							<addrtype>mailing and physical address</addrtype>
+							<address>1200 New Jersey Ave. S.E.</address>
+							<city>Washington</city>
+							<state>DC</state>
+							<postal>20590</postal>
+							<country>USA</country>
+						</cntaddr>
+						<cntvoice>202-366-DATA</cntvoice>
+						<cntemail>answers@bts.gov</cntemail>
+					</cntinfo>
+				</proccont>
+			</procstep>
+		</lineage>
+	</dataqual>
+	<spdoinfo>
+		<direct Sync="TRUE">Vector</direct>
+		<ptvctinf>
+			<sdtsterm Name="airports">
+				<sdtstype Sync="TRUE">Entity point</sdtstype>
+				<ptvctcnt Sync="TRUE">19949</ptvctcnt>
+			</sdtsterm>
+			<esriterm Name="airports"><efeatyp Sync="TRUE">Simple</efeatyp><efeageom Sync="TRUE">Point</efeageom><esritopo Sync="TRUE">FALSE</esritopo><efeacnt Sync="TRUE">19949</efeacnt><spindex Sync="TRUE">TRUE</spindex><linrefer Sync="TRUE">FALSE</linrefer></esriterm></ptvctinf>
+	</spdoinfo>
+	<spref>
+		<horizsys>
+			<geograph>
+				<latres Sync="TRUE">0.000000</latres>
+				<longres Sync="TRUE">0.000000</longres>
+				<geogunit Sync="TRUE">Decimal degrees</geogunit>
+			</geograph>
+			<geodetic>
+				<horizdn Sync="TRUE">D_WGS_1984</horizdn>
+				<ellips Sync="TRUE">WGS_1984</ellips>
+				<semiaxis Sync="TRUE">6378137.000000</semiaxis>
+				<denflat Sync="TRUE">298.257224</denflat>
+			</geodetic>
+			<cordsysn><geogcsn Sync="TRUE">GCS_WGS_1984</geogcsn></cordsysn></horizsys>
+	</spref>
+	<eainfo>
+		<detailed Name="airports">
+			<enttyp>
+				<enttypl Sync="TRUE">airports</enttypl>
+				<enttypd>Airports of the United States and its territories in GIS format.</enttypd>
+				<enttypds>Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)</enttypds>
+				<enttypt Sync="TRUE">Feature Class</enttypt><enttypc Sync="TRUE">19949</enttypc></enttyp>
+			<attr>
+				<attrlabl>FID</attrlabl>
+				<attrdef>Internal feature number.</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attrdomv>
+					<udom>Sequential unique whole numbers that are automatically generated.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">FID</attalias><attrtype Sync="TRUE">OID</attrtype><attwidth Sync="TRUE">4</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>Shape</attrlabl>
+				<attrdef>Feature geometry.</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>None</edomv>
+						<edomvd>Point Shapes as defined by ArcView</edomvd>
+						<edomvds>ArcView Internal Attribute</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<udom>Coordinates defining the features.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">Shape</attalias><attrtype Sync="TRUE">Geometry</attrtype><attwidth Sync="TRUE">0</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>SITE_NO</attrlabl>
+				<attrdef>A unique identifying number followed by an asterisk and the 'landing facility type' code.  The SITE_NO forms the key to the airport records in the NFDC (5010) database.  Example: 04508.*A</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>List of Official Airport Site Numbers</codesetn>
+						<codesets>FAA</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">SITE_NO</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">11</attwidth></attr>
+			<attr>
+				<attrlabl>LAN_FA_TY</attrlabl>
+				<attrdef>Landing Facility Type</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>AIRPORT</edomv>
+						<edomvd>Airport Facility</edomvd>
+						<edomvds>RITA/BTS</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>BALLOONPORT</edomv>
+						<edomvd>Balloon Launch and Landing Facility</edomvd>
+						<edomvds>RITA/BTS</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>SEAPLANE BASE</edomv>
+						<edomvd>Facility for sea plane operations</edomvd>
+						<edomvds>RITA/BTS</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>GLIDERPORT</edomv>
+						<edomvd>Facility for glider operations</edomvd>
+						<edomvds>RITA/BTS</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>HELIPORT</edomv>
+						<edomvd>Facility for helicopter operations</edomvd>
+						<edomvds>RITA/BTS</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>STOLPORT</edomv>
+						<edomvd>Short Take Off and Landing Facility</edomvd>
+						<edomvds>RITA/BTS</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>ULTRALIGHT</edomv>
+						<edomvd>Facility for ultralight operations</edomvd>
+						<edomvds>RITA/BTS</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">LAN_FA_TY</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">13</attwidth></attr>
+			<attr>
+				<attrlabl>LOCID</attrlabl>
+				<attrdef>A unique 3-4 character identifier assigned to the landing facility (i.e. airport).</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>List of Official LOC ID Codes</codesetn>
+						<codesets>FAA</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">LOCID</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">4</attwidth></attr>
+			<attr>
+				<attrlabl>EFF_DATE</attrlabl>
+				<attrdef>Information Effective Data (MM/DD/YYYY).  This date coincides with the 56-day charting and publication cycle date.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>date value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">EFF_DATE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">10</attwidth></attr>
+			<attr>
+				<attrlabl>FAA_REGION</attrlabl>
+				<attrdef>FAA Region where the facility is located</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>AAL</edomv>
+						<edomvd>Alaska</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>ACE</edomv>
+						<edomvd>Central</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>AEA</edomv>
+						<edomvd>Eastern</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>AGL</edomv>
+						<edomvd>Great Lakes</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>AIN</edomv>
+						<edomvd>International</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>ANE</edomv>
+						<edomvd>New England</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>ANM</edomv>
+						<edomvd>Northwest Mountain</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>ASO</edomv>
+						<edomvd>Southern</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>ASW</edomv>
+						<edomvd>Southwest</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>AWP</edomv>
+						<edomvd>Western-Pacific</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">FAA_REGION</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth></attr>
+			<attr>
+				<attrlabl>FAA_DISTRI</attrlabl>
+				<attrdef>FAA District or Field Office Code</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>List of Official FAA District and Field Office Codes</codesetn>
+						<codesets>FAA</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">FAA_DISTRI</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">4</attwidth></attr>
+			<attr>
+				<attrlabl>ST_POSTAL</attrlabl>
+				<attrdef>State Postal abbreviation, as coded by RITA/BTS</attrdef>
+				<attrdefs>USPS</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>Official List of U.S. Postal Code Abbreviations</codesetn>
+						<codesets>U.S. Postal Service (USPS)</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">ST_POSTAL</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth></attr>
+			<attr>
+				<attrlabl>STFIPS</attrlabl>
+				<attrdef>The 2-character FIPS code of the State or State equivalent, as coded by RITA/BTS</attrdef>
+				<attrdefs>RITA/BTS</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>Codes for the Identification of the States, the District of Columbia and the Outlying Areas of the United States, and Associated Areas, FIPS 5-2.</codesetn>
+						<codesets>U.S. Department of Commerce, National Institute of Standards and Technology</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">STFIPS</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth></attr>
+			<attr>
+				<attrlabl>FAA_ST</attrlabl>
+				<attrdef>State Postal abbreviation, as coded by FAA</attrdef>
+				<attrdefs>USPS</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>Official List of U.S. Postal Code Abbreviations</codesetn>
+						<codesets>U.S. Postal Service (USPS)</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">FAA_ST</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth></attr>
+			<attr>
+				<attrlabl>STATE_NAME</attrlabl>
+				<attrdef>Airport's associated state or territory name, as coded by FAA.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>Official List of U.S. States and Territories</codesetn>
+						<codesets>FAA</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">STATE_NAME</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">20</attwidth></attr>
+			<attr>
+				<attrlabl>COUNTY_NAM</attrlabl>
+				<attrdef>Name of the county or parish associated with the airport, as coded by FAA.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>Official List of U.S. County and Parish Names</codesetn>
+						<codesets>FAA</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">COUNTY_NAM</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">21</attwidth></attr>
+			<attr>
+				<attrlabl>COUNTY_ST</attrlabl>
+				<attrdef>Associated county's state (post office code) state where the associated county is located; may not be the same as the associated city's state code, as coded by FAA.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>Official List of U.S. State Names</codesetn>
+						<codesets>FAA</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">COUNTY_ST</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth></attr>
+			<attr>
+				<attrlabl>CITY_NAME</attrlabl>
+				<attrdef>Name of the city associated with the airport, as coded by FAA.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>Official List of U.S. Cities</codesetn>
+						<codesets>FAA</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">CITY_NAME</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">40</attwidth></attr>
+			<attr>
+				<attrlabl>FULLNAME</attrlabl>
+				<attrdef>Official Airport Name</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>List of Official Airport Names</codesetn>
+						<codesets>FAA</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">FULLNAME</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">42</attwidth></attr>
+			<attr>
+				<attrlabl>OWNER_TYPE</attrlabl>
+				<attrdef>Type of Airport Facility Owner</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>PU</edomv>
+						<edomvd>Publicly Owned</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>PR</edomv>
+						<edomvd>Privately Owned</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>MA</edomv>
+						<edomvd>Air Force Owned</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>MN</edomv>
+						<edomvd>Navy Owned</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>MR</edomv>
+						<edomvd>Army Owned</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">OWNER_TYPE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth></attr>
+			<attr>
+				<attrlabl>FAC_USE</attrlabl>
+				<attrdef>Facility Use -- Public or Private</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>PU</edomv>
+						<edomvd>Public Use Airport Facility</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>PR</edomv>
+						<edomvd>Private Use Airport Facility</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">FAC_USE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth></attr>
+			<attr>
+				<attrlabl>FAC_CYSTZP</attrlabl>
+				<attrdef>City, State, and Zip code associated with the airport.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Character value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">FAC_CYSTZP</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">45</attwidth></attr>
+			<attr>
+				<attrlabl>LATITUDE</attrlabl>
+				<attrdef>The latitude of the point expressed as a signed real number. This value is in decimal degrees with negative values indicating South latitude and positive values indicating North latitude.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<rdom>
+						<rdommin>90 degrees South</rdommin>
+						<rdommax>90 degrees North</rdommax>
+					</rdom>
+				</attrdomv>
+				<attalias Sync="TRUE">LATITUDE</attalias><attrtype Sync="TRUE">Number</attrtype><attwidth Sync="TRUE">19</attwidth><atnumdec Sync="TRUE">10</atnumdec></attr>
+			<attr>
+				<attrlabl>LONGITUDE</attrlabl>
+				<attrdef>The longitude of the point expressed as a signed real number. This value is in decimal degrees with negative values indicating West longitude and positive values indicating East longitude.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<rdom>
+						<rdommin>180 degrees West</rdommin>
+						<rdommax>180 degrees East</rdommax>
+					</rdom>
+				</attrdomv>
+				<attalias Sync="TRUE">LONGITUDE</attalias><attrtype Sync="TRUE">Number</attrtype><attwidth Sync="TRUE">19</attwidth><atnumdec Sync="TRUE">10</atnumdec></attr>
+			<attr>
+				<attrlabl>ELEV</attrlabl>
+				<attrdef>Elevation in feet at the highest point on the centerline of the useable landing surface.  Measured to the nearest foot with respect to mean sea level (MSL).</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>measured value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">ELEV</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">5</attwidth></attr>
+			<attr>
+				<attrlabl>AERO_CHART</attrlabl>
+				<attrdef>Aeronautical chart on which the airport facility appears.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<codesetd>
+						<codesetn>Index of Official Aeronautical Charts</codesetn>
+						<codesets>FAA</codesets>
+					</codesetd>
+				</attrdomv>
+				<attalias Sync="TRUE">AERO_CHART</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">30</attwidth></attr>
+			<attr>
+				<attrlabl>CBD_DIST</attrlabl>
+				<attrdef>Distance from the central business district of the associated city to the airport in nautical miles (1 nautical mile = 6,080 feet).  Measured to the nearest nautical mile</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>measured value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">CBD_DIST</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth></attr>
+			<attr>
+				<attrlabl>CBD_DIR</attrlabl>
+				<attrdef>Direction of airport from the central business district of the associated city.  Measured to the nearest 1/8 compass point</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>North</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>ENE</edomv>
+						<edomvd>East Northeast</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>ESE</edomv>
+						<edomvd>East Southeast</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>North</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>NE</edomv>
+						<edomvd>Northeast</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>NNE</edomv>
+						<edomvd>North Northeast</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>NNW</edomv>
+						<edomvd>North Northwest</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>NW</edomv>
+						<edomvd>Northwest</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>S</edomv>
+						<edomvd>South</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>SE</edomv>
+						<edomvd>Southeast</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>SSE</edomv>
+						<edomvd>South Southeast</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>SSW</edomv>
+						<edomvd>South Southwest</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>SW</edomv>
+						<edomvd>Southwest</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>W</edomv>
+						<edomvd>West</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>WNW</edomv>
+						<edomvd>West Northwest</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>WSW</edomv>
+						<edomvd>West Southwest</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">CBD_DIR</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth></attr>
+			<attr>
+				<attrlabl>ACT_DATE</attrlabl>
+				<attrdef>Identifies the month and year that the facility was added to the NFDC airport database - only available for facilities opened since 1981 (MM/YYYY).</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>date value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">ACT_DATE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">7</attwidth></attr>
+			<attr>
+				<attrlabl>CERT_TYPE</attrlabl>
+				<attrdef>Airport Certification Type and Date - The format is a two-character code followed by a month/year (MM/YYYY) of certification.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>AS</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>BS</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>CS</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>DS</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>ES</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>AU</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>BU</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>CU</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>DU</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>EU</edomv>
+						<edomvd>Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>LS</edomv>
+						<edomvd>Landing facilities having limited certification under FAR Part 139 and receiving scheduled air carrier service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>LU</edomv>
+						<edomvd>Landing facilities having limited certification under FAR Part 139 and not currently receiving scheduled air carrier service.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>'N' or a blank indicates the facility is not certified.</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">CERT_TYPE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">15</attwidth></attr>
+			<attr>
+				<attrlabl>FED_AGREE</attrlabl>
+				<attrdef>NASP/ Federal Agreement Code - a combination of 1 to 7 codes that indicate the type of federal agreements existing at the airport.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>National Plan of Integrated Airport Systems (NPIAS)</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>B</edomv>
+						<edomvd>Installation of Navigational Facilities on privately owned airports under F&amp;E program</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>G</edomv>
+						<edomvd>Grant agreements under FAAP/ADAP/AIP</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>H</edomv>
+						<edomvd>Compliance with accessibility to the handicapped</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>P</edomv>
+						<edomvd>Surplus property agreement under Public Law 289</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>R</edomv>
+						<edomvd>Surplus Property agreement under Regulation 16-WAA</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>S</edomv>
+						<edomvd>Conveyance under Section 16, Federal Airport Act of 1946 or Section 23, Airport and Airway Development Act of 1970</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>V</edomv>
+						<edomvd>Advance Planning Agreement under FAAP</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>X</edomv>
+						<edomvd>Obligations assumed by transfer</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>Y</edomv>
+						<edomvd>Assurances pursuant to Title VI, Civil Rights Act of 1964</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>Z</edomv>
+						<edomvd>Conveyance under Section 303(C), Federal Aviation Act of 1958</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>1</edomv>
+						<edomvd>Grant agreement has expired; however, agreement remains in effect as long as it is a public use facility</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>2</edomv>
+						<edomvd>Section 303(C) Authority from FAA Act of 1958 has expired; however, agreement remains in effect as long as it is a public use facility</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>3</edomv>
+						<edomvd>AP-4 Agreement under DLAND or DCLA has expired</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>NONE</edomv>
+						<edomvd>No Grant Agreement Exists</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">FED_AGREE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">7</attwidth></attr>
+			<attr>
+				<attrlabl>INTERNATIO</attrlabl>
+				<attrdef>Customs international airport - Whether the landing facility has been designated by the U.S. Treasury as an international airport of entry for customs.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>Y</edomv>
+						<edomvd>Yes</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>No</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">INTERNATIO</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">1</attwidth></attr>
+			<attr>
+				<attrlabl>CUST_LNDG</attrlabl>
+				<attrdef>Customs Landing Rights Airport - Whether the landing facility has been designated by the U.S. Treasury as a customs landing rights airport (some landing facilities may have these rights for cargo only).</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>Y</edomv>
+						<edomvd>Yes</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>No</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">CUST_LNDG</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">1</attwidth></attr>
+			<attr>
+				<attrlabl>JOINT_USE</attrlabl>
+				<attrdef>Joint Use - Whether the landing facility has a military/civil joint use agreement that allows civil operations at a military airport or military operations at a civil airport.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>Y</edomv>
+						<edomvd>Yes</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>No</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">JOINT_USE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">1</attwidth></attr>
+			<attr>
+				<attrlabl>MIL_LNDG_R</attrlabl>
+				<attrdef>Military Landing Rights - Whether the airport has entered into an agreement that grants landing rights to the military.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>Y</edomv>
+						<edomvd>Yes</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>No</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">MIL_LNDG_R</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">1</attwidth></attr>
+			<attr>
+				<attrlabl>MIL_INT</attrlabl>
+				<attrdef>Military Emergency Interest - Military department(s) that maintains national emergency use interest in this civil facility.  Data values in this field are one, two, or three alphanumeric codes indicating military emergency use interest, with each code in a series separated by a '/'.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>A</edomv>
+						<edomvd>Air Force</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>R</edomv>
+						<edomvd>Army</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>Navy</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>X</edomv>
+						<edomvd>None [applicable only where there is an entry in the National Emergency * Status [NAT_EMER] Field]</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">MIL_INT</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">6</attwidth></attr>
+			<attr>
+				<attrlabl>CNTL_TWR</attrlabl>
+				<attrdef>Airport Control Tower located on the airport.</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<edom>
+						<edomv>Y</edomv>
+						<edomvd>Yes</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attrdomv>
+					<edom>
+						<edomv>N</edomv>
+						<edomvd>No</edomvd>
+						<edomvds>FAA</edomvds>
+					</edom>
+				</attrdomv>
+				<attalias Sync="TRUE">CNTL_TWR</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">1</attwidth></attr>
+			<attr>
+				<attrlabl>S_ENG_GA</attrlabl>
+				<attrdef>Based Single Engine General Aviation Aircraft</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">S_ENG_GA</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth></attr>
+			<attr>
+				<attrlabl>M_ENG_GA</attrlabl>
+				<attrdef>Based Multi-engine general aviation aircraft</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">M_ENG_GA</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth></attr>
+			<attr>
+				<attrlabl>JET_EN_GA</attrlabl>
+				<attrdef>Based Jet engine general aviation aircraft</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">JET_EN_GA</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth></attr>
+			<attr>
+				<attrlabl>HELICOPTER</attrlabl>
+				<attrdef>Based Helicopters - General Aviation</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">HELICOPTER</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth></attr>
+			<attr>
+				<attrlabl>OPER_GLIDE</attrlabl>
+				<attrdef>Base Operational Gliders - general aviation</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">OPER_GLIDE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth></attr>
+			<attr>
+				<attrlabl>OPER_MIL</attrlabl>
+				<attrdef>Based Military Aircraft - including helicopters</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">OPER_MIL</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth></attr>
+			<attr>
+				<attrlabl>ULTRALIGHT</attrlabl>
+				<attrdef>Based Ultralight aircraft - general aviation</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">ULTRALIGHT</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth></attr>
+			<attr>
+				<attrlabl>COMM_SERV</attrlabl>
+				<attrdef>Commercial Services - scheduled operations by CAB certified carriers or intrastate carriers and any scheduled commuter/cargo carriers (Annual Operations).</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">COMM_SERV</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">6</attwidth></attr>
+			<attr>
+				<attrlabl>AIR_TAXI</attrlabl>
+				<attrdef>Air Taxi operators carrying passengers, mail, or mail for revenue (Annual Operations).</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">AIR_TAXI</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">6</attwidth></attr>
+			<attr>
+				<attrlabl>LOCAL_OPS</attrlabl>
+				<attrdef>General Aviation, Local Operations - Those operating in the local traffic pattern or within a 20 mile radius (Annual Operations).</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">LOCAL_OPS</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">6</attwidth></attr>
+			<attr>
+				<attrlabl>ITIN_OPS</attrlabl>
+				<attrdef>General Aviation - Itinerant Operations.  Those general aviation operations (excluding commuter or air taxi) not qualifying as local (Annual Operations).</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">ITIN_OPS</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">6</attwidth></attr>
+			<attr>
+				<attrlabl>MIL_OPS</attrlabl>
+				<attrdef>Military Aircraft Operations (Annual Operations).</attrdef>
+				<attrdefs>FAA</attrdefs>
+				<attrdomv>
+					<udom>Numeric count value</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">MIL_OPS</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">6</attwidth></attr>
+			<attr>
+				<attrlabl>VERSION</attrlabl>
+				<attrdef>The VERSION is a 2-digit number that will be incremented for all records in the database whenever a new release is distributed.</attrdef>
+				<attrdefs>RITA/BTS</attrdefs>
+				<attrdomv>
+					<rdom>
+						<rdommin>00</rdommin>
+						<rdommax>99</rdommax>
+					</rdom>
+				</attrdomv>
+				<attalias Sync="TRUE">VERSION</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth></attr>
+		</detailed>
+	</eainfo>
+	<distinfo>
+		<distrib>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)</cntorg>
+					<cntper>Office of Geospatial Information Systems</cntper>
+				</cntorgp>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>1200 New Jersey Ave. SE</address>
+					<city>Washington</city>
+					<state>DC</state>
+					<postal>20590</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>202-366-DATA</cntvoice>
+				<cntemail>answers@bts.gov</cntemail>
+			</cntinfo>
+		</distrib>
+		<resdesc>National Transportation Atlas Databases (NTAD) 2011</resdesc>
+		<distliab>None</distliab>
+		<stdorder>
+			<digform>
+				<digtinfo>
+					<formname>ESRI Shapefile</formname>
+					<formvern>2011</formvern>
+					<filedec>no compression applied</filedec>
+					<transize>0.545</transize>
+					<dssize Sync="TRUE">0.533</dssize></digtinfo>
+				<digtopt>
+					<onlinopt>
+						<accinstr>The NTAD DVD can be ordered from the online bookstore at www.bts.gov.  NTAD can also be downloaded from the Geographic Information Program web sit at http://www.bts.gov/programs/geographic_information_services/.</accinstr>
+					</onlinopt>
+					<offoptn>
+						<offmedia>DVD</offmedia>
+						<reccap>
+							<recden>650</recden>
+							<recdenu>megabytes</recdenu>
+						</reccap>
+						<recfmt>ISO 9660</recfmt>
+					</offoptn>
+				</digtopt>
+			</digform>
+			<fees>None</fees>
+			<ordering>Call (202-366-DATA), or E-mail (answers@bts.gov) RITA/BTS to request the National Transportation Atlas Databases (NTAD) 2011 DVD. The NTAD DVD can be ordered from the online bookstore at www.bts.gov.  Individual datasets from the NTAD can also be downloaded from the Office of Geospatial Information Systems website at http://www.bts.gov/programs/geographic_information_services/</ordering>
+		</stdorder>
+		<techpreq>Software that can process GIS files.</techpreq>
+		<availabl>
+			<timeinfo>
+				<sngdate>
+					<caldate>2011</caldate>
+				</sngdate>
+			</timeinfo>
+		</availabl>
+	</distinfo>
+	<metainfo>
+		<metd Sync="TRUE">20110428</metd>
+		<metc>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)</cntorg>
+					<cntper>Office of Geospatial Information Systems</cntper>
+				</cntorgp>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>1200 New Jersey Ave. SE</address>
+					<city>Washington</city>
+					<state>DC</state>
+					<postal>20590</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>202-366-DATA</cntvoice>
+				<cntemail>answers@bts.gov</cntemail>
+			</cntinfo>
+		</metc>
+		<metstdn Sync="TRUE">FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+		<metstdv Sync="TRUE">FGDC-STD-001-1998</metstdv>
+		<mettc Sync="TRUE">local time</mettc>
+		<metextns>
+			<onlink>http://www.esri.com/metadata/esriprof80.html</onlink>
+			<metprof>ESRI Metadata Profile</metprof>
+		</metextns>
+		<langmeta Sync="TRUE">en</langmeta><metextns><onlink Sync="TRUE">http://www.esri.com/metadata/esriprof80.html</onlink><metprof Sync="TRUE">ESRI Metadata Profile</metprof></metextns></metainfo>
+	<Esri><MetaID>{BA8E9C2A-6B64-4430-AC2A-6C7712F66CC4}</MetaID><CreaDate>20110316</CreaDate><CreaTime>11171400</CreaTime><SyncOnce>FALSE</SyncOnce><SyncDate>20110428</SyncDate><SyncTime>15170900</SyncTime><ModDate>20110428</ModDate><ModTime>15170900</ModTime></Esri><dataIdInfo><envirDesc Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 3; ESRI ArcCatalog 9.3.1.4000</envirDesc><dataLang><languageCode Sync="TRUE" value="en"></languageCode></dataLang><idCitation><resTitle Sync="TRUE">airports</resTitle><presForm><PresFormCd Sync="TRUE" value="005"></PresFormCd></presForm></idCitation><spatRpType><SpatRepTypCd Sync="TRUE" value="001"></SpatRepTypCd></spatRpType><dataExt><geoEle><GeoBndBox esriExtentType="native"><westBL Sync="TRUE">-177.381308</westBL><eastBL Sync="TRUE">174.113619</eastBL><northBL Sync="TRUE">76.533333</northBL><southBL Sync="TRUE">-14.33166</southBL><exTypeCode Sync="TRUE">1</exTypeCode></GeoBndBox></geoEle></dataExt><geoBox esriExtentType="decdegrees"><westBL Sync="TRUE">-177.381308</westBL><eastBL Sync="TRUE">174.113619</eastBL><northBL Sync="TRUE">76.533333</northBL><southBL Sync="TRUE">-14.33166</southBL><exTypeCode Sync="TRUE">1</exTypeCode></geoBox></dataIdInfo><mdLang><languageCode Sync="TRUE" value="en"></languageCode></mdLang><mdStanName Sync="TRUE">ISO 19115 Geographic Information - Metadata</mdStanName><mdStanVer Sync="TRUE">DIS_ESRI1.0</mdStanVer><mdChar><CharSetCd Sync="TRUE" value="004"></CharSetCd></mdChar><mdHrLv><ScopeCd Sync="TRUE" value="005"></ScopeCd></mdHrLv><mdHrLvName Sync="TRUE">dataset</mdHrLvName><distInfo><distributor><distorTran><onLineSrc><orDesc Sync="TRUE">002</orDesc><linkage Sync="TRUE">file://\\152.120.208.62\projectdataset\gis\Data\NTAD\2011\NTAD2011_DVD\point\airports\airports.shp</linkage><protocol Sync="TRUE">Local Area Network</protocol></onLineSrc><transSize Sync="TRUE">0.533</transSize></distorTran><distorFormat><formatName Sync="TRUE">Shapefile</formatName></distorFormat></distributor></distInfo><refSysInfo><RefSystem><refSysID><identCode Sync="TRUE">GCS_WGS_1984</identCode></refSysID></RefSystem></refSysInfo><spatRepInfo><VectSpatRep><topLvl><TopoLevCd Sync="TRUE" value="001"></TopoLevCd></topLvl><geometObjs Name="airports"><geoObjTyp><GeoObjTypCd Sync="TRUE" value="004"></GeoObjTypCd></geoObjTyp><geoObjCnt Sync="TRUE">19949</geoObjCnt></geometObjs></VectSpatRep></spatRepInfo><mdDateSt Sync="TRUE">20110428</mdDateSt></metadata>

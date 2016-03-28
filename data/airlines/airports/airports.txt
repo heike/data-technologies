@@ -1,0 +1,936 @@
+Identification_Information:
+  Citation:
+    Citation_Information:
+      Originator: Federal Aviation Administration (Aeronautical Information Services, ATA-100)
+      Publication_Date: 2011
+      Title: airports
+      Edition: 2011
+      Geospatial_Data_Presentation_Form: vector digital data
+      Publication_Information:
+        Publication_Place: Washington, DC
+        Publisher: Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)
+      Online_Linkage: http://www.bts.gov/programs/geographic_information_services/
+      Larger_Work_Citation:
+        Citation_Information:
+          Originator: Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)
+          Publication_Date: 2011
+          Title: National Transportation Atlas Databases (NTAD) 2011
+          Geospatial_Data_Presentation_Form: vector digital data
+          Publication_Information:
+            Publication_Place: Washington, DC
+            Publisher: Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)
+          Online_Linkage: http://www.bts.gov/programs/geographic_information_services/
+  Description:
+    Abstract: The Airports database is a geographic point database of aircraft landing facilities in the United States and U.S. Territories.  Attribute data is provided on the physical and operational characteristics of the landing facility, current usage including enplanements and aircraft operations, congestion levels and usage categories.  This geospatial data is derived from the FAA's National Airspace System Resource Aeronautical Data Product.
+    Purpose: The dataset provides users with information about airport locations and attributes and can be used for national and regional analysis applications.
+  Time_Period_of_Content:
+    Time_Period_Information:
+      Single_Date/Time:
+        Calendar_Date: 2011
+    Currentness_Reference: publication date
+  Status:
+    Progress: Complete
+    Maintenance_and_Update_Frequency: Annually
+  Spatial_Domain:
+    Bounding_Coordinates:
+      West_Bounding_Coordinate: -177.381308
+      East_Bounding_Coordinate: 174.113619
+      North_Bounding_Coordinate: 76.533333
+      South_Bounding_Coordinate: -14.331660
+  Keywords:
+    Theme:
+      Theme_Keyword_Thesaurus: location
+      Theme_Keyword: transportation
+      Theme_Keyword: airport
+    Place:
+      Place_Keyword: United States
+      Place_Keyword: US
+      Place_Keyword: USA
+      Place_Keyword: US Territories
+    Stratum:
+      Stratum_Keyword: air
+    Temporal:
+      Temporal_Keyword: 2008
+      Temporal_Keyword: 2009
+      Temporal_Keyword: 2010
+      Temporal_Keyword: 2011
+  Access_Constraints: None
+  Use_Constraints: None.  Acknowledgment of the Federal Aviation Administration (FAA) and the Research and Innovative Technology Administration's Bureau of  Transportation Statistics (RITA/BTS) National Transportation Atlas Databases (NTAD) 2011 would be appreciated in products derived from these data.
+  Point_of_Contact:
+    Contact_Information:
+      Contact_Organization_Primary:
+        Contact_Organization: Federal Aviation Administration (Aeronautical Information Services, ATA-100)
+      Contact_Address:
+        Address_Type: mailing and physical address
+        Address: FAA National Headquarters
+        City: Washington
+        State_or_Province: DC
+        Postal_Code: 20591
+        Country: USA
+      Contact_Voice_Telephone: 1-800-457-6656 x35442
+  Data_Set_Credit: The Federal Aviation Administration (FAA) develops and maintains the textual data from which this geospatial layer was derived.
+  Security_Information:
+    Security_Classification: Unclassified
+  Native_Data_Set_Environment: Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 3; ESRI ArcCatalog 9.3.0.1770
+  Cross_Reference:
+    Citation_Information:
+      Originator: Research and Innovative Technology Administration's Bureau of Transporation Statistics (RITA/BTS)
+      Publication_Date: 2011
+      Title: National Transportation Atlas Databases (NTAD) 2011
+      Geospatial_Data_Presentation_Form: vector digital data
+      Publication_Information:
+        Publication_Place: Washington, DC
+        Publisher: Research and Innovative Technology Administration's Bureau of Transporation Statistics (RITA/BTS)
+      Online_Linkage: http://www.bts.gov/programs/geographic_information_services/
+      Larger_Work_Citation:
+        Citation_Information:
+          Publication_Date: 2011
+Data_Quality_Information:
+  Attribute_Accuracy:
+    Attribute_Accuracy_Report: Airport attributes were obtained from the Federal Aviation Administration's (FAA) National Airspace System Resource Aeronautical Data and the Office of Airline Information (OAI) Enplanement Data.   The FAA Data was published by the Aeronautical Information Services with an Effective Date of March 10, 2011.   All records were assigned the accurate state name, state abbreviation and FIPS code.
+    Quantitative_Attribute_Accuracy_Assessment:
+      Attribute_Accuracy_Value: unknown
+      Attribute_Accuracy_Explanation: N/A
+  Logical_Consistency_Report:
+    All point records in this dataset are represented by a single coordinate pair and two unique feature identifiers -- the landing facility location identifier (LOCID) and the site number (SITE_NO) assigned by the FAA.
+
+    BTS quality checks were to cross reference the place dataset with the state dataset, to determine that the spatial data and attribute data were accurate.
+  Completeness_Report: unknown
+  Positional_Accuracy:
+    Horizontal_Positional_Accuracy:
+      Horizontal_Positional_Accuracy_Report: Horizontal positional accuracy is based on coordinate data provided in the FAA National Airspace System Resource Aeronautical Dataset.  These coordinate data identify the approximate location of the Airport Reference Point (ARP) as reported by the landing facility on the NFDC (National Flight Data Center) 5010 form.  According to NFDC guidelines, the location of the ARP should be reported to a horizontal accuracy of one arc second of latitude and longitude.  However, the accuracy of these reported coordinates are not verified by FAA.  The records were loaded into a GIS and checked for any unusual or obviously erroneous locations.
+  Lineage:
+    Source_Information:
+      Source_Citation:
+        Citation_Information:
+          Originator: Federal Aviation Administration (Aeronautical Information Services, ATA-100)
+          Publication_Date: 2011
+          Title: FAA National Airspace System Resource Aeronautical Data
+          Edition: FAA National Airspace System Resource Aeronautical Data
+          Publication_Information:
+            Publication_Place: Washington, DC
+            Publisher: Federal Aviation Administration (FAA)
+          Larger_Work_Citation:
+            Citation_Information:
+              Originator: Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)
+              Publication_Date: 2011
+              Title: National Transportation Atlas Databases (NTAD) 2011
+              Geospatial_Data_Presentation_Form: vector digital data
+              Publication_Information:
+                Publication_Place: Washington DC
+                Publisher: Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)
+              Online_Linkage: http://www.bts.gov/programs/geographic_information_services/
+      Type_of_Source_Media: disc
+      Source_Time_Period_of_Content:
+        Time_Period_Information:
+          Single_Date/Time:
+            Calendar_Date: 2011
+        Source_Currentness_Reference: publication date
+      Source_Contribution: Data were obtained from the Federal Aviation Administration's (FAA) National Airspace System Resource Aeronautical Data.  This product was published by the Aeronautical Information Services.
+    Process_Step:
+      Process_Description: The creation of this geospatial data layer was completed by RITA/BTS in March 2011. This Shapefile was built from textual data on the FAA National Airspace System Resource Aeronautical Data CDROM, effective March 10, 2011.
+      Source_Used_Citation_Abbreviation: FAA-NASRAD
+      Process_Date: 2011
+      Process_Contact:
+        Contact_Information:
+          Contact_Person_Primary:
+            Contact_Person: Office of Geospatial Information Systems
+            Contact_Organization: Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)
+          Contact_Address:
+            Address_Type: mailing and physical address
+            Address: 1200 New Jersey Ave. S.E.
+            City: Washington
+            State_or_Province: DC
+            Postal_Code: 20590
+            Country: USA
+          Contact_Voice_Telephone: 202-366-DATA
+          Contact_Electronic_Mail_Address: answers@bts.gov
+Spatial_Data_Organization_Information:
+  Direct_Spatial_Reference_Method: Vector
+  Point_and_Vector_Object_Information:
+    SDTS_Terms_Description:
+      SDTS_Point_and_Vector_Object_Type: Entity point
+      Point_and_Vector_Object_Count: 19949
+Spatial_Reference_Information:
+  Horizontal_Coordinate_System_Definition:
+    Geographic:
+      Latitude_Resolution: 0.000000
+      Longitude_Resolution: 0.000000
+      Geographic_Coordinate_Units: Decimal degrees
+    Geodetic_Model:
+      Horizontal_Datum_Name: D_WGS_1984
+      Ellipsoid_Name: WGS_1984
+      Semi-major_Axis: 6378137.000000
+      Denominator_of_Flattening_Ratio: 298.257224
+Entity_and_Attribute_Information:
+  Detailed_Description:
+    Entity_Type:
+      Entity_Type_Label: airports
+      Entity_Type_Definition: Airports of the United States and its territories in GIS format.
+      Entity_Type_Definition_Source: Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)
+    Attribute:
+      Attribute_Label: FID
+      Attribute_Definition: Internal feature number.
+      Attribute_Definition_Source: ESRI
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Sequential unique whole numbers that are automatically generated.
+    Attribute:
+      Attribute_Label: Shape
+      Attribute_Definition: Feature geometry.
+      Attribute_Definition_Source: ESRI
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: None
+          Enumerated_Domain_Value_Definition: Point Shapes as defined by ArcView
+          Enumerated_Domain_Value_Definition_Source: ArcView Internal Attribute
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Coordinates defining the features.
+    Attribute:
+      Attribute_Label: SITE_NO
+      Attribute_Definition: A unique identifying number followed by an asterisk and the 'landing facility type' code.  The SITE_NO forms the key to the airport records in the NFDC (5010) database.  Example: 04508.*A
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: List of Official Airport Site Numbers
+          Codeset_Source: FAA
+    Attribute:
+      Attribute_Label: LAN_FA_TY
+      Attribute_Definition: Landing Facility Type
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: AIRPORT
+          Enumerated_Domain_Value_Definition: Airport Facility
+          Enumerated_Domain_Value_Definition_Source: RITA/BTS
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: BALLOONPORT
+          Enumerated_Domain_Value_Definition: Balloon Launch and Landing Facility
+          Enumerated_Domain_Value_Definition_Source: RITA/BTS
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: SEAPLANE BASE
+          Enumerated_Domain_Value_Definition: Facility for sea plane operations
+          Enumerated_Domain_Value_Definition_Source: RITA/BTS
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: GLIDERPORT
+          Enumerated_Domain_Value_Definition: Facility for glider operations
+          Enumerated_Domain_Value_Definition_Source: RITA/BTS
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: HELIPORT
+          Enumerated_Domain_Value_Definition: Facility for helicopter operations
+          Enumerated_Domain_Value_Definition_Source: RITA/BTS
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: STOLPORT
+          Enumerated_Domain_Value_Definition: Short Take Off and Landing Facility
+          Enumerated_Domain_Value_Definition_Source: RITA/BTS
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: ULTRALIGHT
+          Enumerated_Domain_Value_Definition: Facility for ultralight operations
+          Enumerated_Domain_Value_Definition_Source: RITA/BTS
+    Attribute:
+      Attribute_Label: LOCID
+      Attribute_Definition: A unique 3-4 character identifier assigned to the landing facility (i.e. airport).
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: List of Official LOC ID Codes
+          Codeset_Source: FAA
+    Attribute:
+      Attribute_Label: EFF_DATE
+      Attribute_Definition: Information Effective Data (MM/DD/YYYY).  This date coincides with the 56-day charting and publication cycle date.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: date value
+    Attribute:
+      Attribute_Label: FAA_REGION
+      Attribute_Definition: FAA Region where the facility is located
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: AAL
+          Enumerated_Domain_Value_Definition: Alaska
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: ACE
+          Enumerated_Domain_Value_Definition: Central
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: AEA
+          Enumerated_Domain_Value_Definition: Eastern
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: AGL
+          Enumerated_Domain_Value_Definition: Great Lakes
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: AIN
+          Enumerated_Domain_Value_Definition: International
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: ANE
+          Enumerated_Domain_Value_Definition: New England
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: ANM
+          Enumerated_Domain_Value_Definition: Northwest Mountain
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: ASO
+          Enumerated_Domain_Value_Definition: Southern
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: ASW
+          Enumerated_Domain_Value_Definition: Southwest
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: AWP
+          Enumerated_Domain_Value_Definition: Western-Pacific
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: FAA_DISTRI
+      Attribute_Definition: FAA District or Field Office Code
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: List of Official FAA District and Field Office Codes
+          Codeset_Source: FAA
+    Attribute:
+      Attribute_Label: ST_POSTAL
+      Attribute_Definition: State Postal abbreviation, as coded by RITA/BTS
+      Attribute_Definition_Source: USPS
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: Official List of U.S. Postal Code Abbreviations
+          Codeset_Source: U.S. Postal Service (USPS)
+    Attribute:
+      Attribute_Label: STFIPS
+      Attribute_Definition: The 2-character FIPS code of the State or State equivalent, as coded by RITA/BTS
+      Attribute_Definition_Source: RITA/BTS
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: Codes for the Identification of the States, the District of Columbia and the Outlying Areas of the United States, and Associated Areas, FIPS 5-2.
+          Codeset_Source: U.S. Department of Commerce, National Institute of Standards and Technology
+    Attribute:
+      Attribute_Label: FAA_ST
+      Attribute_Definition: State Postal abbreviation, as coded by FAA
+      Attribute_Definition_Source: USPS
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: Official List of U.S. Postal Code Abbreviations
+          Codeset_Source: U.S. Postal Service (USPS)
+    Attribute:
+      Attribute_Label: STATE_NAME
+      Attribute_Definition: Airport's associated state or territory name, as coded by FAA.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: Official List of U.S. States and Territories
+          Codeset_Source: FAA
+    Attribute:
+      Attribute_Label: COUNTY_NAM
+      Attribute_Definition: Name of the county or parish associated with the airport, as coded by FAA.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: Official List of U.S. County and Parish Names
+          Codeset_Source: FAA
+    Attribute:
+      Attribute_Label: COUNTY_ST
+      Attribute_Definition: Associated county's state (post office code) state where the associated county is located; may not be the same as the associated city's state code, as coded by FAA.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: Official List of U.S. State Names
+          Codeset_Source: FAA
+    Attribute:
+      Attribute_Label: CITY_NAME
+      Attribute_Definition: Name of the city associated with the airport, as coded by FAA.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: Official List of U.S. Cities
+          Codeset_Source: FAA
+    Attribute:
+      Attribute_Label: FULLNAME
+      Attribute_Definition: Official Airport Name
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: List of Official Airport Names
+          Codeset_Source: FAA
+    Attribute:
+      Attribute_Label: OWNER_TYPE
+      Attribute_Definition: Type of Airport Facility Owner
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: PU
+          Enumerated_Domain_Value_Definition: Publicly Owned
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: PR
+          Enumerated_Domain_Value_Definition: Privately Owned
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: MA
+          Enumerated_Domain_Value_Definition: Air Force Owned
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: MN
+          Enumerated_Domain_Value_Definition: Navy Owned
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: MR
+          Enumerated_Domain_Value_Definition: Army Owned
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: FAC_USE
+      Attribute_Definition: Facility Use -- Public or Private
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: PU
+          Enumerated_Domain_Value_Definition: Public Use Airport Facility
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: PR
+          Enumerated_Domain_Value_Definition: Private Use Airport Facility
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: FAC_CYSTZP
+      Attribute_Definition: City, State, and Zip code associated with the airport.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Character value
+    Attribute:
+      Attribute_Label: LATITUDE
+      Attribute_Definition: The latitude of the point expressed as a signed real number. This value is in decimal degrees with negative values indicating South latitude and positive values indicating North latitude.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Range_Domain:
+          Range_Domain_Minimum: 90 degrees South
+          Range_Domain_Maximum: 90 degrees North
+    Attribute:
+      Attribute_Label: LONGITUDE
+      Attribute_Definition: The longitude of the point expressed as a signed real number. This value is in decimal degrees with negative values indicating West longitude and positive values indicating East longitude.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Range_Domain:
+          Range_Domain_Minimum: 180 degrees West
+          Range_Domain_Maximum: 180 degrees East
+    Attribute:
+      Attribute_Label: ELEV
+      Attribute_Definition: Elevation in feet at the highest point on the centerline of the useable landing surface.  Measured to the nearest foot with respect to mean sea level (MSL).
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: measured value
+    Attribute:
+      Attribute_Label: AERO_CHART
+      Attribute_Definition: Aeronautical chart on which the airport facility appears.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Codeset_Domain:
+          Codeset_Name: Index of Official Aeronautical Charts
+          Codeset_Source: FAA
+    Attribute:
+      Attribute_Label: CBD_DIST
+      Attribute_Definition: Distance from the central business district of the associated city to the airport in nautical miles (1 nautical mile = 6,080 feet).  Measured to the nearest nautical mile
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: measured value
+    Attribute:
+      Attribute_Label: CBD_DIR
+      Attribute_Definition: Direction of airport from the central business district of the associated city.  Measured to the nearest 1/8 compass point
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: North
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: ENE
+          Enumerated_Domain_Value_Definition: East Northeast
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: ESE
+          Enumerated_Domain_Value_Definition: East Southeast
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: North
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: NE
+          Enumerated_Domain_Value_Definition: Northeast
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: NNE
+          Enumerated_Domain_Value_Definition: North Northeast
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: NNW
+          Enumerated_Domain_Value_Definition: North Northwest
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: NW
+          Enumerated_Domain_Value_Definition: Northwest
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: S
+          Enumerated_Domain_Value_Definition: South
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: SE
+          Enumerated_Domain_Value_Definition: Southeast
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: SSE
+          Enumerated_Domain_Value_Definition: South Southeast
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: SSW
+          Enumerated_Domain_Value_Definition: South Southwest
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: SW
+          Enumerated_Domain_Value_Definition: Southwest
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: W
+          Enumerated_Domain_Value_Definition: West
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: WNW
+          Enumerated_Domain_Value_Definition: West Northwest
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: WSW
+          Enumerated_Domain_Value_Definition: West Southwest
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: ACT_DATE
+      Attribute_Definition: Identifies the month and year that the facility was added to the NFDC airport database - only available for facilities opened since 1981 (MM/YYYY).
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: date value
+    Attribute:
+      Attribute_Label: CERT_TYPE
+      Attribute_Definition: Airport Certification Type and Date - The format is a two-character code followed by a month/year (MM/YYYY) of certification.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: AS
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: BS
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: CS
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: DS
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: ES
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 and receiving scheduled air carrier service from carriers certified by the Civil Aeronautics Board. The A, B, C, D, E identifies the aircraft rescue and fire fighting index for the landing facility, and the 'S' is for scheduled air carrier service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: AU
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: BU
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: CU
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: DU
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: EU
+          Enumerated_Domain_Value_Definition: Landing facilities having a full certificate under FAR Part 139 but not currently receiving scheduled service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: LS
+          Enumerated_Domain_Value_Definition: Landing facilities having limited certification under FAR Part 139 and receiving scheduled air carrier service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: LU
+          Enumerated_Domain_Value_Definition: Landing facilities having limited certification under FAR Part 139 and not currently receiving scheduled air carrier service.
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: 'N' or a blank indicates the facility is not certified.
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: FED_AGREE
+      Attribute_Definition: NASP/ Federal Agreement Code - a combination of 1 to 7 codes that indicate the type of federal agreements existing at the airport.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: National Plan of Integrated Airport Systems (NPIAS)
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: B
+          Enumerated_Domain_Value_Definition: Installation of Navigational Facilities on privately owned airports under F&E program
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: G
+          Enumerated_Domain_Value_Definition: Grant agreements under FAAP/ADAP/AIP
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: H
+          Enumerated_Domain_Value_Definition: Compliance with accessibility to the handicapped
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: P
+          Enumerated_Domain_Value_Definition: Surplus property agreement under Public Law 289
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: R
+          Enumerated_Domain_Value_Definition: Surplus Property agreement under Regulation 16-WAA
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: S
+          Enumerated_Domain_Value_Definition: Conveyance under Section 16, Federal Airport Act of 1946 or Section 23, Airport and Airway Development Act of 1970
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: V
+          Enumerated_Domain_Value_Definition: Advance Planning Agreement under FAAP
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: X
+          Enumerated_Domain_Value_Definition: Obligations assumed by transfer
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: Y
+          Enumerated_Domain_Value_Definition: Assurances pursuant to Title VI, Civil Rights Act of 1964
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: Z
+          Enumerated_Domain_Value_Definition: Conveyance under Section 303(C), Federal Aviation Act of 1958
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: 1
+          Enumerated_Domain_Value_Definition: Grant agreement has expired; however, agreement remains in effect as long as it is a public use facility
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: 2
+          Enumerated_Domain_Value_Definition: Section 303(C) Authority from FAA Act of 1958 has expired; however, agreement remains in effect as long as it is a public use facility
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: 3
+          Enumerated_Domain_Value_Definition: AP-4 Agreement under DLAND or DCLA has expired
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: NONE
+          Enumerated_Domain_Value_Definition: No Grant Agreement Exists
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: INTERNATIO
+      Attribute_Definition: Customs international airport - Whether the landing facility has been designated by the U.S. Treasury as an international airport of entry for customs.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: Y
+          Enumerated_Domain_Value_Definition: Yes
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: No
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: CUST_LNDG
+      Attribute_Definition: Customs Landing Rights Airport - Whether the landing facility has been designated by the U.S. Treasury as a customs landing rights airport (some landing facilities may have these rights for cargo only).
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: Y
+          Enumerated_Domain_Value_Definition: Yes
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: No
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: JOINT_USE
+      Attribute_Definition: Joint Use - Whether the landing facility has a military/civil joint use agreement that allows civil operations at a military airport or military operations at a civil airport.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: Y
+          Enumerated_Domain_Value_Definition: Yes
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: No
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: MIL_LNDG_R
+      Attribute_Definition: Military Landing Rights - Whether the airport has entered into an agreement that grants landing rights to the military.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: Y
+          Enumerated_Domain_Value_Definition: Yes
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: No
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: MIL_INT
+      Attribute_Definition: Military Emergency Interest - Military department(s) that maintains national emergency use interest in this civil facility.  Data values in this field are one, two, or three alphanumeric codes indicating military emergency use interest, with each code in a series separated by a '/'.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: A
+          Enumerated_Domain_Value_Definition: Air Force
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: R
+          Enumerated_Domain_Value_Definition: Army
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: Navy
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: X
+          Enumerated_Domain_Value_Definition: None [applicable only where there is an entry in the National Emergency * Status [NAT_EMER] Field]
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: CNTL_TWR
+      Attribute_Definition: Airport Control Tower located on the airport.
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: Y
+          Enumerated_Domain_Value_Definition: Yes
+          Enumerated_Domain_Value_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: N
+          Enumerated_Domain_Value_Definition: No
+          Enumerated_Domain_Value_Definition_Source: FAA
+    Attribute:
+      Attribute_Label: S_ENG_GA
+      Attribute_Definition: Based Single Engine General Aviation Aircraft
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: M_ENG_GA
+      Attribute_Definition: Based Multi-engine general aviation aircraft
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: JET_EN_GA
+      Attribute_Definition: Based Jet engine general aviation aircraft
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: HELICOPTER
+      Attribute_Definition: Based Helicopters - General Aviation
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: OPER_GLIDE
+      Attribute_Definition: Base Operational Gliders - general aviation
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: OPER_MIL
+      Attribute_Definition: Based Military Aircraft - including helicopters
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: ULTRALIGHT
+      Attribute_Definition: Based Ultralight aircraft - general aviation
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: COMM_SERV
+      Attribute_Definition: Commercial Services - scheduled operations by CAB certified carriers or intrastate carriers and any scheduled commuter/cargo carriers (Annual Operations).
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: AIR_TAXI
+      Attribute_Definition: Air Taxi operators carrying passengers, mail, or mail for revenue (Annual Operations).
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: LOCAL_OPS
+      Attribute_Definition: General Aviation, Local Operations - Those operating in the local traffic pattern or within a 20 mile radius (Annual Operations).
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: ITIN_OPS
+      Attribute_Definition: General Aviation - Itinerant Operations.  Those general aviation operations (excluding commuter or air taxi) not qualifying as local (Annual Operations).
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: MIL_OPS
+      Attribute_Definition: Military Aircraft Operations (Annual Operations).
+      Attribute_Definition_Source: FAA
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Numeric count value
+    Attribute:
+      Attribute_Label: VERSION
+      Attribute_Definition: The VERSION is a 2-digit number that will be incremented for all records in the database whenever a new release is distributed.
+      Attribute_Definition_Source: RITA/BTS
+      Attribute_Domain_Values:
+        Range_Domain:
+          Range_Domain_Minimum: 00
+          Range_Domain_Maximum: 99
+Distribution_Information:
+  Distributor:
+    Contact_Information:
+      Contact_Organization_Primary:
+        Contact_Organization: Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)
+        Contact_Person: Office of Geospatial Information Systems
+      Contact_Address:
+        Address_Type: mailing and physical address
+        Address: 1200 New Jersey Ave. SE
+        City: Washington
+        State_or_Province: DC
+        Postal_Code: 20590
+        Country: USA
+      Contact_Voice_Telephone: 202-366-DATA
+      Contact_Electronic_Mail_Address: answers@bts.gov
+  Resource_Description: National Transportation Atlas Databases (NTAD) 2011
+  Distribution_Liability: None
+  Standard_Order_Process:
+    Digital_Form:
+      Digital_Transfer_Information:
+        Format_Name: ESRI Shapefile
+        Format_Version_Number: 2011
+        File_Decompression_Technique: no compression applied
+        Transfer_Size: 0.545
+      Digital_Transfer_Option:
+        Online_Option:
+          Access_Instructions: The NTAD DVD can be ordered from the online bookstore at www.bts.gov.  NTAD can also be downloaded from the Geographic Information Program web sit at http://www.bts.gov/programs/geographic_information_services/.
+        Offline_Option:
+          Offline_Media: DVD
+          Recording_Capacity:
+            Recording_Density: 650
+            Recording_Density_Units: megabytes
+          Recording_Format: ISO 9660
+    Fees: None
+    Ordering_Instructions: Call (202-366-DATA), or E-mail (answers@bts.gov) RITA/BTS to request the National Transportation Atlas Databases (NTAD) 2011 DVD. The NTAD DVD can be ordered from the online bookstore at www.bts.gov.  Individual datasets from the NTAD can also be downloaded from the Office of Geospatial Information Systems website at http://www.bts.gov/programs/geographic_information_services/
+  Technical_Prerequisites: Software that can process GIS files.
+  Available_Time_Period:
+    Time_Period_Information:
+      Single_Date/Time:
+        Calendar_Date: 2011
+Metadata_Reference_Information:
+  Metadata_Date: 20110401
+  Metadata_Contact:
+    Contact_Information:
+      Contact_Organization_Primary:
+        Contact_Organization: Research and Innovative Technology Administration's Bureau of Transportation Statistics (RITA/BTS)
+        Contact_Person: Office of Geospatial Information Systems
+      Contact_Address:
+        Address_Type: mailing and physical address
+        Address: 1200 New Jersey Ave. SE
+        City: Washington
+        State_or_Province: DC
+        Postal_Code: 20590
+        Country: USA
+      Contact_Voice_Telephone: 202-366-DATA
+      Contact_Electronic_Mail_Address: answers@bts.gov
+  Metadata_Standard_Name: FGDC Content Standards for Digital Geospatial Metadata
+  Metadata_Standard_Version: FGDC-STD-001-1998
+  Metadata_Time_Convention: local time
+  Metadata_Extensions:
+    Online_Linkage: http://www.esri.com/metadata/esriprof80.html
+    Profile_Name: ESRI Metadata Profile
+  Metadata_Extensions:
+    Online_Linkage: http://www.esri.com/metadata/esriprof80.html
+    Profile_Name: ESRI Metadata Profile

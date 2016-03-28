@@ -16,7 +16,8 @@ I would also like to use new data rather than the Expo data.
 
 
 There were 445,827 national flights recorded for January 2016:
-```{r}
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
 ontime <- read.csv("data/airlines/ontime/On_Time_On_Time_Performance_2016_1.csv")
 dim(ontime)
 require(dplyr)
@@ -31,6 +32,49 @@ qplot(miles, data=tails, fill=carrier) + xlim(c(0,150000)) + facet_wrap(~carrier
 Southwest (WN) flies the heck out of its planes, but it is beaten at this game by a lot of the very small airline carriers, at the front of which is Spirit Airlines (NK).
 What we cannot see from the boxplots is that some of these airline carriers have several modes for the number of miles that their planes fly. United and American seem to have a couple of planes that fly only very rarely. Carrier AS has two modes: one mode at a very high number of miles, the other at around 75,000 miles.  
 
-```{r}
+All times in the ontime data set are in local time. This is problematic for almost any data analysis. Even ordering flights by their departure time over the course of a day is not possible unless we are only considering flights in the same time zone. 
 
+There is a slew of different approaches and online services available to resolve issues around time zones. Because all of the locations we are interested in, are airports, we can make use of the
+[National Transportation Atlas Database](http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/publications/national_transportation_atlas_database/2011/index.html) provided by the Bureau of Transportation Statistics. In this database, airports are listed with geographic location in latitude and longitude. 
+```{r, message=FALSE}
+library(foreign)
+airports <- read.dbf("data/airlines/airports/airports.dbf")
+# we can reduce our data set to airports only 
+table(airports$LAN_FA_TY)
+
+airports <- subset(airports, LAN_FA_TY=="AIRPORT")
+qplot(LONGITUDE, LATITUDE, data=airports)
+```
+
+
+```{r, eval=FALSE}
+library(lubridate)
+dests <- unique(ontime$DestCityName)
+#dests <- gsub("(.*), .*", "\\1", dests) # get rid of State
+#dests <- gsub("(.*)/.*", "\\1", dests) # only use first when given two choices
+
+timestamp <- 1452427200
+
+
+
+i <- 1
+stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=AIzaSyCYXzAUh7Tq9CQ9dHvNFdkZ7QBdrfKNS3U", airports$LATITUDE[i], airports$LONGITUDE[i])
+
+library(rjson)
+json_data <- fromJSON(file=stringi)
+
+
+cities_tz <- read.csv("data/airlines/cities_csv/cities.txt", header=FALSE)
+
+# find dests in cities_tz .... let's try with a merge
+tz <- data.frame(City=dests)
+tz <- merge(tz, cities_tz[,1:2], by.x="City", by.y="V1", all.x=TRUE)
+
+
+pb.date <- ymd_hm("2016-01-24 16:00", tz="UTC")
+hour(pb.date)
+
+tzs <- sprintf("America/%s", tzs)
+
+hour(format(pb.date, tz=tzs[2], usetz=TRUE))
 ```
