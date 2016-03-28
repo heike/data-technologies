@@ -13,3 +13,24 @@ HH: what I like to include here:
 - making a movie of the flights
 
 I would also like to use new data rather than the Expo data.
+
+
+There were 445,827 national flights recorded for January 2016:
+```{r}
+ontime <- read.csv("data/airlines/ontime/On_Time_On_Time_Performance_2016_1.csv")
+dim(ontime)
+require(dplyr)
+tails <- ontime %>% group_by(TailNum) %>% summarize(
+  numFlights = n(),
+  carrier = UniqueCarrier[1],
+  miles = sum(Distance)
+)
+qplot(reorder(carrier, miles), miles, data=tails, varwidth=TRUE, fill=carrier, geom="boxplot") + ylim(c(0,150000)) 
+qplot(miles, data=tails, fill=carrier) + xlim(c(0,150000)) + facet_wrap(~carrier, scales="free_y")
+```
+Southwest (WN) flies the heck out of its planes, but it is beaten at this game by a lot of the very small airline carriers, at the front of which is Spirit Airlines (NK).
+What we cannot see from the boxplots is that some of these airline carriers have several modes for the number of miles that their planes fly. United and American seem to have a couple of planes that fly only very rarely. Carrier AS has two modes: one mode at a very high number of miles, the other at around 75,000 miles.  
+
+```{r}
+
+```
