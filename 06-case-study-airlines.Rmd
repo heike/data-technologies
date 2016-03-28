@@ -34,7 +34,7 @@ What we cannot see from the boxplots is that some of these airline carriers have
 
 All times in the ontime data set are in local time. This is problematic for almost any data analysis. Even ordering flights by their departure time over the course of a day is not possible unless we are only considering flights in the same time zone. 
 
-There is a slew of different approaches and online services available to resolve issues around time zones. Because all of the locations we are interested in, are airports, we can make use of the
+Because all of the locations we are interested in, are airports, we can make use of the
 [National Transportation Atlas Database](http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/publications/national_transportation_atlas_database/2011/index.html) provided by the Bureau of Transportation Statistics. In this database, airports are listed with geographic location in latitude and longitude. 
 ```{r, message=FALSE}
 library(foreign)
@@ -46,24 +46,34 @@ airports <- subset(airports, LAN_FA_TY=="AIRPORT")
 qplot(LONGITUDE, LATITUDE, data=airports)
 ```
 
+There is a slew of different approaches and (semi-free) online services available to resolve issues around time zones. Here, we are using the Google Maps Time Zone API to get time zones for every one of the airports above. In order to run the following example, yu will have to sign up for this service to get an API key. Make yourself familiar with any limitations of the service so you don't accidentally ramp up any charges.
 
 ```{r, eval=FALSE}
-library(lubridate)
-dests <- unique(ontime$DestCityName)
-#dests <- gsub("(.*), .*", "\\1", dests) # get rid of State
-#dests <- gsub("(.*)/.*", "\\1", dests) # only use first when given two choices
-
-timestamp <- 1452427200
-
-
+timestamp <- 1452427200 # epoch time of Jan 10, 2016 12:00 pm
 
 i <- 1
-stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=AIzaSyCYXzAUh7Tq9CQ9dHvNFdkZ7QBdrfKNS3U", airports$LATITUDE[i], airports$LONGITUDE[i])
+stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=PASTE-YOUR-KEY-HERE", airports$LATITUDE[i], airports$LONGITUDE[i])
 
 library(rjson)
 json_data <- fromJSON(file=stringi)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+timestamp <- 1452427200 # epoch time of Jan 10, 2016 12:00 pm
+library(rjson)
+
+airport_tz <- NULL
+for (i in 501:700) {
+  stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=AIzaSyCYXzAUh7Tq9CQ9dHvNFdkZ7QBdrfKNS3U", airports$LATITUDE[i], airports$LONGITUDE[i])
+  
+  temp <- data.frame(ID = airports$LOCID[i], fromJSON(file=stringi))
+  airport_tz <- rbind(airport_tz, temp)
+}
+write.csv(airport_tz, file="data/airport-timezones.csv", row.names=FALSE)
+```
 
 
+```{r}
 cities_tz <- read.csv("data/airlines/cities_csv/cities.txt", header=FALSE)
 
 # find dests in cities_tz .... let's try with a merge
