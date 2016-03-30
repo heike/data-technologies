@@ -78,9 +78,11 @@ write.csv(airport_tz, file="data/airport-timezones.csv", row.names=FALSE)
 
 What kind of time shift does each of the time zones imply compared to a reference timezone and date? Using UTC as the reference time zone we calculate the difference in hours of the day on January 24 of 2016. 
 ```{r}
+library(lubridate)
 # reference date
 pb.date <- ymd_hm("2016-01-24 12:00", tz="UTC")
 hour(pb.date)
+airport_tz <- read.csv("data/airport-timezones.csv")
 
 airport_tz$timeZoneId <- as.character(airport_tz$timeZoneId)
 airport_tz$tz_hours <- 12 - sapply(airport_tz$timeZoneId, function(x) hour(format(pb.date, tz=x, usetz=TRUE)))
@@ -96,30 +98,23 @@ Using the time zone information we can transform local times at airports into gl
 ```
 Order flights to identify ghost flights
 ```{r}
-
-
-ontime$Departure <- ymd(as.character(ontime$FlightDate))
+ontime$Departure <- lubridate::ymd(as.character(ontime$FlightDate))
 hour(ontime$Departure) <- ontime$CRSDepTime %/% 100
-minute(ontime$Departure) <- ontime$CRSDepTime %% 100
-ontime <- ontime %>% group_by(TailNum) %>% mutate(
-  Order = order(Departure)
-)
-
-# N4YBAA, N434AA
-tn <- ontime %>% filter(TailNum=="N4YBAA") %>%  select(
-  Departure, FlightDate, Order, Origin, Dest, Cancelled
-)
-tn <- tn[tn$Order,]
-tn <- subset(tn, Cancelled == 0)
-
-ghosts <- which(tn$Origin != lag(tn$Dest))
-# for each ghost get two flights: 
-
-tn[sort(c(ghosts, ghosts-1)),]
-
-ghostFlight <- data.frame(
-  TailNum=tn$TailNum[1], 
-  Date = ymd(tn$FlightDate[ghosts]), 
-  From=tn$Dest[ghosts-1], 
-  To=tn$Origin[ghosts])
+minute(ontime$Departure) <- ontime$CRSDepTime %% 100  # this is where the timezones have to come in
 ```
+
+This is how we get to ghost flights: for each individual plane (using tail number `TailNum` as an identifier), we weed out all flights that got cancelled (because presumably the plane won't move if its flight gets cancelled). We then sort flights according to their (scheduled) departure date and time. `LastDest` introduces a variable specifying the last destination a plane has flown into - if things go well, this should be the same as the origin from where the next flight is scheduled to take off. If `LastDest` and `Origin` are different airports, this indicates that at least one ghost flight has taken place, because the plane had to move somehow from its last destination to the new origin. 
+```{r}
+ghosts <- ontime %>% filter(TailNum != "") %>% 
+  group_by(TailNum) %>% 
+  select(
+    Departure, FlightDate, Origin, Dest, Cancelled, UniqueCarrier
+  ) %>% filter(Cancelled == 0) %>%  
+  arrange(Departure) %>%
+  mutate(
+    LastDest = lag(Dest),
+    Ghost = !(Origin == LastDest)
+  ) %>% filter(Ghost)
+dim(ghosts)
+```
+There are 9651 ghost flights in January 2016 (*** not adjusted by timezone - this might change a couple of flights ***).
