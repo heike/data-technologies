@@ -119,7 +119,7 @@ dim(ghosts)
 ```
 There are 9651 ghost flights in January 2016 (*** not adjusted by timezone - this might change a couple of flights ***).
 
-
+HH: Caveat: if a plane is doing an international flight, it might create an 'artificial' ghost flight.
 HH: what I would like to know: number of ghost miles flown. Fuel costs for ghost flights. 
 
 ```{r ghostrate, }
@@ -133,3 +133,22 @@ qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight), data=carrierSta
 ```
 
 Figure \@ref(fig:ghostrate) shows the rate of ghost flights per each 1000 flights for each carrier. The size of the dots is proportional to the number of flights the airline carried out in January 2016, i.e. larger carriers are shown by larger sized dots. Generally, larger carriers have larger ghost rates, but there are some remarkable exceptions. Southwest (WN) has the lowest rate of ghost flights among the larger carriers, while Frontier Airlines (F9) has a very high ghost rate for such a small carrier.  
+
+```{r ghostmap, fig.cap="Ghost flights of national airline carriers. Some hubs become apparent.", fig.height=4, fig.width=10}
+ghosts <- merge(ghosts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="Origin", by.y="LOCID", all.x=TRUE)
+names(ghosts)[grep("LONGITUDE", names(ghosts))] <- "orig.long"
+names(ghosts)[grep("LATITUDE", names(ghosts))] <- "orig.lat"
+
+ghosts <- merge(ghosts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="LastDest", by.y="LOCID", all.x=TRUE)
+names(ghosts)[grep("LONGITUDE", names(ghosts))] <- "dest.long"
+names(ghosts)[grep("LATITUDE", names(ghosts))] <- "dest.lat"
+
+states <- map_data("state")
+ggplot() + theme_bw() + 
+  geom_polygon(aes(long, lat, group=group), data=states, fill="grey80") +
+  geom_segment(aes(x=orig.long, xend=dest.long, y=orig.lat, yend=dest.lat),
+               data=subset(ghosts, UniqueCarrier %in% c("OO", "EV", "F9")),
+               colour="darkorange", alpha=0.25) + facet_wrap(~UniqueCarrier) +
+  xlim(c(-125, -60)) + ylim(c(25, 50))
+```
+
