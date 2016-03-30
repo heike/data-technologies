@@ -62,29 +62,64 @@ json_data <- fromJSON(file=stringi)
 timestamp <- 1452427200 # epoch time of Jan 10, 2016 12:00 pm
 library(rjson)
 
-airport_tz <- NULL
-for (i in 501:700) {
+#airport_tz <- NULL
+for (i in 3180:XXX) {
   stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=AIzaSyCYXzAUh7Tq9CQ9dHvNFdkZ7QBdrfKNS3U", airports$LATITUDE[i], airports$LONGITUDE[i])
-  
-  temp <- data.frame(ID = airports$LOCID[i], fromJSON(file=stringi))
-  airport_tz <- rbind(airport_tz, temp)
+  cat(i)
+  cat("\n")
+  json <- fromJSON(file=stringi)
+  if (json$status =="OK") {
+    temp <- data.frame(ID = airports$LOCID[i], json)
+    airport_tz <- rbind(airport_tz, temp)
+  }
 }
 write.csv(airport_tz, file="data/airport-timezones.csv", row.names=FALSE)
 ```
 
-
+What kind of time shift does each of the time zones imply compared to a reference timezone and date? Using UTC as the reference time zone we calculate the difference in hours of the day on January 24 of 2016. 
 ```{r}
-cities_tz <- read.csv("data/airlines/cities_csv/cities.txt", header=FALSE)
-
-# find dests in cities_tz .... let's try with a merge
-tz <- data.frame(City=dests)
-tz <- merge(tz, cities_tz[,1:2], by.x="City", by.y="V1", all.x=TRUE)
-
-
-pb.date <- ymd_hm("2016-01-24 16:00", tz="UTC")
+# reference date
+pb.date <- ymd_hm("2016-01-24 12:00", tz="UTC")
 hour(pb.date)
 
-tzs <- sprintf("America/%s", tzs)
+airport_tz$timeZoneId <- as.character(airport_tz$timeZoneId)
+airport_tz$tz_hours <- 12 - sapply(airport_tz$timeZoneId, function(x) hour(format(pb.date, tz=x, usetz=TRUE)))
 
-hour(format(pb.date, tz=tzs[2], usetz=TRUE))
+airports <- merge(airports, airport_tz[, c("ID", "timeZoneName", "timeZoneId", "tz_hours")], all.x=TRUE, by.x="LOCID", by.y="ID")
+```
+
+Using the time zone information we can transform local times at airports into global times referenced to UTC, which we then use to order the ontime data according to the time that flights took place ***needs a more precise definition***.
+```{r}
+# merge time zone data into ontime data by  origin and destination 
+# adjust local departure times by origin and arrival times by destination
+
+```
+Order flights to identify ghost flights
+```{r}
+
+
+ontime$Departure <- ymd(as.character(ontime$FlightDate))
+hour(ontime$Departure) <- ontime$CRSDepTime %/% 100
+minute(ontime$Departure) <- ontime$CRSDepTime %% 100
+ontime <- ontime %>% group_by(TailNum) %>% mutate(
+  Order = order(Departure)
+)
+
+# N4YBAA, N434AA
+tn <- ontime %>% filter(TailNum=="N4YBAA") %>%  select(
+  Departure, FlightDate, Order, Origin, Dest, Cancelled
+)
+tn <- tn[tn$Order,]
+tn <- subset(tn, Cancelled == 0)
+
+ghosts <- which(tn$Origin != lag(tn$Dest))
+# for each ghost get two flights: 
+
+tn[sort(c(ghosts, ghosts-1)),]
+
+ghostFlight <- data.frame(
+  TailNum=tn$TailNum[1], 
+  Date = ymd(tn$FlightDate[ghosts]), 
+  From=tn$Dest[ghosts-1], 
+  To=tn$Origin[ghosts])
 ```
