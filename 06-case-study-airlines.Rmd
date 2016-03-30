@@ -118,3 +118,18 @@ ghosts <- ontime %>% filter(TailNum != "") %>%
 dim(ghosts)
 ```
 There are 9651 ghost flights in January 2016 (*** not adjusted by timezone - this might change a couple of flights ***).
+
+
+HH: what I would like to know: number of ghost miles flown. Fuel costs for ghost flights. 
+
+```{r ghostrate, }
+ghostsCarrier <- data.frame(xtabs(~UniqueCarrier, data=ghosts))
+names(ghostsCarrier)[2] <- "Ghost"
+flightsCarrier <- data.frame(xtabs(~UniqueCarrier, data=subset(ontime, Cancelled==0)))
+names(flightsCarrier)[2] <- "Flight"
+
+carrierStats <- merge(ghostsCarrier, flightsCarrier, by="UniqueCarrier")
+qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight), data=carrierStats, size=Flight) + ggtitle("Number of Ghosts for every 1000 Flights")
+```
+
+Figure \@ref(fig:ghostrate) shows the rate of ghost flights per each 1000 flights for each carrier. The size of the dots is proportional to the number of flights the airline carried out in January 2016, i.e. larger carriers are shown by larger sized dots. Generally, larger carriers have larger ghost rates, but there are some remarkable exceptions. Southwest (WN) has the lowest rate of ghost flights among the larger carriers, while Frontier Airlines (F9) has a very high ghost rate for such a small carrier.  
