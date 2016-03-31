@@ -64,7 +64,7 @@ timestamp <- 1452427200 # epoch time of Jan 10, 2016 12:00 pm
 library(rjson)
 
 #airport_tz <- NULL
-for (i in 5644:5681) {
+for (i in 5672:5681) {
   stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=AIzaSyCYXzAUh7Tq9CQ9dHvNFdkZ7QBdrfKNS3U", airports$LATITUDE[i], airports$LONGITUDE[i])
   cat(i)
   cat("\n")
@@ -140,7 +140,7 @@ qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight), data=carrierSta
 
 Figure \@ref(fig:ghostrate) shows the rate of ghost flights per each 1000 flights for each carrier. The size of the dots is proportional to the number of flights the airline carried out in January 2016, i.e. larger carriers are shown by larger sized dots. Generally, larger carriers have larger ghost rates, but there are some remarkable exceptions. Southwest (WN) has the lowest rate of ghost flights among the larger carriers, while Frontier Airlines (F9) has a very high ghost rate for such a small carrier.  
 
-```{r ghostmap, fig.cap="Ghost flights of three national airline carriers. Hubs with at least 2.5\% of the ghost traffic are labelled.", fig.height=4, fig.width=10, warning=FALSE}
+```{r ghostmap, fig.cap="Ghost flights of three national airline carriers. Hubs with at least 2.5\\% of the ghost traffic are labelled.", fig.height=4, fig.width=10, warning=FALSE}
 ghosts <- merge(ghosts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="Origin", by.y="LOCID", all.x=TRUE)
 names(ghosts)[grep("LONGITUDE", names(ghosts))] <- "orig.long"
 names(ghosts)[grep("LATITUDE", names(ghosts))] <- "orig.lat"
