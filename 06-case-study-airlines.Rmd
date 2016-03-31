@@ -140,7 +140,7 @@ qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight), data=carrierSta
 
 Figure \@ref(fig:ghostrate) shows the rate of ghost flights per each 1000 flights for each carrier. The size of the dots is proportional to the number of flights the airline carried out in January 2016, i.e. larger carriers are shown by larger sized dots. Generally, larger carriers have larger ghost rates, but there are some remarkable exceptions. Southwest (WN) has the lowest rate of ghost flights among the larger carriers, while Frontier Airlines (F9) has a very high ghost rate for such a small carrier.  
 
-```{r ghostmap, fig.cap="Ghost flights of national airline carriers. Some hubs become apparent.", fig.height=4, fig.width=10, warning=FALSE}
+```{r ghostmap, fig.cap="Ghost flights of three national airline carriers. Hubs with at least 2.5\% of the ghost traffic are labelled.", fig.height=4, fig.width=10, warning=FALSE}
 ghosts <- merge(ghosts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="Origin", by.y="LOCID", all.x=TRUE)
 names(ghosts)[grep("LONGITUDE", names(ghosts))] <- "orig.long"
 names(ghosts)[grep("LATITUDE", names(ghosts))] <- "orig.lat"
@@ -162,7 +162,7 @@ ghostPorts <- ghosts %>% split(.$UniqueCarrier) %>% purrr::map_df(
 )
 ghostPorts <- merge(ghostPorts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="ID", by.y="LOCID", all.x=TRUE)
 ghostPorts <- ghostPorts %>% group_by(UniqueCarrier) %>% mutate(
-  ghostPerc = ghosts / n() *100
+  ghostPerc = ghosts / sum(ghosts) *100
 )
 
 states <- map_data("state")
@@ -176,6 +176,6 @@ ggplot() + theme_bw() +
   geom_label(
     aes(LONGITUDE, LATITUDE, label=ID), alpha=0.5,
     data=subset(ghostPorts, 
-                UniqueCarrier %in% c("OO", "EV", "F9") & ghostPerc > 30))
+                UniqueCarrier %in% c("OO", "EV", "F9") & ghostPerc > 2.5))
 ```
 
