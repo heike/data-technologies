@@ -18,6 +18,7 @@ I would also like to use new data rather than the Expo data.
 There were 445,827 national flights recorded for January 2016:
 ```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
+library(ggthemes)
 ontime <- read.csv("data/airlines/ontime/On_Time_On_Time_Performance_2016_1.csv")
 dim(ontime)
 require(dplyr)
@@ -63,7 +64,7 @@ timestamp <- 1452427200 # epoch time of Jan 10, 2016 12:00 pm
 library(rjson)
 
 #airport_tz <- NULL
-for (i in 3180:XXX) {
+for (i in 5644:5681) {
   stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=AIzaSyCYXzAUh7Tq9CQ9dHvNFdkZ7QBdrfKNS3U", airports$LATITUDE[i], airports$LONGITUDE[i])
   cat(i)
   cat("\n")
@@ -71,6 +72,10 @@ for (i in 3180:XXX) {
   if (json$status =="OK") {
     temp <- data.frame(ID = airports$LOCID[i], json)
     airport_tz <- rbind(airport_tz, temp)
+  } else {
+    cat(json$status)
+    cat("\n")
+    if (json$status == "OVER_QUERY_LIMIT") return()
   }
 }
 write.csv(airport_tz, file="data/airport-timezones.csv", row.names=FALSE)
@@ -88,6 +93,7 @@ airport_tz$timeZoneId <- as.character(airport_tz$timeZoneId)
 airport_tz$tz_hours <- 12 - sapply(airport_tz$timeZoneId, function(x) hour(format(pb.date, tz=x, usetz=TRUE)))
 
 airports <- merge(airports, airport_tz[, c("ID", "timeZoneName", "timeZoneId", "tz_hours")], all.x=TRUE, by.x="LOCID", by.y="ID")
+qplot(data=airports, x=LONGITUDE, y = LATITUDE, colour=factor(tz_hours))
 ```
 
 Using the time zone information we can transform local times at airports into global times referenced to UTC, which we then use to order the ontime data according to the time that flights took place ***needs a more precise definition***.
@@ -134,7 +140,7 @@ qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight), data=carrierSta
 
 Figure \@ref(fig:ghostrate) shows the rate of ghost flights per each 1000 flights for each carrier. The size of the dots is proportional to the number of flights the airline carried out in January 2016, i.e. larger carriers are shown by larger sized dots. Generally, larger carriers have larger ghost rates, but there are some remarkable exceptions. Southwest (WN) has the lowest rate of ghost flights among the larger carriers, while Frontier Airlines (F9) has a very high ghost rate for such a small carrier.  
 
-```{r ghostmap, fig.cap="Ghost flights of national airline carriers. Some hubs become apparent.", fig.height=4, fig.width=10}
+```{r ghostmap, fig.cap="Ghost flights of national airline carriers. Some hubs become apparent.", fig.height=4, fig.width=10, warning=FALSE}
 ghosts <- merge(ghosts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="Origin", by.y="LOCID", all.x=TRUE)
 names(ghosts)[grep("LONGITUDE", names(ghosts))] <- "orig.long"
 names(ghosts)[grep("LATITUDE", names(ghosts))] <- "orig.lat"
@@ -143,12 +149,33 @@ ghosts <- merge(ghosts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="La
 names(ghosts)[grep("LONGITUDE", names(ghosts))] <- "dest.long"
 names(ghosts)[grep("LATITUDE", names(ghosts))] <- "dest.lat"
 
+ghosts$LastDest <-as.character(ghosts$LastDest)
+ghosts$Origin <-as.character(ghosts$Origin)
+ghostPorts <- ghosts %>% split(.$UniqueCarrier) %>% purrr::map_df(
+  function(x) {
+    dframe <- data.frame(
+      UniqueCarrier = x$UniqueCarrier[1], 
+      ID = with(x, c(LastDest, Origin)))
+    dframe %>% group_by(UniqueCarrier, ID) %>% summarize(
+      ghosts = n())
+  }
+)
+ghostPorts <- merge(ghostPorts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="ID", by.y="LOCID", all.x=TRUE)
+ghostPorts <- ghostPorts %>% group_by(UniqueCarrier) %>% mutate(
+  ghostPerc = ghosts / n() *100
+)
+
 states <- map_data("state")
 ggplot() + theme_bw() + 
   geom_polygon(aes(long, lat, group=group), data=states, fill="grey80") +
   geom_segment(aes(x=orig.long, xend=dest.long, y=orig.lat, yend=dest.lat),
                data=subset(ghosts, UniqueCarrier %in% c("OO", "EV", "F9")),
                colour="darkorange", alpha=0.25) + facet_wrap(~UniqueCarrier) +
-  xlim(c(-125, -60)) + ylim(c(25, 50))
+  xlim(c(-125, -60)) + ylim(c(25, 50)) + 
+  theme_map() + 
+  geom_label(
+    aes(LONGITUDE, LATITUDE, label=ID), alpha=0.5,
+    data=subset(ghostPorts, 
+                UniqueCarrier %in% c("OO", "EV", "F9") & ghostPerc > 30))
 ```
 
