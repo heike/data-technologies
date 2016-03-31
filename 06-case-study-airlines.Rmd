@@ -47,7 +47,8 @@ airports <- subset(airports, LAN_FA_TY=="AIRPORT")
 qplot(LONGITUDE, LATITUDE, data=airports)
 ```
 
-There is a slew of different approaches and (semi-free) online services available to resolve issues around time zones. Here, we are using the Google Maps Time Zone API to get time zones for every one of the airports above. In order to run the following example, yu will have to sign up for this service to get an API key. Make yourself familiar with any limitations of the service so you don't accidentally ramp up any charges.
+There is a slew of different approaches and (semi-free) online services available to resolve issues around time zones. Here, we are using the Google Maps Time Zone API to get time zones based on geographic location for every US airport. 
+In order to run the following example, you will have to sign up for this service to get an API key. Make yourself familiar with any limitations of the service so you don't accidentally ramp up any charges.
 
 ```{r, eval=FALSE}
 timestamp <- 1452427200 # epoch time of Jan 10, 2016 12:00 pm
@@ -64,7 +65,7 @@ timestamp <- 1452427200 # epoch time of Jan 10, 2016 12:00 pm
 library(rjson)
 
 #airport_tz <- NULL
-for (i in 5672:5681) {
+for (i in 8141:8172) {
   stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=AIzaSyCYXzAUh7Tq9CQ9dHvNFdkZ7QBdrfKNS3U", airports$LATITUDE[i], airports$LONGITUDE[i])
   cat(i)
   cat("\n")
@@ -80,8 +81,11 @@ for (i in 5672:5681) {
 }
 write.csv(airport_tz, file="data/airport-timezones.csv", row.names=FALSE)
 ```
-
-What kind of time shift does each of the time zones imply compared to a reference timezone and date? Using UTC as the reference time zone we calculate the difference in hours of the day on January 24 of 2016. 
+This results in a dataset indexed by airport FAA ID (the three letter acronym for each airport, such as `ORD` for Chicago O'Hare or `DFW` for Dallas/Fort Worth) with a timezone ID and the timezone Name. 
+```{r}
+head(airport_tz)
+```
+We can use this information to calculate the time shift for each one of the time zones compared to a reference timezone and date. We make UTC our reference time zone and use 12 pm on a date in January 2016 to calculate the difference in hours of the day. Because there is no change from Standard to Daylight Savings Time in January it does not matter which exact day we use. 
 ```{r}
 library(lubridate)
 # reference date
@@ -93,7 +97,8 @@ airport_tz$timeZoneId <- as.character(airport_tz$timeZoneId)
 airport_tz$tz_hours <- 12 - sapply(airport_tz$timeZoneId, function(x) hour(format(pb.date, tz=x, usetz=TRUE)))
 
 airports <- merge(airports, airport_tz[, c("ID", "timeZoneName", "timeZoneId", "tz_hours")], all.x=TRUE, by.x="LOCID", by.y="ID")
-qplot(data=airports, x=LONGITUDE, y = LATITUDE, colour=factor(tz_hours))
+qplot(data=airports, x=LONGITUDE, y = LATITUDE, colour=factor(tz_hours)) +
+  geom_point(data=subset(airports, !is.na(tz_hours)))
 ```
 
 Using the time zone information we can transform local times at airports into global times referenced to UTC, which we then use to order the ontime data according to the time that flights took place ***needs a more precise definition***.
