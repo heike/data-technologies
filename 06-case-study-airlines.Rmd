@@ -83,15 +83,15 @@ write.csv(airport_tz, file="data/airport-timezones.csv", row.names=FALSE)
 ```
 This results in a dataset indexed by airport FAA ID (the three letter acronym for each airport, such as `ORD` for Chicago O'Hare or `DFW` for Dallas/Fort Worth) with a timezone ID and the timezone Name. 
 ```{r}
+airport_tz <- read.csv("data/airport-timezones.csv")
 head(airport_tz)
 ```
-We can use this information to calculate the time shift for each one of the time zones compared to a reference timezone and date. We make UTC our reference time zone and use 12 pm on a date in January 2016 to calculate the difference in hours of the day. Because there is no change from Standard to Daylight Savings Time in January it does not matter which exact day we use. 
+We use this information to calculate the time shift for each one of the time zones compared to a reference timezone and date. We make UTC our reference time zone and use 12 pm on a date in January 2016 to calculate the difference in hours of the day. Because there is no change from Standard to Daylight Savings Time in January it does not matter which exact day we use. 
 ```{r}
 library(lubridate)
 # reference date
 pb.date <- ymd_hm("2016-01-24 12:00", tz="UTC")
 hour(pb.date)
-airport_tz <- read.csv("data/airport-timezones.csv")
 
 airport_tz$timeZoneId <- as.character(airport_tz$timeZoneId)
 airport_tz$tz_hours <- 12 - sapply(airport_tz$timeZoneId, function(x) hour(format(pb.date, tz=x, usetz=TRUE)))
@@ -101,7 +101,7 @@ qplot(data=airports, x=LONGITUDE, y = LATITUDE, colour=factor(tz_hours)) +
   geom_point(data=subset(airports, !is.na(tz_hours)))
 ```
 
-Using the time zone information we can transform local times at airports into global times referenced to UTC, which we then use to order the ontime data according to the time that flights took place ***needs a more precise definition***.
+Using the time zone information we  transform local times at airports into global times referenced to UTC, which we then use to order the ontime data according to the time that flights took place ***needs a more precise definition***.
 ```{r}
 # merge time zone data into ontime data by  origin and destination 
 # adjust local departure times by origin and arrival times by destination
@@ -145,7 +145,7 @@ qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight), data=carrierSta
 
 Figure \@ref(fig:ghostrate) shows the rate of ghost flights per each 1000 flights for each carrier. The size of the dots is proportional to the number of flights the airline carried out in January 2016, i.e. larger carriers are shown by larger sized dots. Generally, larger carriers have larger ghost rates, but there are some remarkable exceptions. Southwest (WN) has the lowest rate of ghost flights among the larger carriers, while Frontier Airlines (F9) has a very high ghost rate for such a small carrier.  
 
-```{r ghostmap, fig.cap="Ghost flights of three national airline carriers. Hubs with at least 2.5\\% of the ghost traffic are labelled.", fig.height=4, fig.width=10, warning=FALSE}
+```{r ghostmap, fig.cap="Ghost flights of three national airline carriers. Airports with at least 2.5\\% of the ghost traffic are labelled.", fig.height=4, fig.width=10, warning=FALSE}
 ghosts <- merge(ghosts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="Origin", by.y="LOCID", all.x=TRUE)
 names(ghosts)[grep("LONGITUDE", names(ghosts))] <- "orig.long"
 names(ghosts)[grep("LATITUDE", names(ghosts))] <- "orig.lat"
