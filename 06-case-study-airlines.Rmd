@@ -19,9 +19,11 @@ There were 445,827 national flights recorded for January 2016:
 ```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(ggthemes)
-ontime <- read.csv("data/airlines/ontime/On_Time_On_Time_Performance_2016_1.csv")
+# load ontime data into the working directory
+load("data/airlines/ontime/january-flights.RData") 
 dim(ontime)
 require(dplyr)
+
 tails <- ontime %>% group_by(TailNum) %>% summarize(
   numFlights = n(),
   carrier = UniqueCarrier[1],
@@ -65,7 +67,7 @@ timestamp <- 1452427200 # epoch time of Jan 10, 2016 12:00 pm
 library(rjson)
 
 #airport_tz <- NULL
-for (i in 8141:8172) {
+for (i in 10632:13141) {
   stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=AIzaSyCYXzAUh7Tq9CQ9dHvNFdkZ7QBdrfKNS3U", airports$LATITUDE[i], airports$LONGITUDE[i])
   cat(i)
   cat("\n")
@@ -119,7 +121,7 @@ This is how we get to ghost flights: for each individual plane (using tail numbe
 ghosts <- ontime %>% filter(TailNum != "") %>% 
   group_by(TailNum) %>% 
   select(
-    Departure, FlightDate, Origin, Dest, Cancelled, UniqueCarrier
+    TailNum, Departure, FlightDate, Origin, Dest, Cancelled, UniqueCarrier
   ) %>% filter(Cancelled == 0) %>%  
   arrange(Departure) %>%
   mutate(
@@ -140,12 +142,16 @@ flightsCarrier <- data.frame(xtabs(~UniqueCarrier, data=subset(ontime, Cancelled
 names(flightsCarrier)[2] <- "Flight"
 
 carrierStats <- merge(ghostsCarrier, flightsCarrier, by="UniqueCarrier")
-qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight), data=carrierStats, size=Flight) + ggtitle("Number of Ghosts for every 1000 Flights")
+qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight), 
+      data=carrierStats, size=Flight) + 
+  ggtitle("Number of Ghosts for every 1000 Flights") +
+  xlab("Number of ghost flights per 1000 flights") + 
+  ylab("Airline Carrier")
 ```
 
 Figure \@ref(fig:ghostrate) shows the rate of ghost flights per each 1000 flights for each carrier. The size of the dots is proportional to the number of flights the airline carried out in January 2016, i.e. larger carriers are shown by larger sized dots. Generally, larger carriers have larger ghost rates, but there are some remarkable exceptions. Southwest (WN) has the lowest rate of ghost flights among the larger carriers, while Frontier Airlines (F9) has a very high ghost rate for such a small carrier.  
 
-```{r ghostmap, fig.cap="Ghost flights of three national airline carriers. Airports with at least 2.5\\% of the ghost traffic are labelled.", fig.height=4, fig.width=10, warning=FALSE}
+```{r ghostmap, fig.cap="Ghost flights of three national airline carriers. Airports with at least 2.5\\% of the ghost traffic are labelled.", fig.height=4, fig.width=12, warning=FALSE, message=FALSE}
 ghosts <- merge(ghosts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="Origin", by.y="LOCID", all.x=TRUE)
 names(ghosts)[grep("LONGITUDE", names(ghosts))] <- "orig.long"
 names(ghosts)[grep("LATITUDE", names(ghosts))] <- "orig.lat"
@@ -184,3 +190,15 @@ ggplot() + theme_bw() +
                 UniqueCarrier %in% c("OO", "EV", "F9") & ghostPerc > 2.5))
 ```
 
+## Flight delays
+
+There are two main kind of delays in the US flight data: departure and arrival delays. Obviously, the two delays are correlated - at least at first sight. Figure \@ref(fig:delays) shows two scatterplots of arrival and departure delays for each of the 400,000 flights using progressive zooms into the data.  The  scatterplot on the left shows all departure and arrival delays. The correlation is very strong, particularly for large delays. But if we zoom closer into the actually practically relevant region of delays up to 120 mins, we see a more complex relationship. While there is still a strong linear relationship (on average planes make up 6 mins of departure delay on arrival), a second pattern emerges for planes that leave on time or are even early but land late. 
+
+```{r delays, echo=FALSE, fig.caption="Scatterplots of departure delay and arrival delay. Overall, there is a strong linear relationship. Zooming in, a second pattern emerges of planes departing on time but arriving late.", fig.width=6, fig.height=6, warning=FALSE}
+qplot(DepDelay, ArrDelay, data=ontime)
+qplot(DepDelay, ArrDelay, data=subset(ontime, ArrDelay < 120), alpha=I(.05)) 
+```
+
+```{r airtime, echo=FALSE}
+
+```
