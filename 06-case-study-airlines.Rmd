@@ -199,6 +199,48 @@ qplot(DepDelay, ArrDelay, data=ontime)
 qplot(DepDelay, ArrDelay, data=subset(ontime, ArrDelay < 120), alpha=I(.05)) 
 ```
 
-```{r airtime, echo=FALSE}
+### Cancellations?
 
+
+The Department of Transportation is keeping track of four reasons for cancellations: Carrier delays, Weather delays, Security delays and delays due to the National Air System. Three of these reasons were given for cancelled flights in January 2016, as can be seen in Figure \@ref(fig:cancellation-codes). Obviously, cancellations due to weather are most prominent for this timeframe. 
+```{r cancellation-codes}
+cancellations <- subset(ontime, Cancelled == 1)
+levels(cancellations$CancellationCode) <- c("", "Carrier", "Weather", "National Air System")
+qplot(CancellationCode, data=cancellations)
+```
+
+HH: this still needs some work: 
+
+- it seems that some airports are listed multiple times (where does that happen? it's not in the original data, some merge went wrong)
+- number of cancellations are less interesting than the rates of cancellations.
+
+
+
+```{r}
+apCancelOrig <- cancellations %>% group_by(Origin) %>% summarize(
+  n = n()
+)
+apCancelOrig <- merge(apCancelOrig, 
+                      unique(airports[, c("LOCID", "LONGITUDE", "LATITUDE")]),
+                      by.x="Origin", by.y="LOCID")
+ggplot(data=apCancelOrig) + geom_point(aes(LONGITUDE, LATITUDE, size=n))
+table(apCancelOrig$Origin)
+
+apCancelDest <- cancellations %>% group_by(Dest) %>% summarize(
+  n = n()
+)
+apCancelDest <- merge(apCancelDest, airports[, c("LOCID", "LONGITUDE", "LATITUDE")],
+                      by.x="Dest", by.y="LOCID")
+ggplot(data=apCancelDest) + geom_point(aes(LONGITUDE, LATITUDE, size=n))
+table(apCancelDest$Dest)
+```
+
+
+Let us investigate arrival delays by airline and other 
+
+
+
+```{r airtime-delays, echo=FALSE}
+ggplot(aes(x=CRSElapsedTime, y=ActualElapsedTime), data=ontime) +
+  geom_hex(binwidth=c(5,5))
 ```
