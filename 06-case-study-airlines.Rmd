@@ -209,6 +209,28 @@ levels(cancellations$CancellationCode) <- c("", "Carrier", "Weather", "National 
 qplot(CancellationCode, data=cancellations)
 ```
 
+During January 2016 there is a period of four days (see Figure \@ref(fig:day-delays)) that caused massive, mainly weather-related cancellations. 
+
+```{r day-delays}
+cancelDay <- cancellations %>% group_by(DayofMonth, CancellationCode) %>% summarize(
+  n = n()
+)
+qplot(DayofMonth, n, data=cancelDay) + facet_wrap(~CancellationCode)
+```
+
+Looking closer, these cancellations occur mainly in the North East, where winter storm Jonas dropped 2 feet of snow between Jan 22 and Jan 24.
+```{r}
+fourdays <- cancellations %>% filter(between(DayofMonth, 22, 25)) %>%
+  group_by(Origin) %>% summarize(
+    n = n()
+  )
+fourdays <- merge(fourdays, 
+                      unique(airports[, c("LOCID", "LONGITUDE", "LATITUDE")]),
+                      by.x="Origin", by.y="LOCID")
+qplot(LONGITUDE, LATITUDE, size=n, data=fourdays)
+```
+
+
 HH: this still needs some work: 
 
 - it seems that some airports are listed multiple times (where does that happen? it's not in the original data, some merge went wrong)
@@ -216,24 +238,6 @@ HH: this still needs some work:
 
 
 
-```{r}
-apCancelOrig <- cancellations %>% group_by(Origin) %>% summarize(
-  n = n()
-)
-apCancelOrig <- merge(apCancelOrig, 
-                      unique(airports[, c("LOCID", "LONGITUDE", "LATITUDE")]),
-                      by.x="Origin", by.y="LOCID")
-ggplot(data=apCancelOrig) + geom_point(aes(LONGITUDE, LATITUDE, size=n))
-table(apCancelOrig$Origin)
-
-apCancelDest <- cancellations %>% group_by(Dest) %>% summarize(
-  n = n()
-)
-apCancelDest <- merge(apCancelDest, airports[, c("LOCID", "LONGITUDE", "LATITUDE")],
-                      by.x="Dest", by.y="LOCID")
-ggplot(data=apCancelDest) + geom_point(aes(LONGITUDE, LATITUDE, size=n))
-table(apCancelDest$Dest)
-```
 
 
 Let us investigate arrival delays by airline and other 
