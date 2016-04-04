@@ -248,3 +248,16 @@ Let us investigate arrival delays by airline and other
 ggplot(aes(x=CRSElapsedTime, y=ActualElapsedTime), data=ontime) +
   geom_hex(binwidth=c(5,5))
 ```
+
+
+### Fuel
+
+RITA publishes monthly fuel costs and consumptions of airline carriers  on its website at [http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=294&DB_Short_Name=Air%20Carrier%20Financial](http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=294&DB_Short_Name=Air%20Carrier%20Financial).
+We can download the data from there and combine it into one data set for the time frame of the ASA data expo ontime data:
+
+```{r}
+fuel <- read.csv("data/airlines/fuel consumption/fuel.csv")
+qplot(MONTH, TDOMT_GALLONS, colour=UNIQUE_CARRIER, data=fuel) + facet_wrap(~YEAR)
+```
+
+HH: we also need to get the number of miles flown into this picture, as well as the number of passengers, if possible.
