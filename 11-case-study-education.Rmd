@@ -28,7 +28,7 @@ library(forecast)
 
 ```{r load_data, echo = FALSE, message = FALSE, warning = FALSE, results='hide', cache=FALSE}
 # This is the scaffolding to import the data
-sets <- c("item", "parent", "school", "scoredItem", "student")
+sets <- c("school", "student")
 
 # function to build the file names
 fn_build <- function(file_name){
@@ -37,7 +37,7 @@ fn_build <- function(file_name){
   
   file_name %>% 
     vapply(str_join, template, template) %>% 
-    file.path("data/PISA", .)
+    file.path("data/", .)
 }
 
 # load the data
@@ -56,10 +56,10 @@ fn_make_df <- function(named_vector){
 }
 
 # there's a clever way to do this, but beyond me for naw
-dict_item2012 <- fn_make_df(item2012dict) 
-dict_parent2012 <- fn_make_df(parent2012dict) 
+#dict_item2012 <- fn_make_df(item2012dict) 
+#dict_parent2012 <- fn_make_df(parent2012dict) 
 dict_school2012 <- fn_make_df(school2012dict) 
-dict_scoredItem2012 <- fn_make_df(scoredItem2012dict) 
+#dict_scoredItem2012 <- fn_make_df(scoredItem2012dict) 
 dict_student2012 <- fn_make_df(student2012dict) 
 
 # clean
