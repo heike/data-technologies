@@ -1,0 +1,406 @@
+## ---------------------------------- Part I: Data Preparation and Item Selection -------------------------------
+require("ltm")                                              ## ltm package for IRT analysis
+require("homals")                                           ## homals package for categorical PCA
+
+## ------ Raw Data Import
+datraw <- read.csv2("pnas.1506047112.sd01.csv", dec = ".")  ## import raw data
+## Codebook see "pnas.1506047112.sd02.txt"
+
+dim(datraw)                                                 ## 1448 persons in total
+
+## ------ Missing Values 
+nmiss <- apply(datraw, 1, function(x) sum(is.na(x)))        ## check missings
+table(nmiss)  
+## - 310 persons quit the questionnaire immediately
+## - 51 scrolled through without answering
+
+## eliminate persons with full missings (361 in total)
+d <- datraw[which(nmiss < 176),]
+dim(d)                                                      ## 1087 persons
+
+## ---------------------------------------- IRT Analysis ---------------------------------------
+## Unidimensionality is checked with a categorical PCA (homals package)
+## Adjustment for multiple itemfit correction since all of the hypothesis to be tested 
+## are connected/related within the psychological measures to be used. 
+## We use alpha = 0.05 for each psychological measure:
+## alpha_adj = alpha / total # of items of the corresponding subscale.
+## For each itemfit analysis we use the Monte Carlo simulation approach to approximate the p-values. 
+
+
+## ------ Work Design Questionnaire (WDQ) ------
+## remove full WDQ NAs -> 1055 persons, 48 items
+wdq <- d[, 5:52] - 1
+wdq <- wdq[which(colSums(apply(wdq, 1, is.na)) != 48), ]
+dim(wdq)
+
+## Now we perform a 2-PL itemfit analysis for each subscale
+
+## --- task characterstics
+## - autonomy: 01-03
+## - task variety: 04-10        
+## - task significance: 11-14
+## - task identity: 15-18
+## - feedback from job: 19-21
+
+wtask <- wdq[, c(
+  paste0("wdq_0", 1:3),
+  c(paste0("wdq_0", 4:6), "wdq_10"),
+  paste0("wdq_1", 1:4),
+  paste0("wdq_1", 5:8),
+  c("wdq_19", "wdq_20", "wdq_21")
+)]
+dim(wtask)                                        ## 18 items
+
+plot(homals(na.omit(wtask), level = "ordinal"))   ## check unidimensionality
+fit.wtask <- ltm(wtask ~ z1)                      ## 2-PL fit
+set.seed(123)
+ifit.wtask <- item.fit(fit.wtask, simulate.p.value = TRUE)  ## compute Q1 statistic    
+alpha_wdq <- 0.05/dim(wtask)[2]                   ## corrected alpha level
+which(ifit.wtask$p.value < alpha_wdq)             ## itemfit OK
+
+## --- knowledge characteristics
+## - job complexity: 22-24 (reverse coding)
+## - information processing: 25-27
+## - problem solving: 28-31
+## - variety of skills: 32-35
+## - specialization: wdq_36-39               
+wknowledge <- wdq[, c(
+  paste0("wdq_2", 2:4),
+  paste0("wdq_2", 5:7),
+  c("wdq_28", "wdq_29", "wdq_30", "wdq_31"),
+  paste0("wdq_3", 2:5),
+  paste0("wdq_3", 6:9)
+)]
+for(i in paste0("wdq_2", 2:4)) wknowledge[[i]] <- 1 - wknowledge[[i]]  ## due to reverse coding
+dim(wknowledge)                                                 ## 18 items
+
+plot(homals(na.omit(wknowledge), level = "ordinal"))            ## check unidimensionality, wdq_22 goes in different direction.
+wknowledge <- wknowledge[, -grep("wdq_22", names(wknowledge))]  ## eliminate wdq_22 
+fit.wknowledge <- ltm(wknowledge ~ z1)                          ## 2-PL fit
+set.seed(123)
+ifit.wknowledge <- item.fit(fit.wknowledge, simulate.p.value = TRUE)  ## compute Q1 statistic
+alpha_wdq <- 0.05/dim(wknowledge)[2]                            ## corrected alpha level
+which(ifit.wknowledge$p.value < alpha_wdq)                      ## itemfit OK
+
+## --- social characteristics
+## - initiated interdependence: 40-42
+## - received interdependence: 43-45
+## - feedback from others: 46-48
+wsocial <- wdq[, c(
+  paste0("wdq_4", 0:2),
+  paste0("wdq_4", 3:5),
+  paste0("wdq_4", 6:8)
+)]
+dim(wsocial)                                                        ## 9 items
+
+plot(homals(na.omit(wsocial), level = "ordinal"))                   ## unidimensionality check
+fit.wsocial <- ltm(wsocial ~ z1)                                    ## 2-PL fit
+set.seed(123)
+ifit.wsocial <- item.fit(fit.wsocial, simulate.p.value = TRUE)      ## compute Q1 statistic
+alpha_wdq <- 0.05/dim(wsocial)[2]                                   ## corrected alpha level
+which(ifit.wsocial$p.value < alpha_wdq)                             ## itemfit OK
+
+
+## ------ Reinholt Motivation Scale ------
+## remove full NAs in Motivation scale 
+reinholt <- d[,72:107] - 1
+reinholt <- reinholt[which(colSums(apply(reinholt, 1, is.na)) != 36),]
+dim(reinholt)                                     ## 852 persons, 36 items
+
+## --- extreme extrinsic motivation
+## - external regulation: 01-08
+## - introjection: 09-12
+mextrinsic <- reinholt[, c(
+  paste0("eim_0", 1:8),
+  c("eim_09", paste0("eim_1", 0:2))
+)]
+dim(mextrinsic)                                        ## 12 items
+
+plot(homals(na.omit(mextrinsic), level = "ordinal"))             ## unidimensionality: eim_05 and eim_06 extremely suspicious
+mextrinsic <- mextrinsic[, -grep("eim_05", names(mextrinsic))]   ## eliminate eim_05 and eim_06 right away
+mextrinsic <- mextrinsic[, -grep("eim_06", names(mextrinsic))] 
+fit.mextrinsic <- ltm(mextrinsic ~ z1)                 ## 2-PL fit
+set.seed(123)
+ifit.mextrinsic <- item.fit(fit.mextrinsic, simulate.p.value = TRUE)  ## compute Q1 statistic
+alpha_reinholt <- 0.05/dim(mextrinsic)[2]              ## alpha correction
+which(ifit.mextrinsic$p.value < alpha_reinholt)        ## itemfit OK
+
+## --- well-internalized extrinsic motivation/moderated intrinsic motivation
+## - identification: 13-17
+## - integration: 18-22
+## - obligation based motivation: 23-27
+## - self-reinforcement: 28-31
+mhybrid <- reinholt[, c(
+  paste0("eim_1", 3:7),
+  c(paste0("eim_1", 8:9), paste0("eim_2", 0:2)),
+  paste0("eim_2", 3:7),
+  c(paste0("eim_2", 8:9), paste0("eim_3", 0:1))
+)]
+dim(mhybrid)                                       ## 19 items
+
+plot(homals(na.omit(mhybrid), level = "ordinal"))  ## unidimensionality check
+fit.mhybrid <- ltm(mhybrid ~ z1)                   ## 2-PL fit
+set.seed(123)
+ifit.mhybrid <- item.fit(fit.mhybrid, simulate.p.value = TRUE)  ## compute Q1 statistic
+alpha_reinholt <- 0.05/dim(mhybrid)[2]             ## alpha correction
+which(ifit.mhybrid$p.value < alpha_reinholt)       ## itemfit OK
+
+## --- extreme intrinsic motivation
+## - enjoyment based intrinsic motivation: 32-36
+mintrinsic <- reinholt[, paste0("eim_3", 2:6)]
+dim(mintrinsic)                              ## 5 items
+
+plot(homals(na.omit(mintrinsic), level = "ordinal"))         ## unidimensionality check
+fit.mintrinsic <- ltm(mintrinsic ~ z1)                       ## 2-PL fit
+set.seed(222)
+ifit.mintrinsic <- item.fit(fit.mintrinsic, G = 3, simulate.p.value = TRUE) ## Q1 statistic; G lowered due to convergence problems
+alpha_reinholt <- 0.05/dim(mintrinsic)[2]                    ## alpha correction
+which(ifit.mintrinsic$p.value < alpha_reinholt)              ## itemfit OK
+
+## ------ Schwartz Value Scale 
+## remove full NAs in Schwartz scale 
+schwartz <- d[,53:71] - 1
+schwartz <- schwartz[which(colSums(apply(schwartz, 1, is.na)) != 19),]
+dim(schwartz)                               ## 853 persons, 19 items
+
+## --- universalism
+vuniversalism <- schwartz[, c("svs_01", "svs_07", "svs_09", "svs_10", "svs_12", "svs_13", "svs_15", "svs_16")]
+vuniversalism <- vuniversalism[rowSums(!is.na(vuniversalism)) > 0, ]
+dim(vuniversalism)                          ## 8 items
+
+plot(homals(na.omit(vuniversalism), level = "ordinal"))  ## check unidimensionality
+fit.vuniversalism <- ltm(vuniversalism ~ z1)             ## 2-PL fit   
+set.seed(123)
+ifit.vuniversalism <- item.fit(fit.vuniversalism, simulate.p.value = TRUE) ## compute Q1 statistic
+alpha_schwartz <- 0.05/dim(vuniversalism)[2]             ## alpha correction
+which(ifit.vuniversalism$p.value < alpha_schwartz)       ## itemfit OK
+
+## --- power
+vpower <- schwartz[, c("svs_02", "svs_04", "svs_08", "svs_11", "svs_18")]
+vpower <- vpower[rowSums(!is.na(vpower)) > 0, ]
+dim(vpower)                                            ## 5 items
+
+plot(homals(na.omit(vpower), level = "ordinal"))       ## check unidimensionality  
+fit.vpower <- ltm(vpower ~ z1)                         ## 2-PL fit
+set.seed(123)
+ifit.vpower <- item.fit(fit.vpower, simulate.p.value = TRUE)  ## compute Q1 statistic
+alpha_schwartz <- 0.05/dim(vpower)[2]                  ## alpha correction
+which(ifit.vpower$p.value < alpha_schwartz)            ## itemfit OK
+
+## --- self-direction
+vselfdirection <- schwartz[, c("svs_03", "svs_06", "svs_14", "svs_17", "svs_19")]
+vselfdirection <- vselfdirection[rowSums(!is.na(vselfdirection)) > 0, ]
+dim(vselfdirection)                                    ## 5 items
+
+plot(homals(na.omit(vselfdirection), level = "ordinal"))      ## check unidimensionality
+fit.vselfdirection <- ltm(vselfdirection ~ z1)                ## 2-PL fit
+set.seed(123)
+ifit.vselfdirection <- item.fit(fit.vselfdirection, simulate.p.value = TRUE)   ## compute Q1 statistic
+alpha_schwartz <- 0.05/dim(vselfdirection)[2]                 ## alpha correction
+which(ifit.vselfdirection$p.value < alpha_schwartz)           ## itemfit OK
+
+
+## ------------------------------ Compute IRT Person Parameters -------------------------- 
+## some convenience functions for computing the person parameters
+tagify <- function(M) apply(M, 1, paste, collapse = " ")
+fscore <- function(data) {
+  fs <- factor.scores(ltm(data ~ z1), method = "EB")
+  ix <- match(tagify(data), tagify(fs$score.dat[, 1:nrow(fs$coef)]))
+  list(
+    scores = fs$score.dat$z1[ix],
+    serrs  = fs$score.dat$se.z1[ix],
+    names  = rownames(data)
+  )
+}
+
+## compute person parameters and associated standard errors
+pp <- list(
+ wtask = fscore(wtask),
+ wsocial = fscore(wsocial),
+ wknowledge = fscore(wknowledge),
+ mextrinsic = fscore(mextrinsic),
+ mhybrid = fscore(mhybrid),
+ mintrinsic = fscore(mintrinsic),
+ vuniversalism = fscore(vuniversalism),
+ vpower = fscore(vpower),
+ vselfdirection = fscore(vselfdirection)
+)
+
+## ---------------------------------- Final Preparation Step for Data used in GLMs -------------------------
+## dependent variables
+RMotivation <- d[, c("v_210", "v_211", "v_192")]
+names(RMotivation) <- c("lists", "meet", "npkgs")
+RMotivation$lists <- factor(RMotivation$lists, levels = 1:2, labels = c("no", "yes"))
+RMotivation$meet <- factor(RMotivation$meet, levels = 1:2, labels = c("no", "yes"))
+
+## person parameters for scales and associated standard errors
+for(i in names(pp)) {
+  RMotivation[pp[[i]]$names, i] <- pp[[i]]$scores
+  RMotivation[pp[[i]]$names, paste0(i, ".se")] <- pp[[i]]$serrs
+}
+
+## socio-demographic variables
+RMotivation$gender    <- factor(d$v_216, levels = 1:2, labels = c("male", "female"))   ## gender
+RMotivation$phd       <- factor(d$v_220, levels = 0:1, labels = c("no", "yes"))        ## PhD 
+RMotivation$statseduc <- factor(d$v_222, levels = 0:1, labels = c("no", "yes"))        ## statistical education
+RMotivation$fulltime  <- factor(d$v_231, levels = 0:1, labels = c("no", "yes"))        ## working full-time
+RMotivation$academia  <- factor(d$v_237, levels = 0:1, labels = c("no", "yes"))        ## working in academia
+RMotivation$statswork <- factor(d$v_245, levels = 0:1, labels = c("no", "yes"))        ## working in the statistical area
+
+## save(RMotivation, file = "RMotivation.rda")
+
+## ------------------------------ Part II: This code reproduces all the analyses in the article -------------------------------------------
+## load("RMotivation.rda")  
+require("lattice")
+require("simex")
+require("memisc")
+require("xtable")
+require("MASS")
+require("effects")
+
+RMotivation <- na.omit(RMotivation)
+psychometrics <- c("wtask", "wsocial", "wknowledge", "mextrinsic", "mhybrid", "mintrinsic", "vuniversalism", "vpower", "vselfdirection")  
+psychometricsSE <- paste0(psychometrics, ".se")
+demographics <- c("phd", "statseduc", "fulltime", "academia", "statswork")
+
+
+## -------------------------- examining possible non-response bias ----------------------------
+freqsamp <- table(RMotivation$npkgs)                                   ## sample frequencies
+sfreqsplot <- c(freqsamp[3:10], sum(freqsamp[11:length(freqsamp)]))    ## conditional relative frequencies (sample)
+samp2_10 <- round(prop.table(sfreqsplot), 3) * 100                     ## percentages
+pop2_10 <- structure(c(50.9, 18.3, 10.3, 7.1, 3, 2, 1.4, 0.8, 6.3), .Names = c(2:9, "10+"))  ## population percentages
+
+## --- plot sample vs. population proportions (Fig. S1)
+plot(2:10, samp2_10, type = "b", xlab = "Number of Packages", ylab = "Relative Frequencies [%]", 
+     ylim = c(0,55), main = "Sample vs. Population", xaxt = "n")
+points(2:10, pop2_10, type = "b", col = "black", lty = 2, lwd = 1, pch = 2)
+legend("topright", legend = c("Sample", "Population"), col = 1, lty = 1:2, pch = 1:2)
+axis(1, at = 2:10, labels = c(2:9, "10+"))
+
+
+## --------------------------- descriptive analysis ----------------------------
+## histogram: number of packages (Fig. S2)
+hist(RMotivation$npkgs, main = "Histogram R Packages", xlab = "Number of R Packages", breaks = -1:max(RMotivation$npkgs, na.rm = TRUE) + 0.5)
+
+
+## --------------------------- regression models -------------------------------
+## --- negative-binomial regression: number of packages
+if(file.exists("models-npkgs.rda")) {
+  load("models-npkgs.rda")
+} else {
+  formulaGLMnpkgs <- as.formula(paste("npkgs ~", paste(c(psychometrics, demographics), collapse = " +")))
+  fitnpkgsNB <- glm.nb(formulaGLMnpkgs, RMotivation, x = TRUE, y = TRUE)
+  fitnpkgs <- glm(formulaGLMnpkgs, RMotivation, family = negative.binomial(fitnpkgsNB$theta), x = TRUE, y = TRUE)
+  
+  ## stepwise selection
+  fitnpkgsStep <- step(fitnpkgs, formulaGLMnpkgs, trace = 0)
+  fitnpkgsStepplot <- fitnpkgsStep
+  
+  ## SIMEX versions
+  ME <- RMotivation[, psychometricsSE]
+  fitnpkgsSimex <- simex(fitnpkgs, SIMEXvariable = psychometrics, measurement.error = ME, asymptotic = FALSE) 
+  psychoind <- psychometrics %in% names(coef(fitnpkgsStep))
+  ME1 <- RMotivation[, psychometricsSE[psychoind]]
+  fitnpkgsStepSimex <- simex(fitnpkgsStep, SIMEXvariable = psychometrics[psychoind], measurement.error = ME1, asymptotic = FALSE) 
+  fitnpkgs$xlevels <- NULL
+  fitnpkgsStep$xlevels <- NULL
+  
+  ## save results
+  save(fitnpkgs, fitnpkgsSimex, fitnpkgsStep, fitnpkgsStepSimex, fitnpkgsStepplot, file = "models-npkgs.rda")
+}
+
+## regression table (Table S1)
+tabnpkgs <- mtable(
+  "Full (ML)" = fitnpkgs,
+  "Full (SIMEX)" = fitnpkgsSimex,
+  "Step (ML)" = fitnpkgsStep,
+  "Step (SIMEX)" = fitnpkgsStepSimex,
+  summary.stats = FALSE) 
+toLatex(tabnpkgs)
+
+## effect plots 
+plot(allEffects(fitnpkgsStepplot), ylab = "Number of packages", type = "response", ylim = c(1.6, 4))
+
+
+## --- logistic regression (participation in lists)
+if(file.exists("models-lists.rda")) {
+  load("models-lists.rda")
+} else {
+  ## formula
+  formulaGLMlists <- as.formula(paste("lists ~", paste(c(psychometrics, demographics), collapse = " +")))
+  
+  ## full logistic regression
+  fitlists <- glm(formulaGLMlists, RMotivation, family = binomial(), x = TRUE, y = TRUE)
+  
+  ## stepwise selection
+  fitlistsStep <- step(fitlists, formulaGLMlists, trace = 0)
+  fitlistsStepplot <- fitlistsStep
+  
+  ## SIMEX versions
+  ME <- RMotivation[, psychometricsSE]
+  fitlistsSimex <- simex(fitlists, SIMEXvariable = psychometrics, measurement.error = ME, asymptotic = FALSE) 
+  psychoind <- psychometrics %in% names(coef(fitlistsStep))
+  ME1 <- RMotivation[, psychometricsSE[psychoind]]
+  fitlistsStepSimex <- simex(fitlistsStep, SIMEXvariable = psychometrics[psychoind], measurement.error = ME1, asymptotic = FALSE) 
+  fitlists$xlevels <- NULL
+  fitlistsStep$xlevels <- NULL
+  
+  ## save results
+  save(fitlists, fitlistsSimex, fitlistsStep, fitlistsStepSimex, fitlistsStepplot, file = "models-lists.rda")
+}
+
+## regression table (Table S2)
+tablists <- mtable(
+  "Full (ML)" = fitlists,
+  "Full (SIMEX)" = fitlistsSimex,
+  "Step (ML)" = fitlistsStep,
+  "Step (SIMEX)" = fitlistsStepSimex,
+  summary.stats = FALSE)  
+toLatex(tablists)
+
+
+## effect plots 
+plot(allEffects(fitlistsStepplot), ylab = "Probability of mailing list participation", type = "response", ylim = c(0.35, 0.75))
+
+
+## --- logistic regression (conference participation)
+if(file.exists("models-meet.rda")) {
+  load("models-meet.rda")
+} else {
+  ## formula
+  formulaGLMmeet <- as.formula(paste("meet ~", paste(c(psychometrics, demographics), collapse = " +")))
+  
+  ## full logistic regression
+  fitmeet <- glm(formulaGLMmeet, RMotivation, family = binomial(), x = TRUE, y = TRUE)
+  
+  ## stepwise selection
+  fitmeetStep <- step(fitmeet, formulaGLMmeet, trace = 0)
+  fitmeetStepplot <- fitmeetStep
+  
+  ## SIMEX versions
+  ME <- RMotivation[, psychometricsSE]
+  fitmeetSimex <- simex(fitmeet, SIMEXvariable = psychometrics, measurement.error = ME, asymptotic = FALSE) 
+  psychoind <- psychometrics %in% names(coef(fitmeetStep))
+  ME1 <- RMotivation[, psychometricsSE[psychoind]]
+  fitmeetStepSimex <- simex(fitmeetStep, SIMEXvariable = psychometrics[psychoind], measurement.error = ME1, asymptotic = FALSE) 
+  fitmeet$xlevels <- NULL
+  fitmeetStep$xlevels <- NULL
+  
+  ## save results
+  save(fitmeet, fitmeetSimex, fitmeetStep, fitmeetStepSimex, fitmeetStepplot, file = "models-meet.rda")
+}
+
+
+## regression table (Table S3)
+tabmeet <- mtable(
+  "Full (ML)" = fitmeet,
+  "Full (SIMEX)" = fitmeetSimex,
+  "Step (ML)" = fitmeetStep,
+  "Step (SIMEX)" = fitmeetStepSimex,
+  summary.stats = FALSE) 
+toLatex(tabmeet)
+
+
+## effect plots 
+plot(allEffects(fitmeetStepplot), ylab = "Probability of conference participation", type = "response", ylim = c(0.13, 0.45))
+

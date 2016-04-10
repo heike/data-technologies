@@ -1,0 +1,235 @@
+Codebook for RMotivationRaw.csv.
+
+Variable Labels
+
+	* Work Design Questionnaire.
+	
+	* autonomy.
+	/wdq_01 "The work on R packages allows me to make my own decisions about how to schedule my work."
+	/wdq_02 "The work on R packages provides me with significant autonomy in making decisions."
+	/wdq_03 "The development of R packages allows me to make decisions about what methods I use to complete my work."
+	* task variety.
+	/wdq_04 "The work on R packages involves a great deal of task variety."
+	/wdq_05 "The work on R packages involves doing a number of different things."
+	/wdq_06 "The work on R packages requires the performance of a wide range of tasks."
+	/wdq_07 "The major work on R packages I undertake is the development of code."
+	/wdq_08 "The major work on R packages I undertake is the packaging/documentation for CRAN."
+	/wdq_09 "The major work on R packages I undertake is the maintenance of R packages."
+ 	wdq_10 "The work on R packages involves performing a variety of tasks."
+	* task significance.
+	/wdq_11 "The results of my work on R packages are likely to significantly affect the lives of other people."
+	/wdq_12 "The work on R packages itself is very significant and important in the broader scheme of things."
+	/wdq_13 "The work on R packages has a large impact on people outside the R community."
+	/wdq_14 "The work performed on R packages has a significant impact on a lot of subjects outside the R community."
+	* task identity.
+	/wdq_15 "The development of R packages involves completing a piece of work that has an obvious beginning and end."
+	/wdq_16 "The development of R packages is arranged so that I can work on an entire package from beginning to end."
+	/wdq_17 "The development of R packages provides me the chance to completely finish the pieces of work I begin."
+	/wdq_18 "The development of R packages allows me to complete the work I start."
+	* feedback from job.
+	/wdq_19 "The work activities themselves provide direct and clear information about the effectiveness (e.g., quality and quantity) of my performance."
+	/wdq_20 "The work on R packages itself provides feedback on my performance."
+	/wdq_21 "The work on R packages itself provides me with information about my performance."
+	* job complexity (VARIABLES wdq_22 , wdq_23  & wdq_24  NEED REVERSE CODING!).
+	/wdq_22 "The work on R packages requires that I only do one task or activity at a time."
+	/wdq_23 "The work on R packages comprises relatively uncomplicated tasks."
+	/wdq_24 "The work on R packages involves performing relatively simple tasks."
+	* information processing.
+	/wdq_25 "The work on R packages requires that I engage in a large amount of thinking."
+	/wdq_26 "The work on R packages requires me to keep track of more than one thing at a time."
+	/wdq_27 "The work on R packages requires me to analyze a lot of information."
+	*problem solving.
+	/wdq_28 "The work on R packages involves solving problems that have no obvious correct answer."
+	/wdq_29 "The work on R packages requires me to be creative."
+	/wdq_30 "The work on R packages often involves dealing with problems that I have not encountered before."
+	/wdq_31 "The work on R packages requires unique ideas or solutions to problems."
+	* variety of skills.
+	/wdq_32 "The work on R packages requires data analysis skills."
+	/wdq_33 "The work on R packages requires programming skills."
+	/wdq_34 "The work on R packages requires technical skills regarding package building and documentation."
+	/wdq_35 "The work on R packages requires the use of a number of skills."
+	* spezialization.
+	/wdq_36 "The work on R packages is highly specialized in terms of purpose, tasks, or activities."
+	/wdq_37 "The tools, procedures, materials, and so forth used to develop R packages are highly specialized in terms of purpose."
+	/wdq_38 "The work on R packages requires very specialized knowledge."
+	/wdq_38a "The work on R packages requires very specialized knowledge."
+	/wdq_39 "The work on R packages requires a depth of expertise."
+	* initiated interdependence.
+	/wdq_40 "My work on R packages affects the activity of other R developers."
+	/wdq_41 "The tasks of others depend directly on my task."
+	/wdq_42 "Unless my work on the R package gets done, other tasks cannot be completed."
+	* received interdependence.
+	/wdq_43 "The activities while working on R packages are greatly affected by the work of other people."
+	/wdq_44 "The work on R packages depends on the work of many different people for its completion."
+	/wdq_45 "My work on R packages cannot be done unless others do their work."
+	* feedback from others.
+	/wdq_46 "I receive a great deal of information from the R community about my R package performance."
+	/wdq_47 "Other people in the R community provide information about the effectiveness (e.g., quality and quantity) of my R package performance."
+	/wdq_48 "I receive feedback on my R package performance from other people in the R community."
+
+	* Schwartz Value Scale.
+
+	* universalism.	
+	/svs_01 "Equality (equal opportunity for all)"
+	/svs_07 "A World at Peace (free of war and conflict)"
+	/svs_09 "Unity with Nature (fitting into nature)"
+	/svs_10 "Wisdom (a mature understanding of life)"
+	/svs_12 "A World of Beauty (beauty of nature and the arts)"
+	/svs_13 "Social Justice (correcting injustice, care for the weak)"
+	/svs_15 "Broad-Minded (tolerant of different ideas and beliefs)"
+	/svs_16 "Protecting the Environment (preserving nature)"
+	* power.
+	/svs_02 "Social Power (control over others, dominance)"
+	/svs_04 "Wealth (material possessions, money)"
+	/svs_08 "Social Recognition (respect, approval by others)"
+	/svs_11 "Authority (the right to lead or command)"
+	/svs_18 "Preserving My Public Image (protecting my "face")"
+	* self-direction.
+	/svs_03 "Freedom (freedom of action and thought)"
+	/svs_05 "Self-Respect (belief in one´s own worth)"
+	/svs_06 "Creativity (uniqueness, imagination)"
+	/svs_14 "Independent (self-reliant, self-sufficient)"
+	/svs_17 "Choosing Own Goals (selecting own purposes)"
+	/svs_19 "Curious (interested in exploring everything)"
+
+	* Types of Intrinsic and Extrinsic Motivation.
+
+	* external regulation.
+	/eim_01 "I can publish the packages in scientific journals."
+	/eim_02 "they are part of my master / PhD thesis."
+	/eim_03 "I need them for teaching courses."
+	/eim_04 "I develop them for clients who pay me."
+	/eim_05 "they are a byproduct of my empirical research. If I cannot find suitable existing software to analyze my data, I develop software components myself."
+	/eim_06 "they are a byproduct of my methodological research. If I develop/extend methods, I develop accompanying software, e.g., for illustrations and simulations."
+	/eim_07 "I expect an enhancement of my career from it."
+	/eim_08 "my employer pays me to do so."
+	* introjection.
+	/eim_09 "that's what my friends do."
+	/eim_10 "it is expected from me."
+	/eim_11 "that´s what my work colleagues do."
+	/eim_12 "it comes more or less with my job."
+	* identification.
+	/eim_13 "it is an important task for me."
+	/eim_14 "I believe that it is a necessity."
+	/eim_15 "I believe it is vital to improve R."
+	/eim_16 "I feel that R requires continuous enhancement."
+	/eim_17 "I think that it is of importance."
+	* integration.
+	/eim_18 "it is part of my identity."
+	/eim_19 "it is important for my personal goals but for no apparent rewards, such as money, career opportunities, etc."
+	/eim_20 "it is part of my character to do so."
+	/eim_21 "it is an integral part of my personality."
+	/eim_22 "it is in line with my personal values."
+	*obligation based motivation.
+	/eim_23 "I feel an obligation towards the R community."
+	/eim_24 "it reflects my responsibility towards the R community."
+	/eim_25 "I believe that it is appropriate to do so."
+	/eim_26 "I aim for social approval of my activities."
+	/eim_27 "I am committed to the R community."
+	*self-reinforcement.
+	/eim_28 "I can feel satisfied with my performance."
+	/eim_29 "it leaves me with a feeling of accomplishment."
+	/eim_30 "it gives me satisfaction to produce something of high quality."
+	/eim_31 "I get the feeling that I´ve accomplished something of great value."
+	* enjoyment based intrinsic motivation.
+	/eim_32 "I enjoy undertaking the required tasks."
+	/eim_33 "I take pleasure in applying my skills."
+	/eim_34 "it means pure fun for me."
+	/eim_35 "I feel that it is an interesting exercise."
+	/eim_36 "it is a joyful activity."
+
+	* Details on the Participation in the R Community.
+
+	* Where did you first get in touch with R?.
+	/v_167 "As student at a university"
+	/v_168 "As academic at a university"
+	/v_169 "At work outside of the university"
+	/v_170 "Media (Internet, Newspaper, etc.)"
+	/v_171 "Other"
+	/v_172 "text"
+	* For how long have you been participating in the R community?.
+	/v_173 "number"
+	* Do you plan to continue to participate in the R community?.
+	/v_179 "Do you plan to continue to participate in the R community? Please indicate the extent to which you think further participation probable on a scale from 1 to 5 (1=Very unlikely, 5=Very likely)!"
+	* Do you use other statistical software packages than R?.
+	/v_181 "IBM SPSS (former SPSS, PASW)"
+	/v_182 "Stata"
+	/v_183 "SAS"
+	/v_184 "S-PLUS"
+	/v_185 "Minitab"
+	/v_186 "Systat"
+	/v_187 "EViews"
+	/v_188 "MATLAB"
+	/v_189 "Other"
+	/v_190 "text"
+	* If you are working in a team coding R packages, how many people other than you work approximately in this team? In case you are working alone, please fill in 0! (MANDATORY BOX!).
+	/v_191 "number"
+	* Until now, in the development of how many R packages have you been involved?
+	/v_192 "number"
+	* Where do you distribute your R packages?.
+	/v_193 "CRAN"
+	/v_194 "Bioconductor"
+	/v_195 "R-Forge (http://R-Forge.R-project.org/)"
+	/v_196 "RForge (http://www.RForge.net/)"
+	/v_201 "Other"
+	/v_202 "text"
+	* In case you have published manuscripts on your R packages, in which media have you published them?.
+	/v_203 "Journal of Statistical Software"
+	/v_204 "The R Journal (or formerly R News)"
+	/v_205 "Journal of Computational & Graphical Statistics"
+	/v_206 "Computational Statistics and Data Analysis"
+	/v_207 "Computational Statistics"
+	/v_208 "Other"
+	/v_209 "text"
+	* Do you participate in other activities of the R community?.
+	/v_210 "R mailing lists (R-help, R-devel, R-SIGs, ...)"
+	/v_211 "R conferences (useR!, DSC, ...)"
+
+	* Details on the Person.
+
+	* How old are you (in years)?.
+	/v_215 "Section 5.1"
+	* Are you ...? (OPTIONS: Male, Female).
+	/v_216 "text"
+	* What is your hightest level of education?.
+	/v_217 "High school"
+	/v_218 "Vocational / technical qualification or apprenticeship"
+	/v_219 "University degree (BA, MSc., MBA, etc.)"
+	/v_220 "University degree (PhD)"
+	* In which fields have you been educated?.
+	/v_222 "Statistics"
+	/v_223 "Business & economics"
+	/v_224 "Social sciences"
+	/v_225 "Life sciences"
+	/v_226 "Engineering & computer technology"
+	/v_227 "Mathematics & natural sciences"
+	/v_228 "Other"
+	/v_229 "text"
+	* Which of the following describes your occupational status?.
+	/v_230 "Part time 1-20hr/wk"
+	/v_231 "Full time work"
+	/v_232 "Training / student"
+	/v_233 "Full time homemaker, carer or parent"
+	/v_234 "Temporary leave (e.g., maternity or sick leave)"
+	/v_235 "Retired"
+	/v_236 "Not working"
+	* Which of these categories best describes your job?.
+	/v_237 "Academic at a university (e.g., Researcher, Lecturer)"
+	/v_238 "Public official (e.g., Researcher at Governmental Body)"
+	/v_239 "Private research institute (e.g., Researcher)"
+	/v_240 "Private sector (e.g., Technician, Statistician)"
+	/v_241 "Student"
+	/v_242 "Not applicable (e.g., Not Working, Homeworker, Carer, Parent, Retired)"
+	/v_243 "Other"
+	/v_244 "text"
+	* In which field do you work?.
+	/v_245 "Statistics"
+	/v_246 "Business & economics"
+	/v_247 "Social sciences"
+	/v_248 "Life sciences"
+	/v_249 "Engineering & computer technology"
+	/v_250 "Mathematics & natural sciences"
+	/v_251 "Other"
+	/v_252 "text"
+	* Which country do you work in?.
+	/v_253 "country".
