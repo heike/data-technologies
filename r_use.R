@@ -22,6 +22,7 @@ datraw$country <- countrynames$name[datraw$v_253]
 datraw$country[is.na(datraw$country)] <- "unknown"
 table(datraw$country)
 
+# Set up map
 world <- getMap(resolution = "low")
 extractPolys <- function(p) {
   polys <- NULL
@@ -39,8 +40,19 @@ extractPolys <- function(p) {
 }
 polys <- extractPolys(world@polygons)
   
-qplot(lon, lat, data=polys, group=region, geom="path")
-qplot(lon, lat, data=polys, group=region, geom="polygon")
+# Map theme
+theme_map <- theme_bw()
+theme_map$line <- element_blank()
+theme_map$strip.text <- element_blank()
+theme_map$axis.text <- element_blank()
+theme_map$plot.title <- element_blank()
+theme_map$axis.title <- element_blank()
+theme_map$panel.border <- element_rect(colour = "grey90", size=1, fill=NA)
+
+qplot(lon, lat, data=polys, group=region, geom="path") + 
+  theme_map + coord_equal()
+qplot(lon, lat, data=polys, group=region, geom="polygon") + 
+  theme_map + coord_equal()
 
 # Match country names to map names
 cntrynames <- unique(datraw$country)
@@ -53,6 +65,10 @@ cntry_count <- datraw %>% group_by(country) %>% tally()
 # Join to map
 polys_cntry <- merge(polys, cntry_count, by.x="ID", by.y="country", all.x=TRUE)
 polys_cntry <- polys_cntry %>% arrange(region, order)
-qplot(lon, lat, data=polys_cntry, group=region, geom="polygon", fill=n) + coord_equal()
+ggplot(data=polys_cntry, aes(x=lon, y=lat)) + 
+  geom_polygon(aes(group=region, fill=n), color="grey90", size=0.1) + 
+  scale_fill_gradient("", low="#e0f3db", high="#43a2ca", na.value="white") + 
+  scale_x_continuous(expand=c(0,0)) + scale_y_continuous(expand=c(0,0)) +
+  coord_equal() + theme_map 
 
 
