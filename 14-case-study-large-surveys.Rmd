@@ -1,0 +1,9 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Government surveys
+
+access and work with very large surveys, such as the American Community Survey (ACS) or BRFSS or GSS or NHANES
+
+Great resources: Thomas Lumley's ```survey``` and ```sqlsurvey``` packages.
