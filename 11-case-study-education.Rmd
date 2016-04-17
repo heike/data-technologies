@@ -6,8 +6,6 @@ knit: bookdown::preview_chapter
 
 Data can be downloaded from [http://www.oecd.org/pisa/pisaproducts/](http://www.oecd.org/pisa/pisaproducts/database-cbapisa2012.htm)
 
-***Need to update code***
-
 Categorical variables, plus continuous and maps
 
 
@@ -17,198 +15,92 @@ library(stringr)
 library(reshape2)
 library(ggplot2)
 library(lubridate)
-library(maps)
-library(ggmap)
-library(htmltools)
 library(rworldmap)
 library(grid)    
 library(scales)
 library(gridExtra)
-library(forecast)
 ```
 
 ```{r load_data, echo = FALSE, message = FALSE, warning = FALSE, results='hide', cache=FALSE}
-# student2012 <- read_csv("http://www.oecd.org/pisa/pisaproducts/CBA_STU12_MAR31.zip") # Zip file is 109.5Mb
-#
-student2012 <- read.fwf("data/PISA2012/CBA_STU12_MAR31.txt", 
-      widths=c(3,7,7,1,6,7,5,2,2,2,4,1,1,4,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,7,
-               7,7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,4,4,4,4,4,4,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               4,4,4,4,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-               1,1,1,2,2,2,1,2,2,1,8,2,8,8,8,9,8,5,5,
-               9,6,6,6,9,9,8,8,9,8,9,9,9,9,8,1,1,8,9,1,8,8,
-               9,9,9,9,9,9,1,9,9,9,8,8,1,1,1,1,3,
-               1,4,9,8,9,9,1,4,9,4,4,9,8,8,
-               9,1,8,4,8,9,9,9,9,8,3,
-               9,9,9,8,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,
-               9,9,9,9,9,9,9,9,9,9,9,
-               9,2,2,9,7), n=-1)
+#student2012.codebook <- read.table("data/PISA2012/codebook.txt")
+#ptm <- proc.time()
+#student2012 <- read.fwf("data/PISA2012/CBA_STU12_MAR31.txt",
+#      widths =  student2012.codebook[,2], col.names = student2012.codebook[,1]) 
+#proc.time() - ptm
+#student2012.sub <- student2012 %>% select(CNT, SCHOOLID, ST04Q01, ST06Q01, ST57Q01, 
+#                                          ST57Q02, ST57Q03, ST57Q04, ST57Q05, ST57Q06, 
+#                                          ST11Q01, ST11Q02,
+#                                          ST15Q01, ST19Q01,
+#                                          ST26Q01, ST26Q02, ST26Q03, ST26Q04, ST26Q05, ST26Q06, ST26Q07, 
+#                                          ST26Q08, ST26Q09, ST26Q10, ST26Q11, ST26Q12, ST26Q13, ST26Q14, 
+#                                          ST27Q01, ST27Q02, ST27Q03, ST27Q04, ST27Q05, ST28Q01,
+#                                          PV1MATH, PV2MATH, PV3MATH, PV4MATH, PV5MATH, 
+#                                          PV1READ, PV2READ, PV3READ, PV4READ, PV5READ, 
+#                                          PV1SCIE, PV2SCIE, PV3SCIE, PV4SCIE, PV5SCIE, senwgt_STU)
+#saveRDS(student2012.sub, "data/PISA2012/student_sub.rds")
+#saveRDS(student2012, "data/PISA2012/student.rds")
 
-# This is the scaffolding to import the data
-sets <- c("school", "student")
-
-# function to build the file names
-fn_build <- function(file_name){
- 
-  template <- c("2012.rda", "2012dict.rda")
-  
-  file_name %>% 
-    vapply(str_join, template, template) %>% 
-    file.path("data/", .)
-}
-
-# load the data
-sets %>% fn_build %>% lapply(load, .GlobalEnv)
-
-# clean
-rm(fn_build, sets)
-
-# function to convert to data-frames
-fn_make_df <- function(named_vector){
-  data.frame(
-    variable = attr(named_vector, "names"),
-    description = named_vector,
-    row.names = NULL
-  )
-}
-
-# there's a clever way to do this, but beyond me for naw
-#dict_item2012 <- fn_make_df(item2012dict) 
-#dict_parent2012 <- fn_make_df(parent2012dict) 
-dict_school2012 <- fn_make_df(school2012dict) 
-#dict_scoredItem2012 <- fn_make_df(scoredItem2012dict) 
-dict_student2012 <- fn_make_df(student2012dict) 
-
-# clean
-rm(fn_make_df)
-#rm(item2012dict, parent2012dict, school2012dict, scoredItem2012dict, student2012dict)
-dim(student2012)
-length(table(student2012$STIDSTD))
+student2012.sub <- readRDS("data/PISA2012/student_sub.rds")
 ```
 
 ```{r mapdata, echo = FALSE, message = FALSE, warning = FALSE, results='hide', cache=FALSE}
-# Produce the maps
-extractPolygons <- function(shapes) {
-
-  dframe <- ldply(1:length(shapes@polygons), function(i) {
-    ob <- shapes@polygons[[i]]@Polygons
-    dframe <- ldply(1:length(ob), function(j) {
-      x <- ob[[j]]
-      co <- x@coords
-      data.frame(co, order=1:nrow(co), group=j)
-    })
-    dframe$region <- i
-    dframe$name <- shapes@polygons[[i]]@ID
-    dframe
-  })
-  # construct a group variable from both group and polygon:
-  dframe$group <- interaction(dframe$region, dframe$group)
-  
-  dframe
-}
-
-# To get a blank background on map
-new_theme_empty <- theme_bw()
-new_theme_empty$line <- element_blank()
-new_theme_empty$rect <- element_blank()
-new_theme_empty$strip.text <- element_blank()
-new_theme_empty$axis.text <- element_blank()
-new_theme_empty$plot.title <- element_blank()
-new_theme_empty$axis.title <- element_blank()
-new_theme_empty$plot.margin <- structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit")
-
 world <- getMap(resolution = "low")
-#library(plyr)
-world.polys <- extractPolygons(world)
-detach("package:plyr")
+extractPolys <- function(p) {
+  polys <- NULL
+  for (i in 1:length(p)) {
+    for (j in 1:length(p[[i]]@Polygons)) {
+      x <- p[[i]]@Polygons[[j]]@coords
+      polys$lon <- c(polys$lon, x[,1])
+      polys$lat <- c(polys$lat, x[,2])
+      polys$ID <- c(polys$ID, rep(p[[i]]@ID, nrow(x)))
+      polys$region <- c(polys$region, rep(paste(p[[i]]@ID, j, sep="_"), nrow(x)))
+      polys$order <- c(polys$order, 1:nrow(x))
+    }
+  }
+  return(data.frame(polys))
+}
+polys <- extractPolys(world@polygons)
 ```
 
 ```{r dataprep, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE}
-colnames(student2012)[1] <- "name"
-student2012$name <- as.character(student2012$name)
-colnames(school2012)[1] <- "name"
-school2012$name <- as.character(school2012$name)
-
 fix_country = function(df) {
-df$name = as.character(df$name)
-df$name[df$name=="Serbia"] <- "Republic of Serbia"
-df$name[df$name=="Korea"] <- "South Korea"
-df$name[df$name=="Chinese Taipei"] <- "Taiwan"
-df$name[df$name=="Slovak Republic"] <- "Slovakia"
-df$name[df$name=="Russian Federation"] <- "Russia"
-df$name[df$name=="Perm(Russian Federation)"] <- "Russia"
-df$name[df$name=="Hong Kong-China"] <- "Hong Kong S.A.R."
-df$name[df$name=="China-Shanghai"] <- "China"
-df$name[df$name=="China-Macau"] <- "China"
-df$name[df$name=="Connecticut (USA)"] <- "United States of America"
-df$name[df$name=="Florida (USA)"] <- "United States of America"
-df$name[df$name=="Massachusetts (USA)"] <- "United States of America"
+df$CNT = as.character(df$CNT)
+df$CNT[df$CNT=="Serbia"] <- "Republic of Serbia"
+df$CNT[df$CNT=="Korea"] <- "South Korea"
+df$CNT[df$CNT=="Chinese Taipei"] <- "Taiwan"
+df$CNT[df$CNT=="Slovak Republic"] <- "Slovakia"
+df$CNT[df$CNT=="Russian Federation"] <- "Russia"
+df$CNT[df$CNT=="Perm(Russian Federation)"] <- "Russia"
+df$CNT[df$CNT=="Hong Kong-China"] <- "Hong Kong S.A.R."
+df$CNT[df$CNT=="China-Shanghai"] <- "China"
+df$CNT[df$CNT=="China-Macau"] <- "China"
+df$CNT[df$CNT=="Connecticut (USA)"] <- "United States of America"
+df$CNT[df$CNT=="Florida (USA)"] <- "United States of America"
+df$CNT[df$CNT=="Massachusetts (USA)"] <- "United States of America"
 
 df
 }
 
 shorten_countrynames = function(df) {
-df$name = as.character(df$name)
-df$name[df$name=="Hong Kong S.A.R."] <- "Hong Kong"
-df$name[df$name=="Republic of Serbia"] <- "Serbia"
-df$name[df$name=="United Arab Emirates"] <- "UAE"
-df$name[df$name=="United States of America"] <- "USA"
-df$name[df$name=="United Kingdom"] <- "UK"
+df$CNT = as.character(df$CNT)
+df$CNT[df$CNT=="Hong Kong S.A.R."] <- "Hong Kong"
+df$CNT[df$CNT=="Republic of Serbia"] <- "Serbia"
+df$CNT[df$CNT=="United Arab Emirates"] <- "UAE"
+df$CNT[df$CNT=="United States of America"] <- "USA"
+df$CNT[df$CNT=="United Kingdom"] <- "UK"
 
 df
 }
 
-# Now add data
-#student2012$name[student2012$name=="Serbia"] <- "Republic of Serbia"
-#student2012$name[student2012$name=="Korea"] <- "South Korea"
-#student2012$name[student2012$name=="Chinese Taipei"] <- "Taiwan"
-#student2012$name[student2012$name=="Slovak Republic"] <- "Slovakia"
-#student2012$name[student2012$name=="Russian Federation"] <- "Russia"
-#student2012$name[student2012$name=="Perm(Russian Federation)"] <- "Russia"
-#student2012$name[student2012$name=="Hong Kong-China"] <- "Hong Kong S.A.R."
-#student2012$name[student2012$name=="China-Shanghai"] <- "China"
-#student2012$name[student2012$name=="China-Macau"] <- "China"
-#student2012$name[student2012$name=="Connecticut (USA)"] <- "United States of America"
-#student2012$name[student2012$name=="Florida (USA)"] <- "United States of America"
-#student2012$name[student2012$name=="Massachusetts (USA)"] <- "United States of America"
-student2012$ST06Q01 <- as.numeric(student2012$ST06Q01)
-student2012$PV1MATH <- as.numeric(student2012$PV1MATH)
-student2012$PV1READ <- as.numeric(student2012$PV1READ)
-student2012$PV1SCIE <- as.numeric(student2012$PV1SCIE)
-student2012$SENWGT_STU <- as.numeric(student2012$SENWGT_STU)
-school2012 = fix_country(school2012)
-student2012 = fix_country(student2012)
+#student2012$ST06Q01 <- as.numeric(student2012$ST06Q01)
+#student2012$PV1MATH <- as.numeric(student2012$PV1MATH)
+#student2012$PV1READ <- as.numeric(student2012$PV1READ)
+#student2012$PV1SCIE <- as.numeric(student2012$PV1SCIE)
+#student2012$SENWGT_STU <- as.numeric(student2012$SENWGT_STU)
+student2012.sub = fix_country(student2012.sub)
 ```
 
-```{r gendermath, fig.width=3.5, fig.height=3.5, warning=FALSE, message=FALSE, echo=FALSE, cache=FALSE, fig.align='center'}
+```
 #library(plyr)
 student2012.sub <- student2012[, c(1, 12, 501, 541, 546, 634)]
 student2012.sub.summary.gap <- summarise(group_by(student2012.sub, name), 
@@ -251,7 +143,7 @@ ggplot(data=student2012.sub.summary.gap) +
         legend.title = element_text(size=5))
 ```
 
-```{r gendermaps, fig.width=4.5, fig.height=2.5, warning=FALSE, message=FALSE, echo=FALSE, cache=FALSE}
+```
 student2012.sub.summary.gap$name <- as.character(student2012.sub.summary.gap$name)
 student2012.sub.map <- left_join(student2012.sub.summary.gap, world.polys)
 student2012.sub.map$msig <- factor(student2012.sub.map$msig)
