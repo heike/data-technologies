@@ -49,10 +49,10 @@ theme_map$plot.title <- element_blank()
 theme_map$axis.title <- element_blank()
 theme_map$panel.border <- element_rect(colour = "grey90", size=1, fill=NA)
 
-qplot(lon, lat, data=polys, group=region, geom="path") + 
-  theme_map + coord_equal()
-qplot(lon, lat, data=polys, group=region, geom="polygon") + 
-  theme_map + coord_equal()
+#qplot(lon, lat, data=polys, group=region, geom="path") + 
+#  theme_map + coord_equal()
+#qplot(lon, lat, data=polys, group=region, geom="polygon") + 
+#  theme_map + coord_equal()
 
 # Match country names to map names
 cntrynames <- unique(datraw$country)
@@ -104,3 +104,4 @@ table(datraw$v_226)
 table(datraw$v_227)
 table(datraw$v_228)
 
+# Look at proportions
