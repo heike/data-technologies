@@ -6,7 +6,7 @@ knit: bookdown::preview_chapter
 
 Data can be downloaded from [http://www.oecd.org/pisa/pisaproducts/](http://www.oecd.org/pisa/pisaproducts/database-cbapisa2012.htm)
 
-Categorical variables, plus continuous and maps
+This example uses a data set with a lot of categorical variables, in addition to numerical variables and it relates to countries that can be displayed as maps.
 
 
 ```{r cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, results='hide'}
@@ -64,32 +64,32 @@ polys <- extractPolys(world@polygons)
 
 ```{r dataprep, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE}
 fix_country = function(df) {
-df$CNT = as.character(df$CNT)
-df$CNT[df$CNT=="Serbia"] <- "Republic of Serbia"
-df$CNT[df$CNT=="Korea"] <- "South Korea"
-df$CNT[df$CNT=="Chinese Taipei"] <- "Taiwan"
-df$CNT[df$CNT=="Slovak Republic"] <- "Slovakia"
-df$CNT[df$CNT=="Russian Federation"] <- "Russia"
-df$CNT[df$CNT=="Perm(Russian Federation)"] <- "Russia"
-df$CNT[df$CNT=="Hong Kong-China"] <- "Hong Kong S.A.R."
-df$CNT[df$CNT=="China-Shanghai"] <- "China"
-df$CNT[df$CNT=="China-Macau"] <- "China"
-df$CNT[df$CNT=="Connecticut (USA)"] <- "United States of America"
-df$CNT[df$CNT=="Florida (USA)"] <- "United States of America"
-df$CNT[df$CNT=="Massachusetts (USA)"] <- "United States of America"
+  df$CNT = as.character(df$CNT)
+  df$CNT[df$CNT=="Serbia"] <- "Republic of Serbia"
+  df$CNT[df$CNT=="Korea"] <- "South Korea"
+  df$CNT[df$CNT=="Chinese Taipei"] <- "Taiwan"
+  df$CNT[df$CNT=="Slovak Republic"] <- "Slovakia"
+  df$CNT[df$CNT=="Russian Federation"] <- "Russia"
+  df$CNT[df$CNT=="Perm(Russian Federation)"] <- "Russia"
+  df$CNT[df$CNT=="Hong Kong-China"] <- "Hong Kong S.A.R."
+  df$CNT[df$CNT=="China-Shanghai"] <- "China"
+  df$CNT[df$CNT=="China-Macau"] <- "China"
+  df$CNT[df$CNT=="Connecticut (USA)"] <- "United States of America"
+  df$CNT[df$CNT=="Florida (USA)"] <- "United States of America"
+  df$CNT[df$CNT=="Massachusetts (USA)"] <- "United States of America"
 
-df
+  df
 }
 
 shorten_countrynames = function(df) {
-df$CNT = as.character(df$CNT)
-df$CNT[df$CNT=="Hong Kong S.A.R."] <- "Hong Kong"
-df$CNT[df$CNT=="Republic of Serbia"] <- "Serbia"
-df$CNT[df$CNT=="United Arab Emirates"] <- "UAE"
-df$CNT[df$CNT=="United States of America"] <- "USA"
-df$CNT[df$CNT=="United Kingdom"] <- "UK"
+  df$CNT = as.character(df$CNT)
+  df$CNT[df$CNT=="Hong Kong S.A.R."] <- "Hong Kong"
+  df$CNT[df$CNT=="Republic of Serbia"] <- "Serbia"
+  df$CNT[df$CNT=="United Arab Emirates"] <- "UAE"
+  df$CNT[df$CNT=="United States of America"] <- "USA"
+  df$CNT[df$CNT=="United Kingdom"] <- "UK"
 
-df
+  df
 }
 
 #student2012$ST06Q01 <- as.numeric(student2012$ST06Q01)
@@ -98,42 +98,50 @@ df
 #student2012$PV1SCIE <- as.numeric(student2012$PV1SCIE)
 #student2012$SENWGT_STU <- as.numeric(student2012$SENWGT_STU)
 student2012.sub = fix_country(student2012.sub)
+student2012.sub = shorten_countrynames(student2012.sub)
 ```
 
-```
-#library(plyr)
-student2012.sub <- student2012[, c(1, 12, 501, 541, 546, 634)]
-student2012.sub.summary.gap <- summarise(group_by(student2012.sub, name), 
-                  mathgap=mean(PV1MATH[ST04Q01=="Male"], na.rm=T)-
-                          mean(PV1MATH[ST04Q01=="Female"], na.rm=T),
-                  wmathgap=weighted.mean(PV1MATH[ST04Q01=="Male"], w=SENWGT_STU[ST04Q01=="Male"], na.rm=T)-
-                          weighted.mean(PV1MATH[ST04Q01=="Female"], w=SENWGT_STU[ST04Q01=="Female"], na.rm=T),
-                  mtest.stat = t.test(PV1MATH[ST04Q01=="Male"], PV1MATH[ST04Q01=="Female"])$statistic, 
-                  mp.value = t.test(PV1MATH[ST04Q01=="Male"], PV1MATH[ST04Q01=="Female"])$p.value,
-                  readgap=mean(PV1READ[ST04Q01=="Male"], na.rm=T)-mean(PV1READ[ST04Q01=="Female"], na.rm=T),
-                  rtest.stat = t.test(PV1READ[ST04Q01=="Male"], PV1READ[ST04Q01=="Female"])$statistic, 
-                  rp.value = t.test(PV1READ[ST04Q01=="Male"], PV1READ[ST04Q01=="Female"])$p.value,
-                  sciencegap=mean(PV1SCIE[ST04Q01=="Male"], na.rm=T)-mean(PV1SCIE[ST04Q01=="Female"], na.rm=T),
-                  stest.stat = t.test(PV1SCIE[ST04Q01=="Male"], PV1SCIE[ST04Q01=="Female"])$statistic, 
-                  sp.value = t.test(PV1SCIE[ST04Q01=="Male"], PV1SCIE[ST04Q01=="Female"])$p.value,         
-                  minmale=min(PV1MATH[ST04Q01=="Male"], na.rm=T), 
-                  minfemale=min(PV1MATH[ST04Q01=="Female"], na.rm=T), 
-                  maxmale=max(PV1MATH[ST04Q01=="Male"], na.rm=T), 
-                  maxfemale=max(PV1MATH[ST04Q01=="Female"], na.rm=T), 
-                  propmale=length(PV1MATH[ST04Q01=="Male"])/length(PV1MATH), 
-                  propfemale=length(PV1MATH[ST04Q01=="Female"])/length(PV1MATH))
-#qplot(mathgap, wmathgap, data=student2012.sub.summary.gap, xlab="Mean", ylab="Weighted Mean",
-#      xlim=c(-30,30), ylim=c(-30,30)) + geom_abline(slope=1) + theme(aspect.ratio=1)
-student2012.sub.summary.gap$msig <- ifelse(student2012.sub.summary.gap$mp.value>0.05, "none", TRUE)
-student2012.sub.summary.gap$msig[student2012.sub.summary.gap$msig==TRUE&student2012.sub.summary.gap$mtest.stat>0] <- "male"
-student2012.sub.summary.gap$msig[student2012.sub.summary.gap$msig==TRUE&student2012.sub.summary.gap$mtest.stat<0] <- "female"
+```{r computemean, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE}
+student2012.stats <- student2012.sub %>% 
+  group_by(CNT) %>%
+  summarise(mathgap=mean(PV1MATH[ST04Q01=="Male"], na.rm=T)-
+                    mean(PV1MATH[ST04Q01=="Female"], na.rm=T),
+            wmathgap=weighted.mean(PV1MATH[ST04Q01=="Male"], 
+                                   w=senwgt_STU[ST04Q01=="Male"], na.rm=T)-
+                     weighted.mean(PV1MATH[ST04Q01=="Female"],
+                                   w=senwgt_STU[ST04Q01=="Female"], na.rm=T),
+            mtest.stat = t.test(PV1MATH[ST04Q01=="Male"],
+                                PV1MATH[ST04Q01=="Female"])$statistic, 
+            mp.value = t.test(PV1MATH[ST04Q01=="Male"],
+                              PV1MATH[ST04Q01=="Female"])$p.value,
+            readgap=mean(PV1READ[ST04Q01=="Male"], na.rm=T) -
+                    mean(PV1READ[ST04Q01=="Female"], na.rm=T),
+            rtest.stat = t.test(PV1READ[ST04Q01=="Male"],
+                                PV1READ[ST04Q01=="Female"])$statistic, 
+            rp.value = t.test(PV1READ[ST04Q01=="Male"], 
+                              PV1READ[ST04Q01=="Female"])$p.value,
+            sciencegap=mean(PV1SCIE[ST04Q01=="Male"], na.rm=T) -
+                  mean(PV1SCIE[ST04Q01=="Female"], na.rm=T),
+            stest.stat = t.test(PV1SCIE[ST04Q01=="Male"],
+                                PV1SCIE[ST04Q01=="Female"])$statistic, 
+            sp.value = t.test(PV1SCIE[ST04Q01=="Male"],
+                              PV1SCIE[ST04Q01=="Female"])$p.value,         
+            minmale = min(PV1MATH[ST04Q01=="Male"], na.rm=T), 
+            minfemale = min(PV1MATH[ST04Q01=="Female"], na.rm=T), 
+            maxmale = max(PV1MATH[ST04Q01=="Male"], na.rm=T), 
+            maxfemale = max(PV1MATH[ST04Q01=="Female"], na.rm=T), 
+            propmale = length(PV1MATH[ST04Q01=="Male"])/length(PV1MATH), 
+            propfemale = length(PV1MATH[ST04Q01=="Female"])/length(PV1MATH))
+student2012.stats$msig <- ifelse(student2012.stats$mp.value>0.05, "none", TRUE)
+student2012.stats$msig[student2012.stats$msig==TRUE&student2012.stats$mtest.stat>0] <- "male"
+student2012.stats$msig[student2012.stats$msig==TRUE&student2012.stats$mtest.stat<0] <- "female"
 #ddply(student2012.sub, .(name), bootfn)
 #results <- boot(data=aus, statistic=cifn, R=1000)
-student2012.sub.summary.gap$name <- factor(student2012.sub.summary.gap$name, 
-      levels=student2012.sub.summary.gap$name[order(student2012.sub.summary.gap$mathgap)])
-ggplot(data=student2012.sub.summary.gap) + 
+student2012.stats$CNT <- factor(student2012.stats$CNT, 
+      levels=student2012.stats$CNT[order(student2012.stats$mathgap)])
+ggplot(data=student2012.stats) + 
   geom_hline(yintercept=0, colour="grey80") + coord_flip() + theme_bw() + 
-  geom_point(aes(x=name, y=mathgap, color=msig), size=1) + 
+  geom_point(aes(x=CNT, y=mathgap, color=msig), size=1) + 
   xlab("") +  
   scale_colour_manual("Significant", values=c("male"="skyblue", "female"="pink", "none"="lightgreen")) +
   scale_y_continuous("Girls <----------> Boys", breaks=seq(-40, 40, 10), limits=c(-45, 45), 
@@ -144,8 +152,8 @@ ggplot(data=student2012.sub.summary.gap) +
 ```
 
 ```
-student2012.sub.summary.gap$name <- as.character(student2012.sub.summary.gap$name)
-student2012.sub.map <- left_join(student2012.sub.summary.gap, world.polys)
+student2012.stats$CNT <- as.character(student2012.stats$CNT)
+student2012.sub.map <- left_join(student2012.stats, world.polys)
 student2012.sub.map$msig <- factor(student2012.sub.map$msig)
 ggplot(data=world.polys) + 
   geom_path(aes(x=X1, y=X2, order=order, group=group), colour=I("grey90"), size=0.1) + 
