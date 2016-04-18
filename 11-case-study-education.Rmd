@@ -27,8 +27,8 @@ library(SAScii)
 #ptm <- proc.time()
 #student2012 <- read.fwf("data/PISA2012/CBA_STU12_MAR31.txt",
 #      widths =  student2012.codebook[,2], col.names = student2012.codebook[,1], n=10) 
-student2012 <- read.SAScii("data/PISA2012/CBA_STU12_MAR31.txt", "data/PISA2012/PISA2012_SAS_CBA_student.sas",
-                           beginline=8997)
+#student2012 <- read.SAScii("data/PISA2012/CBA_STU12_MAR31.txt", "data/PISA2012/PISA2012_SAS_CBA_student.sas",
+#                           beginline=8997)
 #proc.time() - ptm
 #student2012.sub <- student2012 %>% select(CNT, SCHOOLID, ST04Q01, ST06Q01, ST57Q01, 
 #                                          ST57Q02, ST57Q03, ST57Q04, ST57Q05, ST57Q06, 
