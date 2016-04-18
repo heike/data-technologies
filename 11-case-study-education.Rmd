@@ -104,13 +104,11 @@ shorten_countrynames = function(df) {
   df
 }
 
-#student2012$ST06Q01 <- as.numeric(student2012$ST06Q01)
-#student2012$PV1MATH <- as.numeric(student2012$PV1MATH)
-#student2012$PV1READ <- as.numeric(student2012$PV1READ)
-#student2012$PV1SCIE <- as.numeric(student2012$PV1SCIE)
-#student2012$SENWGT_STU <- as.numeric(student2012$SENWGT_STU)
-student2012.sub = fix_country(student2012.sub)
-student2012.sub = shorten_countrynames(student2012.sub)
+#student2012.sub = fix_country(student2012.sub)
+#student2012.sub = shorten_countrynames(student2012.sub)
+student2012.sub$name <- isoToName(student2012.sub$CNT)
+student2012.sub$ST04Q01 <- factor(student2012.sub$ST04Q01, 
+  levels=c(1,2), labels=c("Female", "Male"))
 ```
 
 ```{r computemean, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE}
@@ -121,41 +119,21 @@ student2012.stats <- student2012.sub %>%
             wmathgap=weighted.mean(PV1MATH[ST04Q01=="Male"], 
                                    w=SENWGT_STU[ST04Q01=="Male"], na.rm=T)-
                      weighted.mean(PV1MATH[ST04Q01=="Female"],
-                                   w=SENWGT_STU[ST04Q01=="Female"], na.rm=T),
-            mtest.stat = t.test(PV1MATH[ST04Q01=="Male"],
-                                PV1MATH[ST04Q01=="Female"])$statistic, 
-            mp.value = t.test(PV1MATH[ST04Q01=="Male"],
-                              PV1MATH[ST04Q01=="Female"])$p.value,
-            readgap=mean(PV1READ[ST04Q01=="Male"], na.rm=T) -
-                    mean(PV1READ[ST04Q01=="Female"], na.rm=T),
-            rtest.stat = t.test(PV1READ[ST04Q01=="Male"],
-                                PV1READ[ST04Q01=="Female"])$statistic, 
-            rp.value = t.test(PV1READ[ST04Q01=="Male"], 
-                              PV1READ[ST04Q01=="Female"])$p.value,
-            sciencegap=mean(PV1SCIE[ST04Q01=="Male"], na.rm=T) -
-                  mean(PV1SCIE[ST04Q01=="Female"], na.rm=T),
-            stest.stat = t.test(PV1SCIE[ST04Q01=="Male"],
-                                PV1SCIE[ST04Q01=="Female"])$statistic, 
-            sp.value = t.test(PV1SCIE[ST04Q01=="Male"],
-                              PV1SCIE[ST04Q01=="Female"])$p.value,         
-            minmale = min(PV1MATH[ST04Q01=="Male"], na.rm=T), 
-            minfemale = min(PV1MATH[ST04Q01=="Female"], na.rm=T), 
-            maxmale = max(PV1MATH[ST04Q01=="Male"], na.rm=T), 
-            maxfemale = max(PV1MATH[ST04Q01=="Female"], na.rm=T), 
-            propmale = length(PV1MATH[ST04Q01=="Male"])/length(PV1MATH), 
-            propfemale = length(PV1MATH[ST04Q01=="Female"])/length(PV1MATH))
-student2012.stats$msig <- ifelse(student2012.stats$mp.value>0.05, "none", TRUE)
-student2012.stats$msig[student2012.stats$msig==TRUE&student2012.stats$mtest.stat>0] <- "male"
-student2012.stats$msig[student2012.stats$msig==TRUE&student2012.stats$mtest.stat<0] <- "female"
+                                   w=SENWGT_STU[ST04Q01=="Female"], na.rm=T))
 #ddply(student2012.sub, .(name), bootfn)
 #results <- boot(data=aus, statistic=cifn, R=1000)
+student2012.stats <-  student2012.stats %>% 
+  mutate(wmathgap_cat = cut(wmathgap, breaks=c(-10,-5, 5, 30), 
+                            labels=c("girls", "same", "boys")))
+
 student2012.stats$CNT <- factor(student2012.stats$CNT, 
-      levels=student2012.stats$CNT[order(student2012.stats$mathgap)])
+      levels=student2012.stats$CNT[order(student2012.stats$wmathgap)])
+
 ggplot(data=student2012.stats) + 
   geom_hline(yintercept=0, colour="grey80") + coord_flip() + theme_bw() + 
-  geom_point(aes(x=CNT, y=mathgap, color=msig), size=1) + 
+  geom_point(aes(x=CNT, y=wmathgap, color=wmathgap_cat), size=4) + 
   xlab("") +  
-  scale_colour_manual("Significant", values=c("male"="skyblue", "female"="pink", "none"="lightgreen")) +
+  scale_colour_manual("Diff>5", values=c("boys"="skyblue", "girls"="pink", "same"="lightgreen")) +
   scale_y_continuous("Girls <----------> Boys", breaks=seq(-40, 40, 10), limits=c(-45, 45), 
                      labels=c(seq(40, 0, -10), seq(10, 40, 10))) + 
   theme(axis.text.x = element_text(size=5), axis.text.y = element_text(size=5), 
