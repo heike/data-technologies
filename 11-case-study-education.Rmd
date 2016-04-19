@@ -106,12 +106,13 @@ shorten_countrynames = function(df) {
 
 #student2012.sub = fix_country(student2012.sub)
 #student2012.sub = shorten_countrynames(student2012.sub)
-student2012.sub$name <- isoToName(student2012.sub$CNT)
+#student2012.sub$name <- isoToName(student2012.sub$CNT)
 student2012.sub$ST04Q01 <- factor(student2012.sub$ST04Q01, 
   levels=c(1,2), labels=c("Female", "Male"))
 ```
 
-```{r computemean, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE}
+```{r computemean, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, fig.width=4, fig.height=8}
+# Calculate the statistics
 student2012.stats <- student2012.sub %>% 
   group_by(CNT) %>%
   summarise(mathgap=mean(PV1MATH[ST04Q01=="Male"], na.rm=T)-
@@ -120,35 +121,49 @@ student2012.stats <- student2012.sub %>%
                                    w=SENWGT_STU[ST04Q01=="Male"], na.rm=T)-
                      weighted.mean(PV1MATH[ST04Q01=="Female"],
                                    w=SENWGT_STU[ST04Q01=="Female"], na.rm=T))
-#ddply(student2012.sub, .(name), bootfn)
-#results <- boot(data=aus, statistic=cifn, R=1000)
+
+# Match three digit codes to country names 
+student2012.stats$name <- NA
+for (i in 1:length(student2012.stats$name))  
+  student2012.stats$name[i] <- isoToName(as.character(student2012.stats$CNT[i]))
+# QCN is Shanghai, not whole of China - Don't know what country TAP is
+student2012.stats$name[student2012.stats$CNT == "QCN"] <- isoToName("CHN")
+student2012.stats$name[student2012.stats$CNT == "TAP"] <- "TAP"
+
+# Make a categorical gap variable
 student2012.stats <-  student2012.stats %>% 
   mutate(wmathgap_cat = cut(wmathgap, breaks=c(-10,-5, 5, 30), 
                             labels=c("girls", "same", "boys")))
 
+# Set order of countries by math gap
 student2012.stats$CNT <- factor(student2012.stats$CNT, 
       levels=student2012.stats$CNT[order(student2012.stats$wmathgap)])
+student2012.stats$name <- factor(student2012.stats$name, 
+      levels=student2012.stats$name[order(student2012.stats$wmathgap)])
 
+# Plot
 ggplot(data=student2012.stats) + 
   geom_hline(yintercept=0, colour="grey80") + coord_flip() + theme_bw() + 
-  geom_point(aes(x=CNT, y=wmathgap, color=wmathgap_cat), size=4) + 
+  geom_point(aes(x=name, y=wmathgap, color=wmathgap_cat), size=4) + 
   xlab("") +  
   scale_colour_manual("Diff>5", values=c("boys"="skyblue", "girls"="pink", "same"="lightgreen")) +
-  scale_y_continuous("Girls <----------> Boys", breaks=seq(-40, 40, 10), limits=c(-45, 45), 
-                     labels=c(seq(40, 0, -10), seq(10, 40, 10))) + 
+  scale_y_continuous("Girls <----------> Boys", breaks=seq(-30, 30, 10), limits=c(-35, 35), 
+                     labels=c(seq(30, 0, -10), seq(10, 30, 10))) + 
   theme(axis.text.x = element_text(size=5), axis.text.y = element_text(size=5), 
         axis.title = element_text(size=7), legend.text = element_text(size=5),
         legend.title = element_text(size=5))
 ```
 
-```
-student2012.stats$CNT <- as.character(student2012.stats$CNT)
-student2012.sub.map <- left_join(student2012.stats, world.polys)
-student2012.sub.map$msig <- factor(student2012.sub.map$msig)
-ggplot(data=world.polys) + 
-  geom_path(aes(x=X1, y=X2, order=order, group=group), colour=I("grey90"), size=0.1) + 
-  geom_polygon(data=student2012.sub.map, aes(x=X1, y=X2, order=order, group=group, fill=msig)) +
-  scale_fill_manual("Significant", values=c("male"="skyblue", "female"="pink", "none"="lightgreen")) +
-  new_theme_empty + theme(legend.position="none", panel.background=element_rect(color="grey50"))
+```{r maps, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, fig.width=8, fig.height=4}
+polys <- polys %>% rename(name = ID)
+student2012.sub.map <- left_join(student2012.stats, polys)
+student2012.sub.map <- student2012.sub.map %>% arrange(region, order)
+
+ggplot(data=polys) + 
+  geom_path(aes(x=lon, y=lat, group=region, order=order), colour=I("grey90"), size=0.1) + 
+  geom_polygon(data=student2012.sub.map, aes(x=lon, y=lat, group=region, order=order,  fill=wmathgap_cat)) +
+  scale_fill_manual("Diff>5", values=c("boys"="skyblue", "girls"="pink", "same"="lightgreen")) + 
+  scale_x_continuous(expand=c(0,0)) + scale_y_continuous(expand=c(0,0)) +
+  coord_equal() + theme_map 
 ```
 
