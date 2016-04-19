@@ -291,7 +291,7 @@ qplot(year, fatalities/number*10^6, data=numbers) + ylab("Rate of accident fatal
 
 + Use the structure you find in file [Format14.sas](data/FARS2014-DBF/Format14.sas) as the basis to write a function ```getLevels(varname, file)``` that takes a variable name and a sas file, and returns a dataframe with all levels of the variable in a numeric format and the level names as strings. 
 
-+ Was there somethings wrong with the vehicle? Investigate variable ```MFACTOR``` in the ```Factor.dbf```. Make sure to re-code the numbers to strings. 
++ Was there something wrong with the vehicle? Investigate variable ```MFACTOR``` in the ```Factor.dbf```. Make sure to re-code the numbers to strings. 
 
 + Include gender in the discussion of Figure \@ref(fig:when). (Warning! This question looks harmless, but requires some work.)
 

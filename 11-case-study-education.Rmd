@@ -2,12 +2,15 @@
 knit: bookdown::preview_chapter
 ---
 
-# PISA
+# PISA: Programme for International Student Assessment
 
-Data can be downloaded from [http://www.oecd.org/pisa/pisaproducts/](http://www.oecd.org/pisa/pisaproducts/database-cbapisa2012.htm)
+Every three years an international survey is conducted to assess the educational systems across the globe by testing 15 year olds on math, science and reading. Each child, school, parent are also asked to complete extensive questionnaires. The most recent results are from 2012. Approximately 510,000 students participated from 65 economies, with a sampling scheme that means results represent about 28 million children worldwide. 
 
-This example uses a data set with a lot of categorical variables, in addition to numerical variables and it relates to countries that can be displayed as maps.
+The data can be downloaded from [http://www.oecd.org/pisa/pisaproducts/](http://www.oecd.org/pisa/pisaproducts/database-cbapisa2012.htm). There are five text files containing the student questionnaire and test results, school and parent questionnaire reults, and two cognitive item responses. In this analysis we focus on the student file. It is approximately 580Mb, contains 615 attributes on more than 270,000 students. A 15Mb subset is provided with this book. 
 
+The student data set contains many categorical variables, in addition to numerical variables, and maps can be used to compare across countries.
+
+## Is the math gap universal?
 
 ```{r cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, results='hide'}
 library(dplyr)
@@ -167,3 +170,8 @@ ggplot(data=polys) +
   coord_equal() + theme_map 
 ```
 
+**Note to self: need to add boostrap confidence intervals to dot plot**
+
+## Your turn
+
++ Compute the difference in the weighted means of reading scores by gender. Discuss the reading gap across the globe.
