@@ -17,8 +17,8 @@ library(gridExtra)
 library(dplyr)
 library(ggplot2)
 library(lubridate)
-library(ggmap)
 library(rworldmap)
+library(ggmap)
 ```
 
 Get the data:
