@@ -12,24 +12,13 @@ knit: bookdown::preview_chapter
 
 ***Note to self: Need to update the code to use readr, and get all the stations, acknowledge Halldor***
 
-***HH: is there a way to not load the plyr package? - there are side effects with dplyr, no matter in which order the packages are loaded.***
-
-***DC: YES! that is the note above. I'm putting in placeholders but need ot work on code really soon!***
-
 ```{r load_packages, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, results='hide'}
+library(gridExtra)
 library(dplyr)
-library(stringr)
-library(reshape2)
 library(ggplot2)
 library(lubridate)
-library(maps)
 library(ggmap)
-library(htmltools)
 library(rworldmap)
-library(grid)    
-library(scales)
-library(gridExtra)
-library(forecast)
 ```
 
 Get the data:
