@@ -13,9 +13,8 @@ The student data set contains many categorical variables, in addition to numeric
 ## Is the math gap universal?
 
 ```{r cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, results='hide'}
+library(tidyr)
 library(dplyr)
-library(stringr)
-library(reshape2)
 library(ggplot2)
 library(lubridate)
 library(rworldmap)
@@ -23,6 +22,8 @@ library(grid)
 library(scales)
 library(gridExtra)
 library(SAScii)
+library(purrr)
+library(boot)
 ```
 
 ```{r load_data, echo = FALSE, message = FALSE, warning = FALSE, results='hide', cache=FALSE}
@@ -114,7 +115,7 @@ student2012.sub$ST04Q01 <- factor(student2012.sub$ST04Q01,
   levels=c(1,2), labels=c("Female", "Male"))
 ```
 
-```{r computemean, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, fig.width=4, fig.height=8}
+```{r computemean, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.width=6, fig.height=8}
 # Calculate the statistics
 student2012.stats <- student2012.sub %>% 
   group_by(CNT) %>%
@@ -125,29 +126,54 @@ student2012.stats <- student2012.sub %>%
                      weighted.mean(PV1MATH[ST04Q01=="Female"],
                                    w=SENWGT_STU[ST04Q01=="Female"], na.rm=T))
 
+# Compute confidence intervals
+cifn <- function(d, i) {
+  x <- d[i,]
+  ci <- mean(x$PV1MATH[x$ST04Q01=="Male"], na.rm=T)-
+     mean(x$PV1MATH[x$ST04Q01=="Female"], na.rm=T)
+  ci
+}
+bootfn <- function(d) {
+  r <- boot(d, statistic=cifn, R=100)
+  l <- sort(r$t)[5]
+  u <- sort(r$t)[95]
+  ci <- c(l, u)
+  return(ci)
+}
+#student2012.sub.summary.gap.boot <- ddply(student2012.sub, .(CNT), bootfn)
+student2012.sub.summary.gap.boot <- student2012.sub %>% 
+  split(.$CNT) %>% purrr::map(bootfn) %>% data.frame() %>%
+  gather(CNT, value)
+student2012.sub.summary.gap.boot$ci <- 
+  rep(c("ml","mu"), length(unique(student2012.sub.summary.gap.boot$CNT)))
+student2012.sub.summary.gap.boot.wide <- student2012.sub.summary.gap.boot %>% spread(ci, value)
+student2012.sub.summary.gap <- merge(student2012.stats, student2012.sub.summary.gap.boot.wide)
+
 # Match three digit codes to country names 
-student2012.stats$name <- NA
-for (i in 1:length(student2012.stats$name))  
-  student2012.stats$name[i] <- isoToName(as.character(student2012.stats$CNT[i]))
+student2012.sub.summary.gap$name <- NA
+for (i in 1:length(student2012.sub.summary.gap$name))  
+  student2012.sub.summary.gap$name[i] <-
+  isoToName(as.character(student2012.sub.summary.gap$CNT[i]))
 # QCN is Shanghai, not whole of China - Don't know what country TAP is
-student2012.stats$name[student2012.stats$CNT == "QCN"] <- isoToName("CHN")
-student2012.stats$name[student2012.stats$CNT == "TAP"] <- "TAP"
+student2012.sub.summary.gap$name[student2012.sub.summary.gap$CNT == "QCN"] <- isoToName("CHN")
+student2012.sub.summary.gap$name[student2012.sub.summary.gap$CNT == "TAP"] <- "TAP"
 
 # Make a categorical gap variable
-student2012.stats <-  student2012.stats %>% 
+student2012.sub.summary.gap <-  student2012.sub.summary.gap %>% 
   mutate(wmathgap_cat = cut(wmathgap, breaks=c(-10,-5, 5, 30), 
                             labels=c("girls", "same", "boys")))
 
 # Set order of countries by math gap
-student2012.stats$CNT <- factor(student2012.stats$CNT, 
-      levels=student2012.stats$CNT[order(student2012.stats$wmathgap)])
-student2012.stats$name <- factor(student2012.stats$name, 
-      levels=student2012.stats$name[order(student2012.stats$wmathgap)])
+student2012.sub.summary.gap$CNT <- factor(student2012.sub.summary.gap$CNT, 
+      levels=student2012.sub.summary.gap$CNT[order(student2012.sub.summary.gap$wmathgap)])
+student2012.sub.summary.gap$name <- factor(student2012.sub.summary.gap$name, 
+      levels=student2012.sub.summary.gap$name[order(student2012.sub.summary.gap$wmathgap)])
 
 # Plot
-ggplot(data=student2012.stats) + 
+ggplot(data=student2012.sub.summary.gap) + 
   geom_hline(yintercept=0, colour="grey80") + coord_flip() + theme_bw() + 
-  geom_point(aes(x=name, y=wmathgap, color=wmathgap_cat), size=4) + 
+  geom_point(aes(x=name, y=wmathgap, color=wmathgap_cat), size=3) + 
+  geom_segment(aes(x=name, xend=name, y=ml, yend=mu, color=wmathgap_cat)) + 
   xlab("") +  
   scale_colour_manual("Diff>5", values=c("boys"="skyblue", "girls"="pink", "same"="lightgreen")) +
   scale_y_continuous("Girls <----------> Boys", breaks=seq(-30, 30, 10), limits=c(-35, 35), 
@@ -159,7 +185,7 @@ ggplot(data=student2012.stats) +
 
 ```{r maps, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, fig.width=8, fig.height=4}
 polys <- polys %>% rename(name = ID)
-student2012.sub.map <- left_join(student2012.stats, polys)
+student2012.sub.map <- left_join(student2012.sub.summary.gap, polys)
 student2012.sub.map <- student2012.sub.map %>% arrange(region, order)
 
 ggplot(data=polys) + 
