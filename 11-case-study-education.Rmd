@@ -115,7 +115,7 @@ student2012.sub$ST04Q01 <- factor(student2012.sub$ST04Q01,
   levels=c(1,2), labels=c("Female", "Male"))
 ```
 
-```{r computemean, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.width=6, fig.height=8}
+```{r computemean, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.width=6, fig.height=7}
 # Calculate the statistics
 student2012.stats <- student2012.sub %>% 
   group_by(CNT) %>%
@@ -159,9 +159,12 @@ student2012.sub.summary.gap$name[student2012.sub.summary.gap$CNT == "QCN"] <- is
 student2012.sub.summary.gap$name[student2012.sub.summary.gap$CNT == "TAP"] <- "TAP"
 
 # Make a categorical gap variable
-student2012.sub.summary.gap <-  student2012.sub.summary.gap %>% 
-  mutate(wmathgap_cat = cut(wmathgap, breaks=c(-10,-5, 5, 30), 
-                            labels=c("girls", "same", "boys")))
+#student2012.sub.summary.gap <-  student2012.sub.summary.gap %>% 
+#  mutate(wmathgap_cat = cut(wmathgap, breaks=c(-10,-5, 5, 30), 
+#                            labels=c("girls", "same", "boys")))
+student2012.sub.summary.gap$wmathgap_cat <- "same"
+student2012.sub.summary.gap$wmathgap_cat[student2012.sub.summary.gap$ml > 0] <- "boys"
+student2012.sub.summary.gap$wmathgap_cat[student2012.sub.summary.gap$mu < 0] <- "girls"
 
 # Set order of countries by math gap
 student2012.sub.summary.gap$CNT <- factor(student2012.sub.summary.gap$CNT, 
@@ -175,7 +178,7 @@ ggplot(data=student2012.sub.summary.gap) +
   geom_point(aes(x=name, y=wmathgap, color=wmathgap_cat), size=3) + 
   geom_segment(aes(x=name, xend=name, y=ml, yend=mu, color=wmathgap_cat)) + 
   xlab("") +  
-  scale_colour_manual("Diff>5", values=c("boys"="skyblue", "girls"="pink", "same"="lightgreen")) +
+  scale_colour_manual("", values=c("boys"="skyblue", "girls"="pink", "same"="lightgreen")) +
   scale_y_continuous("Girls <----------> Boys", breaks=seq(-30, 30, 10), limits=c(-35, 35), 
                      labels=c(seq(30, 0, -10), seq(10, 30, 10))) + 
   theme(axis.text.x = element_text(size=5), axis.text.y = element_text(size=5), 
@@ -195,8 +198,6 @@ ggplot(data=polys) +
   scale_x_continuous(expand=c(0,0)) + scale_y_continuous(expand=c(0,0)) +
   coord_equal() + theme_map 
 ```
-
-**Note to self: need to add boostrap confidence intervals to dot plot**
 
 ## Your turn
 
