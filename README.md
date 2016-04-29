@@ -1,1 +1,3 @@
-# data-technologies
+# Exploratory Data Analysis Using R
+
+Data is everywhere today, and the tools to explore data have democratized enabling us all to be data scientists. This book explains how to tackle a broad range of data problems using graphics and simple models. The examples come from our own experiences in working with different data problems over the last decade. The chapters in this book describe these analyses, the process that went into making the data plots, and what we learned about the problems underlying the data. The first half of the book grows from a course taught to graduate students on "data technologies" - the first step for any analysis is to get the data into a shape that can be explored. 
