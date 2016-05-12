@@ -129,8 +129,10 @@ student2012.stats <- student2012.sub %>%
 # Compute confidence intervals
 cifn <- function(d, i) {
   x <- d[i,]
-  ci <- mean(x$PV1MATH[x$ST04Q01=="Male"], na.rm=T)-
-     mean(x$PV1MATH[x$ST04Q01=="Female"], na.rm=T)
+  ci <- weighted.mean(x$PV1MATH[x$ST04Q01=="Male"], 
+                                   w=x$SENWGT_STU[x$ST04Q01=="Male"], na.rm=T)-
+                     weighted.mean(x$PV1MATH[x$ST04Q01=="Female"],
+                                   w=x$SENWGT_STU[x$ST04Q01=="Female"], na.rm=T)
   ci
 }
 bootfn <- function(d) {
