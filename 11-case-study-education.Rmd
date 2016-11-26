@@ -194,7 +194,7 @@ student2012.sub.map <- left_join(student2012.sub.summary.gap, polys)
 student2012.sub.map <- student2012.sub.map %>% arrange(region, order)
 
 ggplot(data=polys) + 
-  geom_path(aes(x=lon, y=lat, group=region, order=order), colour=I("grey90"), size=0.1) + 
+  geom_path(aes(x=lon, y=lat, group=region, order=order), colour=I("grey90"), size=0.1)rm + 
   geom_polygon(data=student2012.sub.map, aes(x=lon, y=lat, group=region, order=order,  fill=wmathgap_cat)) +
   scale_fill_manual("Diff>5", values=c("boys"="skyblue", "girls"="pink", "same"="lightgreen")) + 
   scale_x_continuous(expand=c(0,0)) + scale_y_continuous(expand=c(0,0)) +

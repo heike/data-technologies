@@ -1,6 +1,6 @@
 --- 
-title: "Exploratory Data Analysis Today"
-author: "Dianne Cook and Heike Hofmann"
+title: "Data Technologies and Visualisation for Quantitative Citizenship"
+author: "Heike Hofmann and Dianne Cook"
 date: "`r Sys.Date()`"
 knit: "bookdown::render_book"
 documentclass: book
