@@ -111,7 +111,7 @@ Using the time zone information we  transform local times at airports into globa
 ```
 Order flights to identify ghost flights
 ```{r}
-ontime$Departure <- lubridate::ymd(as.character(ontime$FlightDate))
+ontime$Departure <- as.POSIXct(lubridate::ymd(as.character(ontime$FlightDate)))
 hour(ontime$Departure) <- ontime$CRSDepTime %/% 100
 minute(ontime$Departure) <- ontime$CRSDepTime %% 100  # this is where the timezones have to come in
 ```

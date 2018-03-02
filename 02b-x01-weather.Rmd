@@ -143,7 +143,7 @@ for (dateIDX in length(days):1) {
 ```
 and plot the data:
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, eval=FALSE}
 weather <- read.csv("data/YMML.csv", stringsAsFactors = FALSE)
 
 temps <- subset(weather, Statistics=="Max Temperature")

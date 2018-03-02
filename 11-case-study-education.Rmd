@@ -12,195 +12,159 @@ The student data set contains many categorical variables, in addition to numeric
 
 ## Is the math gap universal?
 
-```{r cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, results='hide'}
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(lubridate)
-library(rworldmap)
-library(grid)    
-library(scales)
-library(gridExtra)
-library(SAScii)
-library(purrr)
-library(boot)
+```{r createdb, eval=FALSE, echo=FALSE}
+library(haven)
+pisa_2015 <- read_sav(file.choose()) # http://www.oecd.org/pisa/data/2015database/. The SPSS format zip file `Student questionnaire data file (419MB)'
 ```
 
-```{r load_data, echo = FALSE, message = FALSE, warning = FALSE, results='hide', cache=FALSE}
-#student2012.codebook <- read.table("data/PISA2012/codebook2.txt")
-#ptm <- proc.time()
-#student2012 <- read.fwf("data/PISA2012/CBA_STU12_MAR31.txt",
-#      widths =  student2012.codebook[,2], col.names = student2012.codebook[,1], n=10) 
-#student2012 <- read.SAScii("data/PISA2012/CBA_STU12_MAR31.txt", "data/PISA2012/PISA2012_SAS_CBA_student.sas",
-#                           beginline=8997)
-#proc.time() - ptm
-#student2012.sub <- student2012 %>% select(CNT, SCHOOLID, ST04Q01, ST06Q01, ST57Q01, 
-#                                          ST57Q02, ST57Q03, ST57Q04, ST57Q05, ST57Q06, 
-#                                          ST11Q01, ST11Q02,
-#                                          ST15Q01, ST19Q01,
-#                                          ST26Q01, ST26Q02, ST26Q03, ST26Q04, ST26Q05, ST26Q06, ST26Q07, 
-#                                          ST26Q08, ST26Q09, ST26Q10, ST26Q11, ST26Q12, ST26Q13, ST26Q14, 
-#                                          ST27Q01, ST27Q02, ST27Q03, ST27Q04, ST27Q05, ST28Q01,
-#                                          PV1MATH, PV2MATH, PV3MATH, PV4MATH, PV5MATH, 
-#                                          PV1READ, PV2READ, PV3READ, PV4READ, PV5READ, 
-#                                          PV1SCIE, PV2SCIE, PV3SCIE, PV4SCIE, PV5SCIE, SENWGT_STU)
-#saveRDS(student2012.sub, "data/PISA2012/student_sub.rds")
-#saveRDS(student2012, "data/PISA2012/student.rds")
+```{r make_sqlite, eval=FALSE, echo=FALSE}
+cat("reading SQL \n")
+library(sqldf)
+library(DBI)
+db <- dbConnect(SQLite(), dbname="data/PISA.sqlite")
+#dbWriteTable(conn=db, name="student", value=pisa_2015)
+#dbListFields(db, "student")
 
-student2012.sub <- readRDS("data/PISA2012/student_sub.rds")
+library(tidyverse)
+library(dbplyr)
+tb <- tbl(db, "student")
+CNT_count <- tb %>% count(CNT, sort=TRUE) %>% collect()
+save(CNT_count, file="data/pisa_counts.rda")
+scores <- tb %>% 
+  select(CNT, ST004D01T, PV1MATH, PV1READ, PV1SCIE, SENWT) %>% collect()
+save(scores, file="data/pisa_scores.rda")
 ```
 
-```{r mapdata, echo = FALSE, message = FALSE, warning = FALSE, results='hide', cache=FALSE}
-world <- getMap(resolution = "low")
-extractPolys <- function(p) {
-  polys <- NULL
-  for (i in 1:length(p)) {
-    for (j in 1:length(p[[i]]@Polygons)) {
-      x <- p[[i]]@Polygons[[j]]@coords
-      polys$lon <- c(polys$lon, x[,1])
-      polys$lat <- c(polys$lat, x[,2])
-      polys$ID <- c(polys$ID, rep(p[[i]]@ID, nrow(x)))
-      polys$region <- c(polys$region, rep(paste(p[[i]]@ID, j, sep="_"), nrow(x)))
-      polys$order <- c(polys$order, 1:nrow(x))
-    }
-  }
-  return(data.frame(polys))
-}
-polys <- extractPolys(world@polygons)
 
-# Map theme
-theme_map <- theme_bw()
-theme_map$line <- element_blank()
-theme_map$strip.text <- element_blank()
-theme_map$axis.text <- element_blank()
-theme_map$plot.title <- element_blank()
-theme_map$axis.title <- element_blank()
-theme_map$panel.border <- element_rect(colour = "grey90", size=1, fill=NA)
+```{r maps}
+load("data/pisa_counts.rda")
+library(ISOcodes)
+data("ISO_3166_1")
+# Codes are not standard
+CNT_count <- CNT_count %>% 
+  mutate(CNT=recode(CNT, "QES"="ESP", "QCH"="CHN", "QAR"="ARG", "TAP"="TWN")) %>%
+  group_by(CNT) %>% summarise(n=sum(n)) %>%
+  filter(CNT != "QUC") %>%
+  filter(CNT != "QUD") %>%
+  filter(CNT != "QUE")
+countries <- CNT_count %>%
+  left_join(ISO_3166_1, by=c("CNT"="Alpha_3"))
+countries$Name[countries$CNT == "KSV"] <- "Kosovo"
 ```
 
-```{r dataprep, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE}
-fix_country = function(df) {
-  df$CNT = as.character(df$CNT)
-  df$CNT[df$CNT=="Serbia"] <- "Republic of Serbia"
-  df$CNT[df$CNT=="Korea"] <- "South Korea"
-  df$CNT[df$CNT=="Chinese Taipei"] <- "Taiwan"
-  df$CNT[df$CNT=="Slovak Republic"] <- "Slovakia"
-  df$CNT[df$CNT=="Russian Federation"] <- "Russia"
-  df$CNT[df$CNT=="Perm(Russian Federation)"] <- "Russia"
-  df$CNT[df$CNT=="Hong Kong-China"] <- "Hong Kong S.A.R."
-  df$CNT[df$CNT=="China-Shanghai"] <- "China"
-  df$CNT[df$CNT=="China-Macau"] <- "China"
-  df$CNT[df$CNT=="Connecticut (USA)"] <- "United States of America"
-  df$CNT[df$CNT=="Florida (USA)"] <- "United States of America"
-  df$CNT[df$CNT=="Massachusetts (USA)"] <- "United States of America"
+```{r gendermap}
+library(ISOcodes)
+library(ggthemes)
+data("ISO_3166_1")
 
-  df
-}
+load("data/pisa_scores.rda")
+scores <- scores %>% 
+  mutate(CNT=recode(CNT, "QES"="ESP", "QCH"="CHN", "QAR"="ARG", "TAP"="TWN")) %>%
+  filter(CNT != "QUC") %>%
+  filter(CNT != "QUD") %>%
+  filter(CNT != "QUE")
+countries <- scores %>%
+  left_join(ISO_3166_1[,c("Alpha_3", "Name")], by=c("CNT"="Alpha_3"))
+countries$Name[countries$CNT == "KSV"] <- "Kosovo"
+countries <- countries %>% 
+  mutate(ST004D01T=factor(ST004D01T, levels=c(1,2), labels=c("female","male")))
+score_gap <- countries %>% 
+  group_by(Name) %>%
+  summarise(wmathgap=weighted.mean(PV1MATH[ST004D01T=="male"],
+                       w=SENWT[ST004D01T=="male"], na.rm=T)-
+                     weighted.mean(PV1MATH[ST004D01T=="female"],
+                       w=SENWT[ST004D01T=="female"], na.rm=T),
+            wreadgap=weighted.mean(PV1READ[ST004D01T=="male"],
+                       w=SENWT[ST004D01T=="male"], na.rm=T)-
+                     weighted.mean(PV1READ[ST004D01T=="female"],
+                       w=SENWT[ST004D01T=="female"], na.rm=T),
+            wsciegap=weighted.mean(PV1SCIE[ST004D01T=="male"],
+                       w=SENWT[ST004D01T=="male"], na.rm=T)-
+                     weighted.mean(PV1SCIE[ST004D01T=="female"],
+                       w=SENWT[ST004D01T=="female"], na.rm=T))
 
-shorten_countrynames = function(df) {
-  df$CNT = as.character(df$CNT)
-  df$CNT[df$CNT=="Hong Kong S.A.R."] <- "Hong Kong"
-  df$CNT[df$CNT=="Republic of Serbia"] <- "Serbia"
-  df$CNT[df$CNT=="United Arab Emirates"] <- "UAE"
-  df$CNT[df$CNT=="United States of America"] <- "USA"
-  df$CNT[df$CNT=="United Kingdom"] <- "UK"
-
-  df
-}
-
-#student2012.sub = fix_country(student2012.sub)
-#student2012.sub = shorten_countrynames(student2012.sub)
-#student2012.sub$name <- isoToName(student2012.sub$CNT)
-student2012.sub$ST04Q01 <- factor(student2012.sub$ST04Q01, 
-  levels=c(1,2), labels=c("Female", "Male"))
+world_map <- map_data("world")
+score_gap <- score_gap %>%
+  mutate(Name = recode(Name, "Czechia"="Czech Republic",
+                       "Korea, Republic of"="South Korea",
+                       "Macedonia, Republic of"="Macedonia",
+                       "Moldova, Republic of"="Moldova",
+                       "Russian Federation"="Russia",
+                       "Taiwan, Province of China"="Taiwan",
+                       "Trinidad and Tobago"="Trinidad",
+                       "United States"="USA",
+                       "United Kingdom"="UK",
+                       "Viet Nam"="Vietnam"))
+world_map$region[world_map$subregion == "Hong Kong"] <- "Hong Kong"
+world_map$region[world_map$subregion == "Macao"] <- "Macao"
+to_map <- left_join(world_map, score_gap, by=c("region"="Name"))
+ggplot(to_map, aes(map_id = region)) + 
+    geom_map(aes(fill=wmathgap), map = world_map, 
+             color="grey70", size=0.1) + 
+    scale_fill_gradient2("Math gap", limits=c(-35, 35), na.value="grey90",
+                         low="#1B9E77", high="#D95F02", mid="white") +
+    expand_limits(x = world_map$long, y = world_map$lat) +
+    theme_few() +
+    theme(legend.position = "bottom",
+          legend.key.width=unit(1.5, "cm"), 
+         axis.ticks = element_blank(), 
+         axis.title = element_blank(), 
+         axis.text =  element_blank()) 
 ```
 
-```{r computemean, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.width=6, fig.height=7}
-# Calculate the statistics
-student2012.stats <- student2012.sub %>% 
-  group_by(CNT) %>%
-  summarise(mathgap=mean(PV1MATH[ST04Q01=="Male"], na.rm=T)-
-                    mean(PV1MATH[ST04Q01=="Female"], na.rm=T),
-            wmathgap=weighted.mean(PV1MATH[ST04Q01=="Male"], 
-                                   w=SENWGT_STU[ST04Q01=="Male"], na.rm=T)-
-                     weighted.mean(PV1MATH[ST04Q01=="Female"],
-                                   w=SENWGT_STU[ST04Q01=="Female"], na.rm=T))
+```{r dotplots}
+library(forcats)
+scores_sumry <- countries %>% 
+  group_by(Name, ST004D01T) %>%
+  summarise(min=min(PV1MATH, na.rm=T), 
+            max=max(PV1MATH, na.rm=T),
+            m=weighted.mean(PV1MATH, w=SENWT, na.rm=T)) %>%
+  ungroup() %>%
+  mutate(Name = fct_reorder(Name, m)) %>%
+  mutate(Name = recode(Name, "Czechia"="Czech Republic",
+                       "Korea, Republic of"="South Korea",
+                       "Macedonia, Republic of"="Macedonia",
+                       "Moldova, Republic of"="Moldova",
+                       "Russian Federation"="Russia",
+                       "Taiwan, Province of China"="Taiwan",
+                       "Trinidad and Tobago"="Trinidad",
+                       "United States"="USA",
+                       "United Kingdom"="UK",
+                       "Viet Nam"="Vietnam"))
 
-# Compute confidence intervals
-cifn <- function(d, i) {
-  x <- d[i,]
-  ci <- weighted.mean(x$PV1MATH[x$ST04Q01=="Male"], 
-                                   w=x$SENWGT_STU[x$ST04Q01=="Male"], na.rm=T)-
-                     weighted.mean(x$PV1MATH[x$ST04Q01=="Female"],
-                                   w=x$SENWGT_STU[x$ST04Q01=="Female"], na.rm=T)
-  ci
-}
-bootfn <- function(d) {
-  r <- boot(d, statistic=cifn, R=100)
-  l <- sort(r$t)[5]
-  u <- sort(r$t)[95]
-  ci <- c(l, u)
-  return(ci)
-}
-#student2012.sub.summary.gap.boot <- ddply(student2012.sub, .(CNT), bootfn)
-student2012.sub.summary.gap.boot <- student2012.sub %>% 
-  split(.$CNT) %>% purrr::map(bootfn) %>% data.frame() %>%
-  gather(CNT, value)
-student2012.sub.summary.gap.boot$ci <- 
-  rep(c("ml","mu"), length(unique(student2012.sub.summary.gap.boot$CNT)))
-student2012.sub.summary.gap.boot.wide <- student2012.sub.summary.gap.boot %>% spread(ci, value)
-student2012.sub.summary.gap <- merge(student2012.stats, student2012.sub.summary.gap.boot.wide)
-
-# Match three digit codes to country names 
-student2012.sub.summary.gap$name <- NA
-for (i in 1:length(student2012.sub.summary.gap$name))  
-  student2012.sub.summary.gap$name[i] <-
-  isoToName(as.character(student2012.sub.summary.gap$CNT[i]))
-# QCN is Shanghai, not whole of China - Don't know what country TAP is
-student2012.sub.summary.gap$name[student2012.sub.summary.gap$CNT == "QCN"] <- isoToName("CHN")
-student2012.sub.summary.gap$name[student2012.sub.summary.gap$CNT == "TAP"] <- "TAP"
-
-# Make a categorical gap variable
-#student2012.sub.summary.gap <-  student2012.sub.summary.gap %>% 
-#  mutate(wmathgap_cat = cut(wmathgap, breaks=c(-10,-5, 5, 30), 
-#                            labels=c("girls", "same", "boys")))
-student2012.sub.summary.gap$wmathgap_cat <- "same"
-student2012.sub.summary.gap$wmathgap_cat[student2012.sub.summary.gap$ml > 0] <- "boys"
-student2012.sub.summary.gap$wmathgap_cat[student2012.sub.summary.gap$mu < 0] <- "girls"
-
-# Set order of countries by math gap
-student2012.sub.summary.gap$CNT <- factor(student2012.sub.summary.gap$CNT, 
-      levels=student2012.sub.summary.gap$CNT[order(student2012.sub.summary.gap$wmathgap)])
-student2012.sub.summary.gap$name <- factor(student2012.sub.summary.gap$name, 
-      levels=student2012.sub.summary.gap$name[order(student2012.sub.summary.gap$wmathgap)])
-
-# Plot
-ggplot(data=student2012.sub.summary.gap) + 
-  geom_hline(yintercept=0, colour="grey80") + coord_flip() + theme_bw() + 
-  geom_point(aes(x=name, y=wmathgap, color=wmathgap_cat), size=3) + 
-  geom_segment(aes(x=name, xend=name, y=ml, yend=mu, color=wmathgap_cat)) + 
-  xlab("") +  
-  scale_colour_manual("", values=c("boys"="skyblue", "girls"="pink", "same"="lightgreen")) +
-  scale_y_continuous("Girls <----------> Boys", breaks=seq(-30, 30, 10), limits=c(-35, 35), 
-                     labels=c(seq(30, 0, -10), seq(10, 30, 10))) + 
-  theme(axis.text.x = element_text(size=5), axis.text.y = element_text(size=5), 
-        axis.title = element_text(size=7), legend.text = element_text(size=5),
-        legend.title = element_text(size=5))
+ggplot(data=scores_sumry, aes(x=Name, y=m, 
+                        colour=ST004D01T)) +
+  geom_point() + coord_flip() + 
+  scale_colour_brewer(palette="Dark2") +
+  xlab("") + ylab("Mean")
+ggplot(data=scores_sumry, aes(x=Name, y=m, 
+                        colour=ST004D01T)) +
+  #geom_point() + 
+  coord_flip() + 
+  geom_errorbar(aes(x=Name, ymin=min, ymax=max), position=position_dodge()) +
+  scale_colour_brewer(palette="Dark2") +
+  xlab("") + ylab("Mean") +
+  ylim(c(0,1000)) + geom_point(alpha=0.5) +
+  theme(legend.position="none") #+
+  #facet_wrap(~ST004D01T, ncol=1)
 ```
 
-```{r maps, cache=FALSE, echo = FALSE, message = FALSE, warning = FALSE, fig.width=8, fig.height=4}
-polys <- polys %>% rename(name = ID)
-student2012.sub.map <- left_join(student2012.sub.summary.gap, polys)
-student2012.sub.map <- student2012.sub.map %>% arrange(region, order)
-
-ggplot(data=polys) + 
-  geom_path(aes(x=lon, y=lat, group=region, order=order), colour=I("grey90"), size=0.1)rm + 
-  geom_polygon(data=student2012.sub.map, aes(x=lon, y=lat, group=region, order=order,  fill=wmathgap_cat)) +
-  scale_fill_manual("Diff>5", values=c("boys"="skyblue", "girls"="pink", "same"="lightgreen")) + 
-  scale_x_continuous(expand=c(0,0)) + scale_y_continuous(expand=c(0,0)) +
-  coord_equal() + theme_map 
-```
 
 ## Your turn
 
 + Compute the difference in the weighted means of reading scores by gender. Discuss the reading gap across the globe.
+
+```{r echo=FALSE, eval=FALSE}
+ggplot(to_map, aes(map_id = region)) + 
+    geom_map(aes(fill=wreadgap), map = world_map, 
+             color="grey70", size=0.1) + 
+    scale_fill_gradient2("Reading gap", limits=c(-35, 35), na.value="grey90",
+                         low="#1B9E77", high="#D95F02", mid="white") +
+    expand_limits(x = world_map$long, y = world_map$lat) +
+    theme_few() +
+    theme(legend.position = "bottom",
+          legend.key.width=unit(1.5, "cm"),
+         axis.ticks = element_blank(), 
+         axis.title = element_blank(), 
+         axis.text =  element_blank()) 
+```

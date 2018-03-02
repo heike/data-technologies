@@ -6,7 +6,8 @@ knit: bookdown::preview_chapter
 
 The City of Melbourne has sensors set up in strategic locations across the inner city to keep tallies of hourly number of pedestrians. The data is available for download in monthly and yearly chunks from [http://www.pedestrian.melbourne.vic.gov.au/datadownload.html](http://www.pedestrian.melbourne.vic.gov.au/datadownload.html).
 We are going to show how to download the data and process it. Results will vary depending on when you download the data. 
-```{r, message=FALSE}
+
+```{r eval=FALSE, echo=FALSE, message=FALSE}
 library(rvest)
 url <- "http://www.pedestrian.melbourne.vic.gov.au/datadownload.html"
 
@@ -17,95 +18,98 @@ head(datalinks)
 ```
 The second link serves as the base url for the download. FIles are sorted chronologically with the tallies for the most recent month first. 
 We can download data for the three most recent months as:
-```{r}
+```{r eval=FALSE, echo=FALSE, }
 baseURL <- datalinks[2]
 peds <- datalinks[3:5] %>% purrr::map_df(function(x) {
   read.csv(paste0(baseURL, x), stringsAsFactors = FALSE)
 })
 ```
 This gives us a dataset in a wide format, i.e. we have a data variable for every station, while each row in the data consists of the number of pedestrians counted at each of the 40 plus sensors during the course of a single hour.
-```{r}
-dim(peds)
-head(peds[, 1:10])
+
+```{r ped-data}
+library(rwalkr)
+peds <- run_melb(year=2017, sensor = c("Southern Cross Station", "Melbourne Central", "Flinders Street Station Underpass", "Birrarung Marr"))
+#dim(peds)
+#head(peds[, 1:10])
 ```
 
 For an analysis we want to re-organize the data to contain all numbers in a single data variable:
 ```{r}
-library(tidyr)
-mpeds <- peds %>% gather(key=Location, value=Count, 3:ncol(peds))
-mpeds$Date <- lubridate::dmy(mpeds$Date)
-mpeds$Month <- lubridate::month(mpeds$Date)
-mpeds$Weekday <- lubridate::wday(mpeds$Date, label=TRUE)
+library(tidyverse)
+library(lubridate)
+#mpeds <- peds %>% select(Sensor, Date_Time, Count) %>% gather(key=Sensor, value=Count, 3:ncol(peds))
+#mpeds$Date <- lubridate::dmy(mpeds$Date)
+peds$Month <- lubridate::month(peds$Date)
+peds$Weekday <- lubridate::wday(peds$Date, label=TRUE)
 # get Sunday from first to last position:
-mpeds$Weekday <- factor(mpeds$Weekday, levels = levels(mpeds$Weekday)[c(2:7, 1)])
-mpeds$Day <- lubridate::mday(mpeds$Date)
+peds$Weekday <- factor(peds$Weekday, levels = levels(peds$Weekday)[c(2:7, 1)])
+peds$Day <- lubridate::mday(peds$Date)
 ```
 Figure \@ref(fig:peds-counts) shows the hourly tallies of pedestrians at 40 different locations across Melbourne. There is a distinct weekday/weekend pattern: during the week, the most dominant pattern is driven by the workforce, with commuters' spikes at 8am and 5pm and a lunch hour rush. These spikes are completely absent on weekends. 
 
 ```{r peds-counts, fig.cap="Hourly pedestrian counts at 40 locations in Melbourne over three months.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-require(ggplot2)
-
-ggplot(aes(x=Hour, y=Count), data=mpeds) + facet_grid(.~Weekday) + geom_line(aes(group=interaction(Location, Day)), alpha=0.3)
+ggplot(aes(x=Time, y=Count), data=peds) + facet_grid(.~Weekday) + geom_line(aes(group=interaction(Sensor, Day)), alpha=0.3)
 ```
 
 We can investigate the working force pattern a bit more closer by location. Rescaling the counts for each location reveals the difference in patterns much more clearly and shows the three workforce spikes much more pronounced (cf Figure \@ref(fig:ped_adjcounts)).
 
 ```{r peds-adjcounts, fig.cap="Adjusted counts of pedestrians reveals the three workforce spikes on weekdays more clearly.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-require(dplyr)
-weekhourlies <- mpeds %>% group_by(Location, Weekday, Hour) %>% summarize(Count = median(Count))
-weekhourlies <- weekhourlies %>% group_by(Location) %>% mutate(adjCount = scale(Count))
+weekhourlies <- peds %>% group_by(Sensor, Weekday, Time) %>%
+  summarize(Count = median(Count, na.rm=TRUE))
+weekhourlies <- weekhourlies %>% group_by(Sensor) %>% 
+  mutate(adjCount = scale(Count))
 
-ggplot(aes(x=Hour, y=adjCount), data=weekhourlies) + facet_grid(.~Weekday) + geom_line(aes(group=Location))
+ggplot(aes(x=Time, y=adjCount), data=weekhourlies) + facet_grid(.~Weekday) + geom_line(aes(group=Sensor))
 ```
 
 Figure \@ref(fig:loc-cluster) gives an overview of the hourly pattern observed at each location. Locations are grouped by their pattern, resulting into three groups, that can be described mostly by their pedestrian counts at 8am, noon, and 5pm. One ofthe groups shows a strong morning and afternoon peak, with only a slight increase during lunch. The other two groups are not nearly as much affected by the pedestrian rush hours. One group shows almost the same pattern on weekdays as on weekends (with tiny spikes added on weekdays), while pedestrian traffic for the last groups is generally higher for the last group on weekdays than on weekends and increases during the day until peaking at 5pm. 
 
 ```{r loc-cluster, fig.cap="Location of sensors clustered by observed patterns of pedestrian counts.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-hourlies <- weekhourlies %>% group_by(Hour, Location) %>% summarize(
-  adjCount = mean(adjCount)
+hourlies <- weekhourlies %>% group_by(Time, Sensor) %>% summarize(
+  adjCount = mean(adjCount, na.rm=TRUE)
 )
-adjcounts <- hourlies %>% spread(Hour, adjCount)
+adjcounts <- hourlies %>% spread(Time, adjCount)
 dists <- dist(adjcounts[,-1])
 pedclust <- hclust(dists)
 adjcounts$Group <- cutree(pedclust, k=3)
 
-weekhourlies <- merge(weekhourlies[1:nrow(weekhourlies),], adjcounts[, c("Location", "Group")], by="Location", all.x=TRUE)
-ggplot(aes(x=Hour, y=Count), data=weekhourlies) + facet_grid(Group~Weekday) + geom_line(aes(group=Location, colour=factor(Group))) + scale_colour_brewer(palette="Dark2")
+weekhourlies <- merge(weekhourlies[1:nrow(weekhourlies),], adjcounts[, c("Sensor", "Group")], by="Sensor", all.x=TRUE)
+ggplot(aes(x=Time, y=Count), data=weekhourlies) + facet_grid(Group~Weekday) + geom_line(aes(group=Sensor, colour=factor(Group))) + scale_colour_brewer(palette="Dark2")
 ```
 
 The [geographic location of the sensors](https://data.melbourne.vic.gov.au/Transport-Movement/Pedestrian-Sensor-Locations/ygaw-6rzq) is made available through the Melbourne Data initiative. A copy of the data is available locally. What we would like to do with this data, is to plot the sensors on a map of Melbourne, coloured by the grouping that we just identified to get an idea of whether the groupings have a geographical interpretation as well. 
-```{r}
+```{r eval=FALSE}
 sensors <- read.csv("data/Pedestrian_Sensor_Locations.csv")
 ```
 Unfortunately, we cannot match the names of the locations directly, because they are formatted (slightly) differently between the two sources. The sensor location data set e.g. contains the string ```Lygon St (West)```, whereas the pedestrian count data contains the same location encoded as ```Lygon.St..West.``` (note the . introduced by R as a substitute for any special character such as a white space in a variable name).
 In order to match these locations, we make use of fuzzy matching as implemented in ```adist```, which is based on the generalized Levenshtein distance:
-```{r}
+```{r eval=FALSE}
 src1 <- as.character(sensors$Sensor.Description)
 src2 <- as.character(unique(weekhourlies$Location))
 
-dist.name<-adist(src1,src2, partial = TRUE, ignore.case = TRUE)
+dist.name<-adist(src1, src2, partial = TRUE, ignore.case = TRUE)
 dim(dist.name)
 ```
 This distance is an integer value of essentially the number of differences between two character strings. We will pick the minimum for each of the pairs to match the locations strings.
 
-```{r}
+```{r eval=FALSE}
 mins <- apply(dist.name, MARGIN=1, FUN=which.min)
 sensors$Location <- unique(weekhourlies$Location)[mins]
 ```
 We should also investigate the actual distance values to make sure that we did not accidentally match things that we should not have matched:
-```{r}
+```{r eval=FALSE}
 sensors$MatchQuality <- apply(dist.name, MARGIN=1, FUN=min)
 summary(sensors$MatchQuality)
 sensors <- sensors[order(sensors$MatchQuality),]
 tail(sensors)[,c("Location", "Sensor.Description")]
 ```
 These matches all look good except for two: ```Lonsdale St-Spring St (West)``` and ```Fitzroy Gardens Visitor Centre``` should probably not be matched at all (these two sensors are not actually included in the pedestrian count data at this time). We will set those two locations to NA, and then match via Location to include the grouping information:
-```{r}
+```{r eval=FALSE}
 sensors$Location[sensors$Sensor.Description %in% c("Lonsdale St-Spring St (West)","Fitzroy Gardens Visitor Centre")] <- NA
 sensors <- merge(sensors, weekhourlies[,c("Location", "Group")], by="Location")
 ```
 Now we want to put this information on a map:
-```{r ped-map, fig.cap="Map of inner Melbourne. Locations of sensors are indicated by dots, colour indicates their group.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+```{r ped-map, fig.cap="Map of inner Melbourne. Locations of sensors are indicated by dots, colour indicates their group.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE, eval=FALSE}
 library(ggmap)
 library(ggthemes)
 melb <- get_map("Melbourne, Australia", zoom=14) # we need to set the zoom - the auto-zoom includes too much. 
@@ -118,18 +122,18 @@ ggmap(melb, extent="normal") +
 
 Coming back to the general pattern of the graphic we started out with in Figure \@ref(fig:peds-counts), we see that
 generally, things are quiet at 5 am, particularly on weekdays. There are, however, some notable exceptions with pedestrian counts of more than 1000 between 5 and 6 in the morning: 
-```{r}
+```{r eval=FALSE}
 subset(mpeds, Hour==5 & Count > 1000)
 ```
 In the current data set (Dec 2015 - Feb 2016) these counts occurred in eight locations on February 21, 2016, which is when Melbourne hosted its annual White Night in 2016.
 Besides New Year's morning on the corner of Flinders and Swanston Street, City Square was the place to be on December 28 and 29 at five in the morning. *** not sure what was going on on those two dates ***
 
-```{r}
+```{r eval=FALSE}
 days <- unique(subset(mpeds, Hour==5 & Count > 1000)[, c("Date", "Location")])
 # I want to get the remaining hours for each of the locations. I also want to get the Feb 20 data.
 ```
 
-```{r}
+```{r eval=FALSE}
 ggplot(aes(x=Hour, y=Count, group=interaction(Location, Day)), 
        data=mpeds) + 
   facet_grid(.~Weekday) + 
