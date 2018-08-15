@@ -50,11 +50,12 @@ CO2.ljo$stn<-"ljo"
 #CO2.mlf$lon<-(-155.6)
 #CO2.mlf$stn<-"mlf"
 
-CO2.spo<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", sep=",", skip=69)
-colnames(CO2.spo)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
-CO2.spo$lat<- (-90.0)
-CO2.spo$lon<-0
-CO2.spo$stn<-"spo"
+# South pole doesn't have daily flask value (Aug 15 2018, HH)
+# CO2.spo<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", sep=",", skip=69)
+# colnames(CO2.spo)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+# CO2.spo$lat<- (-90.0)
+# CO2.spo$lon<-0
+# CO2.spo$stn<-"spo"
 
 CO2.ker<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ker.csv", sep=",", skip=69)
 colnames(CO2.ker)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
@@ -62,13 +63,13 @@ CO2.ker$lat<-(-29.2)
 CO2.ker$lon<-(-177.9)
 CO2.ker$stn<-"ker"
 
-CO2.all<-rbind(CO2.ker,CO2.ljo,CO2.ptb,CO2.spo)
+CO2.all<-rbind(CO2.ker,CO2.ljo,CO2.ptb) #,CO2.spo)
 CO2.all$date<-as.Date(CO2.all$date)
 
 CO2.all$invlat=-1*CO2.all$lat
 CO2.all$stn=reorder(CO2.all$stn,CO2.all$invlat)
 
-CO2.all.loc <- rbind(CO2.ker[1,],CO2.ljo[1,],CO2.ptb[1,],CO2.spo[1,])
+CO2.all.loc <- rbind(CO2.ker[1,],CO2.ljo[1,],CO2.ptb[1,]) #,CO2.spo[1,])
 
 p1 <- qplot(date, co2, data=subset(CO2.all, flg < 2), colour=stn, geom="line",xlab="Year",ylab="CO2 (ppm)") + 
 		facet_wrap(~stn, ncol=1) + theme(axis.text.y=element_text(size = 6), legend.position="none")
