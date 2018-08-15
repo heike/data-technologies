@@ -1,0 +1,80 @@
+---
+knit: bookdown::preview_chapter
+---
+
+#### Weather in Ames (API Version)
+
+In many cases, you are not the first person attempting to use an online dataset for some sort of analysis. In many cases, sites maintain an API (Application Programming Interface) which allows data access via simplified commands. In situations where an API is available (and free), it is generally better to utilize the API than to write a custom scraping function, as typically APIs are more stable than web page structure over time. 
+
+In some cases, there are even simplified interfaces to the site's API: for weather data, the `rnoaa` package provides R bindings to several APIs maintained by the National Oceanic and Atmospheric Administration. 
+
+```{r}
+if (!"rnoaa" %in% installed.packages()) {
+  install.packages("rnoaa")
+}
+
+library(rnoaa)
+```
+
+First, we use the `meteo_nearby_stations` function to identify weather stations near Ames:
+
+```{r}
+lat_lon_df <- data.frame(id = "ames",
+                         latitude = 42.034722,
+                         longitude = -93.62)
+
+# Get weather station closest to Ames
+# Not all stations have all variables, so make sure TMAX is included
+nearby_stations <- meteo_nearby_stations(
+  lat_lon_df = lat_lon_df, radius = 10,
+  limit = 3, var = "TMAX")
+```
+
+The `meteo_pull_monitors` function will pull data from the specified variables for the specified date range, for each station id provided. 
+```{r, include = F}
+library(dplyr)
+```
+
+```{r, message = F, eval = -1}
+library(dplyr)
+
+# According to https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt, 
+# data are provided in tenths of a degree Celsius
+max_temperature <- meteo_pull_monitors(
+  nearby_stations$ames$id, 
+  var = "TMAX", 
+  date_min = "2008-01-01", 
+  date_max = format.Date(Sys.Date(), "%Y-%m-%d")) %>%
+  mutate(tmax = tmax/10) # Convert to whole degrees Celsius
+```
+
+Formatting this data for plotting is relatively straightforward:
+
+```{r}
+max_temperature <- max_temperature %>%
+  mutate(yday_tmax = lag(tmax, 1))
+
+library(ggplot2)
+qplot(data=max_temperature, yday_tmax, tmax, geom="jitter", alpha=I(0.5)) + 
+  xlab("Yesterday's maximum temperature") +
+  ylab("Today's maximum temperature") + 
+  geom_smooth() + 
+  coord_equal()
+
+qplot(data=max_temperature, yday_tmax, tmax, geom="hex") + 
+  xlab("Yesterday's maximum temperature") +
+  ylab("Today's maximum temperature") +
+  coord_equal() 
+
+```
+
+Using the API makes for much simpler code!
+
+
+#### Your turn
+
++ Use the API to get minimum and average daily temperatures in addition to maximum temperatures. 
+
++ Reformat the weather data set in such a way that you can easily compare Maximum and minimum temperatures in a scatterplot. 
+
++ How do temperatures behave over the course of a year? Organize the data correspondingly and plot.
