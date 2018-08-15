@@ -275,22 +275,21 @@ Figure @\ref(fig:registration) shows the number (in millions) of registered vehi
 and the federal reserve bank of St Louis [https://research.stlouisfed.org/fred2/release?rid=254](https://research.stlouisfed.org/fred2/release?rid=254)
 ***
 
-<!--
 
-```{r registration, fig.cap="Number of registered vehicles (in Millions) by year. The number of registered cars increases linearly over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-ggplot(aes(x=year, y=number/10^6), data=vehicles) + 
-  geom_smooth(method="lm") +
-  geom_point() + 
-  ylab("Number of registered vehicles (in Millions)")
-```
 
-Figure \@ref(fig:adjusted-rates) shows the rate of accident fatalities per million registered vehicles over time. Since 1975 this rate has been cut into less than half from over 300 to just over 125 fatalities per million registrations. However, since about 2009 not much progress was made to further reduce the rate (which might go hand in hand with the sub-linear increase in the number of registrations for that same timeframe).
-```{r adjusted-rates, fig.cap="Rate of accident fatalities by million of registered vehicles. ", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-numbers <- merge(numbers, vehicles, by="year", all.x=TRUE)
-qplot(year, fatalities/number*10^6, data=numbers) + ylab("Rate of accident fatalities per million registered vehicles.")
-```
+<!-- ```{r registration, fig.cap="Number of registered vehicles (in Millions) by year. The number of registered cars increases linearly over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE} -->
+<!-- ggplot(aes(x=year, y=number/10^6), data=vehicles) +  -->
+<!--   geom_smooth(method="lm") + -->
+<!--   geom_point() +  -->
+<!--   ylab("Number of registered vehicles (in Millions)") -->
+<!-- ``` -->
 
--->
+<!-- Figure \@ref(fig:adjusted-rates) shows the rate of accident fatalities per million registered vehicles over time. Since 1975 this rate has been cut into less than half from over 300 to just over 125 fatalities per million registrations. However, since about 2009 not much progress was made to further reduce the rate (which might go hand in hand with the sub-linear increase in the number of registrations for that same timeframe). -->
+<!-- ```{r adjusted-rates, fig.cap="Rate of accident fatalities by million of registered vehicles. ", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE} -->
+<!-- numbers <- merge(numbers, vehicles, by="year", all.x=TRUE) -->
+<!-- qplot(year, fatalities/number*10^6, data=numbers) + ylab("Rate of accident fatalities per million registered vehicles.") -->
+<!-- ``` -->
+
 
 ## Your Turn
 
