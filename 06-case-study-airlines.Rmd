@@ -135,7 +135,7 @@ There are 9651 ghost flights in January 2016 (*** not adjusted by timezone - thi
 HH: Caveat: if a plane is doing an international flight, it might create an 'artificial' ghost flight.
 HH: what I would like to know: number of ghost miles flown. Fuel costs for ghost flights. 
 
-```{r ghostrate}
+```{r ghostrate01}
 ghostsCarrier <- data.frame(xtabs(~UniqueCarrier, data=ghosts))
 names(ghostsCarrier)[2] <- "Ghost"
 flightsCarrier <- data.frame(xtabs(~UniqueCarrier, data=subset(ontime, Cancelled==0)))
@@ -149,9 +149,9 @@ qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight),
   ylab("Airline Carrier")
 ```
 
-Figure \@ref(fig:ghostrate) shows the rate of ghost flights per each 1000 flights for each carrier. The size of the dots is proportional to the number of flights the airline carried out in January 2016, i.e. larger carriers are shown by larger sized dots. Generally, larger carriers have larger ghost rates, but there are some remarkable exceptions. Southwest (WN) has the lowest rate of ghost flights among the larger carriers, while Frontier Airlines (F9) has a very high ghost rate for such a small carrier.  
+Figure \@ref(fig:ghostrate01) shows the rate of ghost flights per each 1000 flights for each carrier. The size of the dots is proportional to the number of flights the airline carried out in January 2016, i.e. larger carriers are shown by larger sized dots. Generally, larger carriers have larger ghost rates, but there are some remarkable exceptions. Southwest (WN) has the lowest rate of ghost flights among the larger carriers, while Frontier Airlines (F9) has a very high ghost rate for such a small carrier.  
 
-```{r ghostmap, fig.cap="Ghost flights of three national airline carriers. Airports with at least 2.5\\% of the ghost traffic are labelled.", fig.height=4, fig.width=12, warning=FALSE, message=FALSE}
+```{r ghostmap01, fig.cap="Ghost flights of three national airline carriers. Airports with at least 2.5\\% of the ghost traffic are labelled.", fig.height=4, fig.width=12, warning=FALSE, message=FALSE}
 ghosts <- merge(ghosts, airports[,c("LOCID", "LONGITUDE", "LATITUDE")], by.x="Origin", by.y="LOCID", all.x=TRUE)
 names(ghosts)[grep("LONGITUDE", names(ghosts))] <- "orig.long"
 names(ghosts)[grep("LATITUDE", names(ghosts))] <- "orig.lat"
@@ -194,7 +194,7 @@ ggplot() + theme_bw() +
 
 There are two main kind of delays in the US flight data: departure and arrival delays. Obviously, the two delays are correlated - at least at first sight. Figure \@ref(fig:delays) shows two scatterplots of arrival and departure delays for each of the 400,000 flights using progressive zooms into the data.  The  scatterplot on the left shows all departure and arrival delays. The correlation is very strong, particularly for large delays. But if we zoom closer into the actually practically relevant region of delays up to 120 mins, we see a more complex relationship. While there is still a strong linear relationship (on average planes make up 6 mins of departure delay on arrival), a second pattern emerges for planes that leave on time or are even early but land late. 
 
-```{r delays, echo=FALSE, fig.caption="Scatterplots of departure delay and arrival delay. Overall, there is a strong linear relationship. Zooming in, a second pattern emerges of planes departing on time but arriving late.", fig.width=6, fig.height=6, warning=FALSE}
+```{r delays01, echo=FALSE, fig.caption="Scatterplots of departure delay and arrival delay. Overall, there is a strong linear relationship. Zooming in, a second pattern emerges of planes departing on time but arriving late.", fig.width=6, fig.height=6, warning=FALSE}
 qplot(DepDelay, ArrDelay, data=ontime)
 qplot(DepDelay, ArrDelay, data=subset(ontime, ArrDelay < 120), alpha=I(.05)) 
 ```
@@ -203,7 +203,7 @@ qplot(DepDelay, ArrDelay, data=subset(ontime, ArrDelay < 120), alpha=I(.05))
 
 
 The Department of Transportation is keeping track of four reasons for cancellations: Carrier delays, Weather delays, Security delays and delays due to the National Air System. Three of these reasons were given for cancelled flights in January 2016, as can be seen in Figure \@ref(fig:cancellation-codes). Obviously, cancellations due to weather are most prominent for this timeframe. 
-```{r cancellation-codes}
+```{r cancellation-codes01}
 cancellations <- subset(ontime, Cancelled == 1)
 levels(cancellations$CancellationCode) <- c("", "Carrier", "Weather", "National Air System")
 qplot(CancellationCode, data=cancellations)
@@ -211,7 +211,7 @@ qplot(CancellationCode, data=cancellations)
 
 During January 2016 there is a period of four days (see Figure \@ref(fig:day-delays)) that caused massive, mainly weather-related cancellations. 
 
-```{r day-delays}
+```{r day-delays01}
 cancelDay <- cancellations %>% group_by(DayofMonth, CancellationCode) %>% summarize(
   n = n()
 )
@@ -244,7 +244,7 @@ Let us investigate arrival delays by airline and other
 
 
 
-```{r airtime-delays, echo=FALSE}
+```{r airtime-delays01, echo=FALSE}
 ggplot(aes(x=CRSElapsedTime, y=ActualElapsedTime), data=ontime) +
   geom_hex(binwidth=c(5,5))
 ```
