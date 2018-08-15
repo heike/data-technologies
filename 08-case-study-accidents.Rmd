@@ -246,31 +246,36 @@ qplot(year, n, data=numbers) + geom_point(aes(y=fatalities), colour="red")
 qplot(year, fatalities/n, data=numbers) 
 ```
 
-The drop in both numbers of fatal accidents over time and the rates of fatalities is even more dramatic, when put into the perspective of how many more cars are on the roads. This kind of information is made available by
-RITA. The [table of the number of cars on US roads](http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/publications/national_transportation_statistics/html/table_01_11.html) is available online. 
-While we can read in the data (see below), it is in a fairly awful shape:
-```{r}
-rita <- read.table("http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/table_01_11_3.csv", skip=1, header=TRUE, sep=",", na.strings="NA")
-head(rita[,1:10])
-```
+The drop in both numbers of fatal accidents over time and the rates of fatalities is even more dramatic, when put into the perspective of how many more cars are on the roads. This kind of information is made available by RITA.
 
-But after some basic cleaning, we can extract the number of vehicles registered annually:
-```{r}
-library(tidyr)
-names(rita)[1] <- "mode"
-rm <- gather(rita, key=year, value=number, -mode, na.rm=TRUE)
-rm$year <- as.numeric(gsub("X","", rm$year))
-rm$number <- gsub(",","", rm$number) # get rid of all the comma
-rm$number <- trimws(gsub("(R)", "", rm$number, fixed=TRUE))
-rm$number <- as.numeric(rm$number)
-rm <- subset(rm, !is.na(rm$number))
-vehicles <- subset(rm, mode %in% "Highway, total (registered vehicles)")
-```
+RITA got renamed to BTS - none of the websites below exist any more. Need to find them again. 
+
+<!--  The [table of the number of cars on US roads](http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/publications/national_transportation_statistics/html/table_01_11.html) is available online.  -->
+<!-- While we can read in the data (see below), it is in a fairly awful shape: -->
+<!-- ```{r} -->
+<!-- rita <- read.table("http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/table_01_11_3.csv", skip=1, header=TRUE, sep=",", na.strings="NA") -->
+<!-- head(rita[,1:10]) -->
+<!-- ``` -->
+
+<!-- But after some basic cleaning, we can extract the number of vehicles registered annually: -->
+<!-- ```{r} -->
+<!-- library(tidyr) -->
+<!-- names(rita)[1] <- "mode" -->
+<!-- rm <- gather(rita, key=year, value=number, -mode, na.rm=TRUE) -->
+<!-- rm$year <- as.numeric(gsub("X","", rm$year)) -->
+<!-- rm$number <- gsub(",","", rm$number) # get rid of all the comma -->
+<!-- rm$number <- trimws(gsub("(R)", "", rm$number, fixed=TRUE)) -->
+<!-- rm$number <- as.numeric(rm$number) -->
+<!-- rm <- subset(rm, !is.na(rm$number)) -->
+<!-- vehicles <- subset(rm, mode %in% "Highway, total (registered vehicles)") -->
+<!-- ``` -->
 
 Figure @\ref(fig:registration) shows the number (in millions) of registered vehicles over time. Between 1965 and 1993 the number of annual registrations doubles from 100 million to 200 million. Until most recently, the number of registrations increases linearly with an average of about 3.5 Million more vehicles registered each year. Unfortunately, this does not tell us eaxactly how many cars are on the roads each year - for that we would need to also take into account, for how many years people use the same vehicle on average. For the most meaningful measure we would also need to take the number of miles into account that people drive each year. This number would allow us to estimate a rate of fatal accidents per miles driven. 
 *** we could follow up on this, there are a number of interesting sites that deal with estimating the number of annually driven miles - e.g. the travel monitoring at [https://www.fhwa.dot.gov/policyinformation/travel_monitoring/tvt.cfm](https://www.fhwa.dot.gov/policyinformation/travel_monitoring/tvt.cfm)
 and the federal reserve bank of St Louis [https://research.stlouisfed.org/fred2/release?rid=254](https://research.stlouisfed.org/fred2/release?rid=254)
 ***
+
+<!--
 
 ```{r registration, fig.cap="Number of registered vehicles (in Millions) by year. The number of registered cars increases linearly over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 ggplot(aes(x=year, y=number/10^6), data=vehicles) + 
@@ -285,7 +290,7 @@ numbers <- merge(numbers, vehicles, by="year", all.x=TRUE)
 qplot(year, fatalities/number*10^6, data=numbers) + ylab("Rate of accident fatalities per million registered vehicles.")
 ```
 
-
+-->
 
 ## Your Turn
 
