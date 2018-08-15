@@ -135,7 +135,7 @@ There are 9651 ghost flights in January 2016 (*** not adjusted by timezone - thi
 HH: Caveat: if a plane is doing an international flight, it might create an 'artificial' ghost flight.
 HH: what I would like to know: number of ghost miles flown. Fuel costs for ghost flights. 
 
-```{r ghostrate, }
+```{r ghostrate}
 ghostsCarrier <- data.frame(xtabs(~UniqueCarrier, data=ghosts))
 names(ghostsCarrier)[2] <- "Ghost"
 flightsCarrier <- data.frame(xtabs(~UniqueCarrier, data=subset(ontime, Cancelled==0)))
