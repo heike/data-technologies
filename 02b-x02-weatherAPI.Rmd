@@ -4,7 +4,7 @@ knit: bookdown::preview_chapter
 
 #### Weather in Ames (API Version)
 
-In many cases, you are not the first person attempting to use an online dataset for some sort of analysis. In many cases, sites maintain an API (Application Programming Interface) which allows data access via simplified commands. In situations where an API is available (and free), it is generally better to utilize the API than to write a custom scraping function, as typically APIs are more stable than web page structure over time. 
+In many cases, you are not the first person attempting to use an online dataset for some sort of analysis. Some sites maintain an API (Application Programming Interface) which allows data access via simplified commands. In situations where an API is available (and free), it is generally better to utilize the API than to write a custom scraping function, as typically APIs are more stable than web page structure over time. 
 
 In some cases, there are even simplified interfaces to the site's API: for weather data, the `rnoaa` package provides R bindings to several APIs maintained by the National Oceanic and Atmospheric Administration. 
 
@@ -31,7 +31,7 @@ nearby_stations <- meteo_nearby_stations(
 ```
 
 The `meteo_pull_monitors` function will pull data from the specified variables for the specified date range, for each station id provided. 
-```{r, include = F}
+```{r, eval = T, include = F, echo = F}
 library(dplyr)
 ```
 
@@ -75,6 +75,6 @@ Using the API makes for much simpler code!
 
 + Use the API to get minimum and average daily temperatures in addition to maximum temperatures. 
 
-+ Reformat the weather data set in such a way that you can easily compare Maximum and minimum temperatures in a scatterplot. 
++ Reformat the weather data set in such a way that you can easily compare maximum and minimum temperatures in a scatterplot. 
 
 + How do temperatures behave over the course of a year? Organize the data correspondingly and plot.
