@@ -74,12 +74,18 @@ ggplot(data=polys_cntry, aes(x=lon, y=lat)) +
 # Examine gender
 table(datraw$v_216)
 datraw$v_216 <- factor(datraw$v_216, levels=c(1,2), labels=c("male","female"))
-qplot(v_216, data=datraw, geom="bar") + xlab("Gender")
+ggplot(data = datraw) + 
+  geom_bar(aes(x = v_216)) + 
+  xlab("Gender")
+# qplot(v_216, data=datraw, geom="bar") + xlab("Gender")
 
 # Age
 summary(datraw$v_215)
 head(datraw$v_215)
-qplot(v_215, data=datraw, geom="histogram", binwidth=5) + xlab("Age")
+ggplot(data = datraw) + 
+  geom_histogram(aes(x = v_215), binwidth = 5) + 
+  xlab("Age")
+# qplot(v_215, data=datraw, geom="histogram", binwidth=5) + xlab("Age")
 
 # Education
 table(datraw$v_217)
@@ -93,7 +99,10 @@ datraw$ed[datraw$v_217 == 1] <- "HS"
 datraw$ed[datraw$v_219 == 1] <- "BS/BA/MS/MBA..."
 datraw$ed[datraw$v_220 == 1] <- "PhD"
 datraw$ed <- factor(datraw$ed, levels=c("Not given", "HS", "BS/BA/MS/MBA...", "PhD"))
-qplot(ed, data=datraw, geom="bar") + xlab("Education")
+ggplot(data = datraw) + 
+  geom_bar(aes(x = ed)) + 
+  xlab("Education")
+# qplot(ed, data=datraw, geom="bar") + xlab("Education")
 
 # Ed area
 table(datraw$v_222)

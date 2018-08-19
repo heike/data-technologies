@@ -12,7 +12,9 @@ library(ggplot2)
 library(foreign)
 
 accidents <- read.dbf("data/FARS2014-DBF/accident.dbf")
-qplot(LONGITUD, LATITUDE, data=subset(accidents, dplyr::between(LONGITUD, -130, 0)), size=I(.5), alpha=I(0.5))
+subset(accidents, dplyr::between(LONGITUD, -130, 0)) %>%
+ggplot() + 
+  geom_point(aes(x = LONGITUD, y = LATITUDE), size = .5, alpha = .5)
 ```
 
 Here, we  first focus on a single year's worth of data. The data is released in different formats. Besides SAS, DBF seems to be a staple at the DOT. DBF stands for 'data base format', and in R we can read files in this format using the function ```read.dbf```, which is part of the package ```foreign``` [@R-foreign]. Files in SAS format can be read with package ```sas7bdat``` [@R-sas7bdat]. Generally, files in SAS format are a bit smaller than the ones in DBF, but the ```read.dbf``` function is much faster than the ```read.sas7bdat``` function. However, the SAS files come with a file called ```Format.sas```, which contains a translation of numerical codes to string values, making results much easier to interpret. Using a bit of our magical text skills, we can get the relevant information out of this file (see Your Turn question #1).
@@ -41,8 +43,9 @@ drunk_by_day$HOUR[drunk_by_day$HOUR == 99] <- NA
 drunk_by_day$DAY_WEEK <- factor(drunk_by_day$DAY_WEEK)
 levels(drunk_by_day$DAY_WEEK) <- c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
 drunk_by_day$DAY_WEEK <- factor(drunk_by_day$DAY_WEEK, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
-
-qplot(data=drunk_by_day, geom="bar", x=HOUR, weight=deaths, colour=I(NA)) + facet_wrap(~DAY_WEEK, ncol=4)
+ggplot(data = drunk_by_day) + 
+  geom_bar(aes(x = HOUR, weight = deaths), colour = NA) + 
+  facet_wrap(~DAY_WEEK, ncol = 4)
 ```
 
 
@@ -50,8 +53,10 @@ The variable ```DRUNK_DR``` is the number of drivers involved in the crash who t
 Days of the week are encoded as 1 for Sunday through 7 for Saturday, the dots in Figure \@ref(fig:drunk) show the percentage of accidents in which at least one of the drivers was drunk. On Saturdays and Sundays the percentage of drunk drivers is generally higher, but on all days of the week, fatal accidents that occur after 8 pm and before 5 am have an over 30% chance of involving a drunk driver. During the very early hours of the morning this rate spikes to well over 50% even on weekdays!
 
 ```{r drunk, message=FALSE, warning = FALSE, fig.cap='Percentage of accidents where at least one of the drivers was legally drunk by day of the week and time of the day. Late nights and early mornings have particularly high frequencies.', out.width='80%', fig.asp=.75, fig.align='center'}
-
-qplot(HOUR, drunkPerc, data=drunk_by_day, colour=DAY_WEEK, geom="point", group=DAY_WEEK) + theme_bw() + geom_smooth(se=FALSE)
+ggplot(data = drunk_by_day, aes(x = HOUR, y = drunkPerc, group = DAY_WEEK, colour = DAY_WEEK)) + 
+  geom_point() + 
+  theme_bw() + 
+  geom_smooth(se = FALSE)
 ```
 
 ## What contributes to fatal accidents?
@@ -81,10 +86,12 @@ getLevels <- function(varname, file) {
 ```{r what, fig.cap='Number of accidents by contributing factor. Contributing factor 0 stands for "none".', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 enc <- getLevels("ARF14F", "data/FARS2014-DBF/Format14.sas")
 names(enc) <- c("CF1", "Label")
-
-qplot(reorder(CF1, CF1, length), data=accidents, geom="bar") + coord_flip() + 
-  geom_text(aes(label=Label), y=1000, data=enc, hjust=0)
-
+ggplot(data = accidents, 
+       aes(x = reorder(CF1, CF1, length))) + 
+  geom_bar() + 
+  coord_flip() + 
+  geom_text(aes(label = Label), 
+            y = 1000, data = enc, hjust = 0)
 ```
 
 Was the driver distracted? - The answer to this question is recorded in the variable ```MDRDSTRD``` and summarised in Figure @\ref(fig:MDRDSTRD).
@@ -94,12 +101,15 @@ distract <- read.dbf("data/FARS2014-DBF/Distract.dbf")
 enc2 <- getLevels("DRDIS14F", "data/FARS2014-DBF/Format14.sas")
 names(enc2) <- c("MDRDSTRD", "Label")
 
-qplot(reorder(MDRDSTRD, MDRDSTRD, length), data=distract, geom="bar", fill=MDRDSTRD %in% c("05","06","15")) + coord_flip() + 
+ggplot(data = distract, aes(x = reorder(MDRDSTRD, MDRDSTRD, length))) +
+  geom_bar(aes(fill = MDRDSTRD %in% c("05", "06", "15"))) + 
+  coord_flip() + 
   scale_fill_discrete("Cell phone related distraction") + 
-  geom_text(aes(label=Label), y=1000, data=enc2, hjust=0)
+  geom_text(aes(label = Label), y = 1000, data = enc2, hjust = 0)
+# This is really hard to see... 
 ```
 
-0 stands for 'Not distracted'. 99 is code for 'unkown',
+0 stands for 'Not distracted'. 99 is code for 'unknown',
 96 is a non-report, and 93 stands for a non-specific 'inattention'.
 
 
@@ -123,7 +133,13 @@ drunk$SEX[drunk$SEX > 2] <- NA
 drunk$SEX <- factor(drunk$SEX)
 levels(drunk$SEX) <- c("Male", "Female")
 
-qplot(HOUR, drunkPerc, data=na.omit(drunk), colour=factor(SEX),  geom="point", group=interaction(SEX, DAY_WEEK)) + theme_bw() + geom_smooth(se=FALSE) + facet_wrap(~DAY_WEEK)
+ggplot(data = na.omit(drunk), 
+       aes(x = HOUR, y = drunkPerc, colour = factor(SEX), 
+           group = interaction(SEX, DAY_WEEK))) + 
+  geom_point() + 
+  theme_bw() + 
+  geom_smooth(se = F) + 
+  facet_wrap(~DAY_WEEK)
 ```
 
 Do we see this gap between genders because women are more sensible with alcohol or do they just let somebody else drive?
@@ -239,11 +255,14 @@ write.csv(numbers, "data/numbers.csv", row.names=FALSE)
 
 ```{r fatalities-trend, fig.keep=TRUE, fig.cap="Number of accidents (black points) and fatalities (red points) over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
 numbers <- read.csv("data/numbers.csv")
-qplot(year, n, data=numbers) + geom_point(aes(y=fatalities), colour="red")
+ggplot(data = numbers) + 
+  geom_point(aes(x = year, y = n)) + 
+  geom_point(aes(x = year, y = fatalities), colour = "red")
 ```
 
 ```{r fatalities-rates, fig.cap="Rate of fatalities per accident in which at least one fatality occurred. The rate decreases over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-qplot(year, fatalities/n, data=numbers) 
+ggplot(data = numbers) + 
+  geom_point(aes(x = year, y = fatalities/n))
 ```
 
 The drop in both numbers of fatal accidents over time and the rates of fatalities is even more dramatic, when put into the perspective of how many more cars are on the roads. This kind of information is made available by RITA.
@@ -331,8 +350,10 @@ factor <- read.dbf("data/FARS2014-DBF/Factor.dbf")
 enc3 <- getLevels("FACTR14F", "data/FARS2014-DBF/Format14.sas")
 names(enc3) <- c("MFACTOR", "Label")
 
-qplot(reorder(MFACTOR, MFACTOR, length), data=factor, geom="bar") + coord_flip() +
-  geom_text(aes(label=Label), y=1000, data=enc3, hjust=0)
+ggplot(data = factor, aes(x = reorder(MFACTOR, MFACTOR, length))) + 
+  geom_bar() + 
+  coord_flip() + 
+  geom_text(aes(label = Label), y = 1000, data = enc3, hjust = 0)
 ```
 
 + ***Where people are when they get involved in an accident matters a lot. Investigate numbers and rates of death by seat position (```SEAT_POS```). How do age and gender factor into this? Make sure to investigate only combinations with enough data support.***
@@ -349,8 +370,13 @@ names(enc5) <- c("SEAT_POS", "Seat")
 
 person <- merge(person, enc5, by="SEAT_POS", all.x=TRUE)
 person$SEAT_POS <- with(person, reorder(SEAT_POS, SEAT_POS, length))
-qplot(x = SEAT_POS, data=person, geom="bar") + coord_flip() + 
-  geom_label(aes(label=Seat), y=1000, data=unique(person[,c("SEAT_POS", "Seat")]), hjust=0, alpha=0.5)
+
+ggplot(data = person) + 
+  coord_flip() + 
+  geom_bar(aes(x = SEAT_POS)) + 
+  geom_label(aes(x = SEAT_POS, label = Seat), y = 1000,
+             data = unique(person[,c("SEAT_POS", "Seat")]), 
+             hjust = 0, alpha = 0.5)
 ```
 
 We will require each category of ```SEAT_POS``` to have at least 500 records:
@@ -363,7 +389,7 @@ person$SEAT_POS_cat <- with(person, reorder(SEAT_POS_cat, SEAT_POS_cat, length))
 
 ```{r}
 person$Alive <- person$DEATH_YR > 2015
-qplot(data=person, SEAT_POS_cat, fill=Alive) + coord_flip()
+# qplot(data=person, SEAT_POS_cat, fill=Alive) + coord_flip()
 ggplot(data=person, aes(x=SEAT_POS_cat, fill=Alive)) + coord_flip() +
   geom_bar(position="fill")
 
