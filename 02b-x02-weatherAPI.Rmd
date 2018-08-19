@@ -55,16 +55,18 @@ max_temperature <- max_temperature %>%
   mutate(yday_tmax = lag(tmax, 1))
 
 library(ggplot2)
-qplot(data=max_temperature, yday_tmax, tmax, geom="jitter", alpha=I(0.5)) + 
+ggplot(data = max_temperature, aes(x = yday_tmax, y = tmax)) + 
+  geom_jitter(alpha = I(0.5)) +  
+  geom_smooth() + 
   xlab("Yesterday's maximum temperature") +
   ylab("Today's maximum temperature") + 
-  geom_smooth() + 
   coord_equal()
 
-qplot(data=max_temperature, yday_tmax, tmax, geom="hex") + 
+ggplot(data = max_temperature, aes(x = yday_tmax, y = tmax)) + 
+  geom_hex() + 
   xlab("Yesterday's maximum temperature") +
-  ylab("Today's maximum temperature") +
-  coord_equal() 
+  ylab("Today's maximum temperature") + 
+  coord_equal()
 
 ```
 

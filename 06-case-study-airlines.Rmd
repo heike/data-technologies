@@ -22,15 +22,22 @@ library(ggthemes)
 # load ontime data into the working directory
 load("data/airlines/ontime/january-flights.RData") 
 dim(ontime)
-require(dplyr)
+library(dplyr)
 
 tails <- ontime %>% group_by(TailNum) %>% summarize(
   numFlights = n(),
   carrier = UniqueCarrier[1],
   miles = sum(Distance)
 )
-qplot(reorder(carrier, miles), miles, data=tails, varwidth=TRUE, fill=carrier, geom="boxplot") + ylim(c(0,150000)) 
-qplot(miles, data=tails, fill=carrier) + xlim(c(0,150000)) + facet_wrap(~carrier, scales="free_y")
+ggplot(data = tails) + 
+  geom_boxplot(aes(x = reorder(carrier, miles), 
+                   y = miles, fill = carrier), varwidth = TRUE) + 
+  ylim(c(0,150000)) 
+
+ggplot(data = tails) + 
+  geom_histogram(aes(x = miles, fill = carrier)) + 
+  xlim(c(0, 150000)) + 
+  facet_wrap(~carrier, scales = "free_y")
 ```
 Southwest (WN) flies the heck out of its planes, but it is beaten at this game by a lot of the very small airline carriers, at the front of which is Spirit Airlines (NK).
 What we cannot see from the boxplots is that some of these airline carriers have several modes for the number of miles that their planes fly. United and American seem to have a couple of planes that fly only very rarely. Carrier AS has two modes: one mode at a very high number of miles, the other at around 75,000 miles.  
@@ -46,10 +53,12 @@ airports <- read.dbf("data/airlines/airports/airports.dbf")
 table(airports$LAN_FA_TY)
 
 airports <- subset(airports, LAN_FA_TY=="AIRPORT")
-qplot(LONGITUDE, LATITUDE, data=airports)
+ggplot(data = airports) + 
+  geom_point(aes(x = LONGITUDE, y = LATITUDE))
+# qplot(LONGITUDE, LATITUDE, data=airports)
 ```
 
-There is a slew of different approaches and (semi-free) online services available to resolve issues around time zones. Here, we are using the Google Maps Time Zone API to get time zones based on geographic location for every US airport. 
+There are a slew of different approaches and (semi-free) online services available to resolve issues around time zones. Here, we are using the Google Maps Time Zone API to get time zones based on geographic location for every US airport. 
 In order to run the following example, you will have to sign up for this service to get an API key. Make yourself familiar with any limitations of the service so you don't accidentally ramp up any charges.
 
 ```{r, eval=FALSE}
@@ -66,7 +75,7 @@ json_data <- fromJSON(file=stringi)
 timestamp <- 1452427200 # epoch time of Jan 10, 2016 12:00 pm
 library(rjson)
 
-#airport_tz <- NULL
+# airport_tz <- NULL
 for (i in 1:nrow(airports)) {
   stringi <- sprintf("https://maps.googleapis.com/maps/api/timezone/json?location=%s,%s&timestamp=1452427200&key=AIzaSyCYXzAUh7Tq9CQ9dHvNFdkZ7QBdrfKNS3U", airports$LATITUDE[i], airports$LONGITUDE[i])
   cat(i)
@@ -99,8 +108,11 @@ airport_tz$timeZoneId <- as.character(airport_tz$timeZoneId)
 airport_tz$tz_hours <- 12 - sapply(airport_tz$timeZoneId, function(x) hour(format(pb.date, tz=x, usetz=TRUE)))
 
 airports <- merge(airports, airport_tz[, c("ID", "timeZoneName", "timeZoneId", "tz_hours")], all.x=TRUE, by.x="LOCID", by.y="ID")
-qplot(data=airports, x=LONGITUDE, y = LATITUDE, colour=factor(tz_hours)) +
-  geom_point(data=subset(airports, !is.na(tz_hours)))
+ggplot(aes(x = LONGITUDE, y = LATITUDE, colour = factor(tz_hours))) + 
+  geom_point(data = airports) + 
+  geom_point(data = subset(airports, !is.na(tz_hours)))
+# qplot(data=airports, x = LONGITUDE, y = LATITUDE, colour=factor(tz_hours)) +
+#   geom_point(data=subset(airports, !is.na(tz_hours)))
 ```
 
 Using the time zone information we  transform local times at airports into global times referenced to UTC, which we then use to order the ontime data according to the time that flights took place ***needs a more precise definition***.
@@ -142,8 +154,8 @@ flightsCarrier <- data.frame(xtabs(~UniqueCarrier, data=subset(ontime, Cancelled
 names(flightsCarrier)[2] <- "Flight"
 
 carrierStats <- merge(ghostsCarrier, flightsCarrier, by="UniqueCarrier")
-qplot(Ghost/Flight * 1000, reorder(UniqueCarrier, Ghost/Flight), 
-      data=carrierStats, size=Flight) + 
+ggplot(data = carrierStats) + 
+  geom_point(aes(x = Ghost/Flight * 1000, y = reorder(UniqueCarrier, Ghost/Flight), size = Flight)) + 
   ggtitle("Number of Ghosts for every 1000 Flights") +
   xlab("Number of ghost flights per 1000 flights") + 
   ylab("Airline Carrier")
@@ -195,8 +207,12 @@ ggplot() + theme_bw() +
 There are two main kind of delays in the US flight data: departure and arrival delays. Obviously, the two delays are correlated - at least at first sight. Figure \@ref(fig:delays) shows two scatterplots of arrival and departure delays for each of the 400,000 flights using progressive zooms into the data.  The  scatterplot on the left shows all departure and arrival delays. The correlation is very strong, particularly for large delays. But if we zoom closer into the actually practically relevant region of delays up to 120 mins, we see a more complex relationship. While there is still a strong linear relationship (on average planes make up 6 mins of departure delay on arrival), a second pattern emerges for planes that leave on time or are even early but land late. 
 
 ```{r delays01, echo=FALSE, fig.caption="Scatterplots of departure delay and arrival delay. Overall, there is a strong linear relationship. Zooming in, a second pattern emerges of planes departing on time but arriving late.", fig.width=6, fig.height=6, warning=FALSE}
-qplot(DepDelay, ArrDelay, data=ontime)
-qplot(DepDelay, ArrDelay, data=subset(ontime, ArrDelay < 120), alpha=I(.05)) 
+
+ggplot(data = ontime) + 
+  geom_point(aes(x = DepDelay, y = ArrDelay))
+
+ggplot(data = subset(ontime, ArrDelay < 120)) + 
+  geom_point(aes(x = DepDelay, y = ArrDelay), alpha = .05)
 ```
 
 ### Cancellations?
@@ -206,7 +222,8 @@ The Department of Transportation is keeping track of four reasons for cancellati
 ```{r cancellation-codes01}
 cancellations <- subset(ontime, Cancelled == 1)
 levels(cancellations$CancellationCode) <- c("", "Carrier", "Weather", "National Air System")
-qplot(CancellationCode, data=cancellations)
+ggplot(data = cancellations) + 
+  geom_bar(aes(x = CancellationCode))
 ```
 
 During January 2016 there is a period of four days (see Figure \@ref(fig:day-delays)) that caused massive, mainly weather-related cancellations. 
@@ -215,7 +232,9 @@ During January 2016 there is a period of four days (see Figure \@ref(fig:day-del
 cancelDay <- cancellations %>% group_by(DayofMonth, CancellationCode) %>% summarize(
   n = n()
 )
-qplot(DayofMonth, n, data=cancelDay) + facet_wrap(~CancellationCode)
+ggplot(data = cancelDay) + 
+  geom_point(aes(x = DayofMonth, y = n)) + 
+  facet_wrap(~CancellationCode)
 ```
 
 Looking closer, these cancellations occur mainly in the North East, where winter storm Jonas dropped 2 feet of snow between Jan 22 and Jan 24.
@@ -227,7 +246,8 @@ fourdays <- cancellations %>% filter(between(DayofMonth, 22, 25)) %>%
 fourdays <- merge(fourdays, 
                       unique(airports[, c("LOCID", "LONGITUDE", "LATITUDE")]),
                       by.x="Origin", by.y="LOCID")
-qplot(LONGITUDE, LATITUDE, size=n, data=fourdays)
+ggplot(data = fourdays) + 
+  geom_point(aes(x = LONGITUDE, y = LATITUDE, size = n))
 ```
 
 
@@ -257,7 +277,9 @@ We can download the data from there and combine it into one data set for the tim
 
 ```{r}
 fuel <- read.csv("data/airlines/fuel consumption/fuel.csv")
-qplot(MONTH, TDOMT_GALLONS, colour=UNIQUE_CARRIER, data=fuel) + facet_wrap(~YEAR)
+ggplot(data = fuel) + 
+  geom_point(aes(x = MONTH, y = TDOMT_GALLONS, colour = UNIQUE_CARRIER)) + 
+  facet_wrap(~YEAR)
 ```
 
 HH: we also need to get the number of miles flown into this picture, as well as the number of passengers, if possible.

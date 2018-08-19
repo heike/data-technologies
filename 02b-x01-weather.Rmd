@@ -92,16 +92,18 @@ weather$Record <- as.numeric(weather$Record)
 temps <- subset(weather, Statistics=="Max Temperature")
 temps$Previous <- c(temps$Actual[-1], NA)
 library(ggplot2)
-qplot(data=temps, Previous, Actual, geom="jitter", alpha=I(0.5)) + 
+ggplot(data = temps, aes(x = Previous, y = Actual)) + 
+  geom_jitter(alpha = I(0.5)) +  
+  geom_smooth() + 
   xlab("Yesterday's maximum temperature") +
   ylab("Today's maximum temperature") + 
-  geom_smooth() + 
   coord_equal()
 
-qplot(data=temps, Previous, Actual, geom="hex") + 
+ggplot(data = temps, aes(x = Previous, y = Actual)) + 
+  geom_hex() + 
   xlab("Yesterday's maximum temperature") +
-  ylab("Today's maximum temperature") +
-  coord_equal() 
+  ylab("Today's maximum temperature") + 
+  coord_equal()
 ```
 What we see is a strong linear pattern, i.e. tomorrow's maximum temperature is close to what we see today, making it a very strong predictor. There is a peak in density at temperatures around 30 degree Celsius (shown in the binned scatterplot by the light blue tiles). With higher temperatures we see less variability, while at lower temperatures this relationship is more variable. 
 
