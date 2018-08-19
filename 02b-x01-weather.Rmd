@@ -144,13 +144,13 @@ for (dateIDX in length(days):1) {
 and plot the data:
 
 ```{r, warning=FALSE, eval=FALSE}
-weather <- read.csv("data/YMML.csv", stringsAsFactors = FALSE)
+#weather <- read.csv("data/YMML.csv", stringsAsFactors = FALSE)
+weather <- read_csv("data/YMML.csv")
 
 temps <- subset(weather, Statistics=="Max Temperature")
 temps$Previous <- c(temps$Actual[-1], NA)
-library(ggplot2)
 ggplot(data=temps) +
-  geom_hex(aes(x=Previous, y=Actual, fill=log(..value..))) + 
+  geom_hex(aes(x=Previous, y=Actual)) + #, fill=log(..value..))) + 
   xlab("Yesterday's maximum temperature") +
   ylab("Today's maximum temperature") +
   coord_equal() 

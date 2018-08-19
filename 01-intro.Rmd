@@ -5,3 +5,21 @@ knit: bookdown::preview_chapter
 # Introduction {#intro}
 
 This book is provides new approaches using data technologies and graphical methods to broadly develop quantitative citizenship. 
+
+tools of the trade that have moved on from paper and pencil: RStudio, markdown, ... and why reproducibility is making any data exploration or  analysis more ethical
+
+## What is Wild data?
+
+"wild data" is the data that's 'out there' in the world and available to us. It's the kind of data that we can go out and find in our quest to make sense of the world.
+
+We are living in an age of data - data about us, the world, and our interactions with the world and each other is being collected at an ever-increasing rate. In 2015 the estimation was that by 2020 "about 1.7 megabytes of new information will be created every second for every human being on the planet". 
+
+https://www.forbes.com/sites/bernardmarr/2015/09/30/big-data-20-mind-boggling-facts-everyone-must-read/#54f6b00a17b1 (Data Strategy, Bernard Marr)
+
+At the same time, a lot more data is being made available; political developments, such as the 2007 Open Government amendment to the Freedom of Information Act addresses data  used to generate reports and requires that agencies "shall make the raw statistical data used in its reports available electronically ...". 
+This means that data used in reports by any US Department or Agency is publicly available, and usually public in this setting means the world-wide web.  
+
+Fun facts: did you know that
+(1) "despacito is awesome to listen to in any language" - it is across languages and continents the worldwide  most listened to song on spotify? (2) the number of BASHs (bird aviation strike hits) is lower in Spring when birds nest? (3) the wingspans (finger tip to finger tip distance) of NBA players are disproportionally high compared to players' heights and still growing year by year? (4) 15 year old girls score higher on boys in math, on average, in some countries, but boys always score lower than girls on reading, on average, in all countries. 
+
+Those facts can be (relatively easily) found from publicly available data after a course using the material from this book. 

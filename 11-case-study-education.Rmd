@@ -82,7 +82,9 @@ score_gap <- countries %>%
                        w=SENWT[ST004D01T=="male"], na.rm=T)-
                      weighted.mean(PV1SCIE[ST004D01T=="female"],
                        w=SENWT[ST004D01T=="female"], na.rm=T))
+```
 
+```{r eval=FALSE}
 world_map <- map_data("world")
 score_gap <- score_gap %>%
   mutate(Name = recode(Name, "Czechia"="Czech Republic",

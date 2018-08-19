@@ -1,6 +1,6 @@
 --- 
-title: "Data Technologies and Visualisation for Quantitative Citizenship"
-author: "Heike Hofmann and Dianne Cook"
+title: "The Taming of the Wild: statistical methodology for data driven explorations to build quantitative citizenship"
+author: "Heike Hofmann, Dianne Cook, Susan Vanderplas and Earo Wang"
 date: "`r Sys.Date()`"
 knit: "bookdown::render_book"
 documentclass: book
@@ -10,8 +10,16 @@ link-citations: yes
 delete_merged_file: true
 ---
 
+
+
 # Preamble
 
+At the heart of this book are these assumptions:
 
-tools of the trade that have moved on from paper and pencil: RStudio, markdown, ... and why reproducibility is making any data exploration or  analysis more ethical
+- Data-Driven: we are at our core rationale beings and base our decisions on quantifiable evidence 
+- Exploration: we  haven't lost our innate curiosity about the world and are not only willing but eager to learn
+
+Please stop reading, if those two assumptions are not fulfilled and pick up a different book.
+
+
 
