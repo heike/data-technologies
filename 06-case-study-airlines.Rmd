@@ -108,9 +108,9 @@ airport_tz$timeZoneId <- as.character(airport_tz$timeZoneId)
 airport_tz$tz_hours <- 12 - sapply(airport_tz$timeZoneId, function(x) hour(format(pb.date, tz=x, usetz=TRUE)))
 
 airports <- merge(airports, airport_tz[, c("ID", "timeZoneName", "timeZoneId", "tz_hours")], all.x=TRUE, by.x="LOCID", by.y="ID")
-ggplot(aes(x = LONGITUDE, y = LATITUDE, colour = factor(tz_hours))) + 
-  geom_point(data = airports) + 
-  geom_point(data = subset(airports, !is.na(tz_hours)))
+ggplot() + 
+  geom_point(data = airports, aes(x = LONGITUDE, y = LATITUDE, colour = factor(tz_hours))) + 
+  geom_point(data = subset(airports, !is.na(tz_hours)), aes(x = LONGITUDE, y = LATITUDE, colour = factor(tz_hours)))
 # qplot(data=airports, x = LONGITUDE, y = LATITUDE, colour=factor(tz_hours)) +
 #   geom_point(data=subset(airports, !is.na(tz_hours)))
 ```
