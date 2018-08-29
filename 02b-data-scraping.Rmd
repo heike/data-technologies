@@ -7,3 +7,4 @@ knit: bookdown::preview_chapter
 There are a lot of different packages available in R that allow us to scrape data.
 
 
+Remember that APIs and data services provide a **service** to us. Always scrape responsibly and don't violate Terms of Service!
