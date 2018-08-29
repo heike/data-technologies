@@ -20,6 +20,10 @@ At the same time, a lot more data is being made available; political development
 This means that data used in reports by any US Department or Agency is publicly available, and usually public in this setting means the world-wide web.  
 
 Fun facts: did you know that
-(1) "despacito is awesome to listen to in any language" - it is across languages and continents the worldwide  most listened to song on spotify? (2) the number of BASHs (bird aviation strike hits) is lower in Spring when birds nest? (3) the wingspans (finger tip to finger tip distance) of NBA players are disproportionally high compared to players' heights and still growing year by year? (4) 15 year old girls score higher on boys in math, on average, in some countries, but boys always score lower than girls on reading, on average, in all countries. 
+
+(1) "'Despacito' is awesome to listen to in any language" - in Spring and Summer 2018 it was across languages and continents the worldwide  most listened to song on spotify? 
+(2) the number of BASHs (bird aviation strike hits) is lower in Spring when birds nest? 
+(3) the wingspans (finger tip to finger tip distance) of NBA players are disproportionally high compared to players' heights and still increasing year by year? 
+(4) 15 year old girls score higher on boys in math, on average, in some countries, but boys always score lower than girls on reading, on average, in all countries. 
 
 Those facts can be (relatively easily) found from publicly available data after a course using the material from this book. 
