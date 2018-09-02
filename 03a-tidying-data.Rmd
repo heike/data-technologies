@@ -19,6 +19,7 @@ __Tabular data__ is a set of values, each associated with a variable and an obse
 The grad programs data in tabular form. It also is in **wide** tidy form, because there are multiple columns containing different variables.
 
 ```{r readgrad}
+library(emo)
 library(tidyverse)
 grad <- read_csv("data/graduate-programs.csv")
 grad %>% top_n(10)
