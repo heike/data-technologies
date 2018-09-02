@@ -1,5 +1,5 @@
 --- 
-title: "The Taming of the Wild: statistical methodology for data driven explorations to build quantitative citizenship"
+title: "Data Science and Statistical Thinking: With wild-caught data and R"
 author: "Heike Hofmann, Dianne Cook, Susan Vanderplas and Earo Wang"
 date: "`r Sys.Date()`"
 knit: "bookdown::render_book"
