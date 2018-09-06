@@ -1,0 +1,7 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Generalied linear models
+
+Different distributions for response, link fuctions, ...

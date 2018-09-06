@@ -1,0 +1,12 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Model fitting and optimisation
+
+This chapter has these topics
+
+- Basic optimisation methods
+- Least squares, LAD
+- Linear models
+- Decision trees

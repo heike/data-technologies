@@ -1,0 +1,14 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Statistical distributions
+
+This chapter has:
+
+- common probability distributions
+- simulating samples
+- getting quantiles
+- getting percentiles
+- checking sample to distribution fit - qqplots
+- estimating parameters using mle, likelihood functions

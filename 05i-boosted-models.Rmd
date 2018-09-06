@@ -1,0 +1,13 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Boosted models
+
+Sample weights
+
+Re-weighting - boosting algorithm
+
+Gradient boosting
+
+

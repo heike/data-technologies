@@ -1,0 +1,15 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Bayesian models
+
+This needs to be quite long!
+
+Discussion hypthesis testing as well as models
+
+Priors
+
+Posteriors
+
+Optimisation, MCMC

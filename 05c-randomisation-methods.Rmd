@@ -1,0 +1,10 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Randomization methods
+
+- simulation
+- permutation
+- bootstrap
+- residual rotation

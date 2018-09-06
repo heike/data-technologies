@@ -1,0 +1,7 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Ensembles of models
+
+Building multiple models and predictions from collections of models

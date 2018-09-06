@@ -1,0 +1,9 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Decision making with data
+
+Adding cost functions to models, to find optimal strategies
+
+Understanding uncertainty
