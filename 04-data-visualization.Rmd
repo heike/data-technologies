@@ -374,8 +374,9 @@ ggplot(tb_map) +
 
 ## Colour blindness
 
-- About 10% of the population have difficulty distonguishing between red and green. 
+- About 10% of men have some form of colorblindness. Less than 0.2% of women have a form of color deficiency. The most common type of color deficiency causes difficulty distinguishing between red and green. 
 - There are several colour blind tested palettes: RColorbrewer has an associated web site [colorbrewer.org](http://colorbrewer2.org) where the palettes are labelled, and the `colorblind` package has all palettes readable by everyone.
+<!-- Colorbrewer's colorblind friendly sets are actually pretty awful -->
 - You can test your color choices for different forms of colorblindness using the `dichromat` package. Below is the same plot usng the default two colour scheme of ggplot, and what it looks like to a person with red/green colorblindness.
 
 
