@@ -1,0 +1,8 @@
+---
+knit: bookdown::preview_chapter
+---
+
+# Spatial data
+
+This chapter should have
+
