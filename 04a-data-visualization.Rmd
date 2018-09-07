@@ -374,10 +374,11 @@ ggplot(tb_map) +
 
 ## Colour blindness
 
-- About 10% of men have some form of colorblindness. Less than 0.2% of women have a form of color deficiency. The most common type of color deficiency causes difficulty distinguishing between red and green. 
-- There are several colour blind tested palettes: RColorbrewer has an associated web site [colorbrewer.org](http://colorbrewer2.org) where the palettes are labelled, and the `colorblind` package has all palettes readable by everyone.
+- About 10% of men have some form of colorblindness; less than 0.2% of women are affected. The most common type of color deficiency causes difficulty distinguishing between red and green. 
+- There are several colour blind tested palettes: RColorbrewer has an associated web site [colorbrewer.org](http://colorbrewer2.org) where the palettes are labelled, and the `colorblind` package has palettes which are safe for various types of color deficiency. 
 <!-- Colorbrewer's colorblind friendly sets are actually pretty awful -->
-- You can test your color choices for different forms of colorblindness using the `dichromat` package. Below is the same plot usng the default two colour scheme of ggplot, and what it looks like to a person with red/green colorblindness.
+- You can test your color choices for different forms of colorblindness using the `dichromat` package. Below is the same plot usng the default two colour scheme of ggplot, and what it looks like to a person with red/green colorblindness. As there are many mutations which can lead to different severities of color deficiency, simulations are not 100% accurate. 
+- A foolproof way to ensure your color palettes are distinguishable is to print them in black and white. If all colors can be distinguished, then your palette is safe to use for all types of colorblindness.
 
 
 ```{r fig.show='hold', fig.width=8, fig.height=4}
