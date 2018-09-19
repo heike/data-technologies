@@ -135,23 +135,31 @@ genes_long <- genes %>%
   gather(variable, expr, -id) 
 genes_long
 ```
-In this example, we identified the columns as containing expression levels of a different variable. We have _gathered_ these variables into a single column, with the expression levels in a corresponding column. The `-id` argument to `gather()` indicates that we do not want the `id` column to be gathered; this has the effect of repeating the 3 values of gene for each variable. 
+In this example, we identified the columns as containing expression levels of a gene during different experimental conditions (variables). We have _gathered_ these variables into a single column, with the expression levels in a corresponding column. The `-id` argument to `gather()` indicates that we do not want the `id` column to be gathered; this has the effect of repeating the 3 values of gene for each variable. 
 
 
 ### Separate columns
+
+The variables in the previous example are a cryptic combination of treatment, timepoint, and replicate. Using `separate()`, we can separate this information out into a tidy (and much more human friendly) representation of the experimental conditions:
 
 ```{r}
 genes_long %>%
   separate(variable, c("trt", "leftover"), "-") 
 ```
+First, we separate the treatment from the rest of the information. 
+
+Next, we separate the remainder into timepoint and replicate variables. 
 
 ```{r}
 genes_long %>%
   separate(variable, c("trt", "leftover"), "-") %>%
   separate(leftover, c("time", "rep"), "\\.") 
 ```
+This data is tidy, in that observations are in rows and variables are in columns, but it is not as easy to read. We can examine the different features of this data set using `spread()`.
 
 ### Now spread to examine different aspects
+
+There are several different features of the data which we might want to explore. Each feature requires a slight reconfiguration of the dataset, but these are easily accomplished using `spread()`. 
 
 #### Examine treatments against each other
 
@@ -161,10 +169,11 @@ genes_long <- genes_long %>%
   separate(leftover, c("time", "rep"), "\\.") 
 genes_long %>%
   spread(trt, expr) %>%
-  ggplot(aes(x=WI, y=WM, colour=id)) + geom_point()
+  ggplot(aes(x=WI, y=WM, colour=id, shape = id)) + geom_point()
 ```
-
-Generally, some negative association within each gene, WM is low if WI is high. 
+Generally, some negative association within each gene, WM is low if WI is high. <!--Not really... at best, there's a negative association for Gene 2, but even that is pushing it. If you don't consider each gene separately, there's a positive association. -->
+ 
+<!-- The color scheme is INCREDIBLY difficult to see... -->
 
 #### Examine replicates against each other
 
@@ -172,7 +181,8 @@ Generally, some negative association within each gene, WM is low if WI is high.
 genes_long %>%
   spread(rep, expr) %>%
   ggplot(aes(x=R1, y=R4, colour=id)) + 
-  geom_point() + coord_equal()
+  geom_point() + 
+  coord_equal()
 ```
 
 Very roughly, replicate 4 is like replicate 1, eg if one is low, the other is low. That's a good thing, that the replicates are fairly similar.
@@ -261,7 +271,7 @@ This is basically what we need. The day variable doesn't have the right values i
 
 ### Use spread to look at different things
 
-But there are a couple of things that I need to fix to make it possible to do these plots. We will discuss these operations next week.
+But there are a couple of things that I need to fix to make it possible to do these plots. We will discuss these operations next week. <!-- Next week? -->
 
 ```{r}
 melbtemp_long <- melbtemp_long %>% 
