@@ -17,6 +17,13 @@ RStudio has been a substantial contributor to the growth of R, and has  received
 
 why (computational) reproducibility is crucial to any data exploration and makes our work more ethical
 
+When learning R, we are dealing with the two distinct questions of 'how?' and 'why?' almost simultaneously. 
+The first problem is the mere mechanical problem of getting the code to the place that we want it to be. Often times this first problem is the one we think of when we state that 'we want to learn R'. However, the second question is the 'interesting' one, that touches on the statistical concepts behind why we are applying some methods over others. In this book we will be trying to highlight problems from both perspectives and add the third  question of "what do we learn?".
+
+Third question completes the cycle. 
+
+Tie into exploratory model.
+
 ## What is Wild data?
 
 "wild data" is the data that's 'out there' in the world and available to us. It's the kind of data that we can go out and find in our quest to make sense of the world.
