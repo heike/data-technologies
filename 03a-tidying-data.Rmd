@@ -117,7 +117,7 @@ What are the variables?
 
 Messy data is messy in its own way. You can make unique solutions, but then another data set comes along, and you have to again make a unique solution. 
 
-Tidy data can be though of as legos. Once you have this form, you can put it together in so many different ways, to make different analyses.
+Tidy data can be though of as legos. Once you have this form, you can put it together in so many different ways, to make different analyses and visualizations. <!--Pedantic comment: legos isn't a word. the plural of lego is lego. -->
 
 ![](images/lego.png)
 
