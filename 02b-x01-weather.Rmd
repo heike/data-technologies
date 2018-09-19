@@ -20,7 +20,7 @@ For historic data, each day is summarised by a set of statistics, such as temper
 
 The process
 
-We want to scrape the daily information from Weather Underground for a particular station and some determined time frame. 
+We want to scrape the daily information from Weather Underground for a particular station and some  time frame. 
 
 First, we write a scraper:
 ```{r}
