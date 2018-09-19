@@ -124,8 +124,8 @@ Tidy data can be though of as legos. Once you have this form, you can put it tog
 ## Tidy verbs
 
 - `gather`: specify the **keys** (identifiers) and the **values** (measures) to make long form (used to be called melting)
-- `spread`: variables in columns (used to be called casting)
-- `separate`: split character columns
+- `spread`: move a variable from a row into columns (used to be called casting)
+- `separate`: split a character vector into columns
 
 ## Tidying genes data
 
@@ -135,6 +135,8 @@ genes_long <- genes %>%
   gather(variable, expr, -id) 
 genes_long
 ```
+In this example, we identified the columns as containing expression levels of a different variable. We have _gathered_ these variables into a single column, with the expression levels in a corresponding column. The `-id` argument to `gather()` indicates that we do not want the `id` column to be gathered; this has the effect of repeating the 3 values of gene for each variable. 
+
 
 ### Separate columns
 
