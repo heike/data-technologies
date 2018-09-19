@@ -6,7 +6,10 @@ knit: bookdown::preview_chapter
 
 This book is provides new approaches using data technologies and graphical methods to broadly develop quantitative citizenship. 
 
-tools of the trade that have moved on from paper and pencil: RStudio, markdown, ... and why reproducibility is making any data exploration or  analysis more ethical
+tools of the trade that have moved on from paper and pencil: 
+ R, RStudio and markdown, for teams: git and github ... 
+
+why (computational) reproducibility is crucial to any data exploration and makes our work more ethical
 
 ## What is Wild data?
 

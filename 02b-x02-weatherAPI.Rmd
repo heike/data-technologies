@@ -16,7 +16,7 @@ if (!"rnoaa" %in% installed.packages()) {
 library(rnoaa)
 ```
 
-First, we use the `meteo_nearby_stations` function to identify weather stations near Ames:
+First, we use the `meteo_nearby_stations` function to identify weather stations near Ames, IA:
 
 ```{r}
 lat_lon_df <- data.frame(id = "ames",
@@ -30,7 +30,7 @@ nearby_stations <- meteo_nearby_stations(
   limit = 3, var = "TMAX")
 ```
 
-The `meteo_pull_monitors` function will pull data from the specified variables for the specified date range, for each station id provided. 
+The `meteo_pull_monitors` function  pulls data from the specified variables for the specified date range, for each station id provided. 
 ```{r, eval = T, include = F, echo = F}
 library(dplyr)
 ```
