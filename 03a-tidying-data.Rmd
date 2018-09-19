@@ -27,7 +27,7 @@ grad %>% top_n(10)
 
 What's good about the format?
 
-- Rows contain information about the institution
+- Rows contain information about each department of an institution
 - Columns contain types of information, like average number of publications, average number of citations, % completion, 
 
 It makes it easy to make summaries:
