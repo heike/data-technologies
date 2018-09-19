@@ -6,7 +6,13 @@ knit: bookdown::preview_chapter
 
 This book is provides new approaches using data technologies and graphical methods to broadly develop quantitative citizenship. 
 
-tools of the trade that have moved on from paper and pencil: 
+Tools of the trade  described lovingly and very detailed in @eda have moved on from paper and pencil. R [@R] has become the de-facto lingua franca for Statisticians and Data Analysts to communicate methods and findings. The RStudio IDE provides R users and developers infrastructure and support. To cite Julie Lowndes, NCEAS, ["if R were an airplane, RStudio is the airport." ](http://jules32.github.io/2016-07-12-Oxford/R_RStudio/)
+Founded by J.J. Allaire in 2009, RStudio provides an organizational framework that facilitates well-organized workflows, integration to versioning systems, and collaborations.
+The core of RStudio's mission is to provide "open source and enterprise-ready professional software for the R statistical computing environment."
+RStudio has been a substantial contributor to the growth of R, and has  received the 
+2015 InfoWorld Technology of the Year Award  (together with, among others, Github, Docker, and Apache Hadoop)
+
+
  R, RStudio and markdown, for teams: git and github ... 
 
 why (computational) reproducibility is crucial to any data exploration and makes our work more ethical
