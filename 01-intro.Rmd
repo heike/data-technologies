@@ -24,7 +24,7 @@ Third question completes the cycle.
 
 Tie into exploratory model.
 
-## What is Wild data?
+## What is **wild** data?
 
 "wild data" is the data that's 'out there' in the world and available to us. It's the kind of data that we can go out and find in our quest to make sense of the world.
 

@@ -4,7 +4,30 @@ knit: bookdown::preview_chapter
 
 # Variation and inference
 
+## What is variation and uncertainty?
+
+Debby Swayne, famous for her work on XGobi [XXX], and GGobi [XXX], liked to say that probability was what she found hardest about learning statistics. Her example was a coin flip. She observed the result of a coin flip, and so there was nothing uncertain. It either was a head or a tail. Maybe this transition is hard for many people. Once we have observed something, it is difficult to step backwards and imagine the uncertainty -- "hindsight is 20/20". 
+
+Debby took issue with the teaching of the probability of a head for a coin flip being $1/2$. Prior to tossing the coin, assuming that it is a fair coin, we are told that the probability, or the long term average, for observing a head is the same as for a tail, a half. Half the time, the coin will show a head and half the time it will show a tail. This thinking assumes that someone tosses the coin for their entire life and beyond. 
+
+Not enough emphasis is given to once the event has happened, the result is known. It either occurred or didn't occur, probability 1 or 0. The former is a vague concept, but the latter is a certainty.
+
+This has a name, *hindsight bias*, which is the inclination after an event has occurred to see it as predictable. It is also called *knew-it-all-along effect* or *creeping determinism* [(wikipedia)](https://en.wikipedia.org/wiki/Hindsight_bias). 
+
+We often have the sample in hand, which is like seeing the result of the coin flip, without knowing what the original options were. 
+
+More about short term coi flip sequences. 
+
+
+## Ways of sampling the data 
+
+## What is inference?
+
+## Collecting data
+
+## Randomization tests
+
 Using randomization tests
 
-Visual inference
+## Visual inference
 
