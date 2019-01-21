@@ -16,7 +16,7 @@ This has a name, *hindsight bias*, which is the inclination after an event has o
 
 We often have the sample in hand, which is like seeing the result of the coin flip, without knowing what the original options were. 
 
-More about short term coi flip sequences. 
+More about short term coin flip sequences. 
 
 
 ## Ways of sampling the data 

@@ -43,3 +43,10 @@ Fun facts: did you know that
 (4) 15 year old girls score higher on boys in math, on average, in some countries, but boys always score lower than girls on reading, on average, in all countries. 
 
 Those facts can be (relatively easily) found from publicly available data after a course using the material from this book. 
+
+## What is computational statistical thinking?
+
+Statistical thinking is about understanding our world by modeling the variation we care about, and harnessing randomness to "white noise" the variation that is not of primary interest. There is definitely lots of history to statistical thinking. Florence Nightingale employed data collection, computation and data plots to improve hygiene and hence survival rates during the Crimean War. ...
+
+Computational statistical thinking engages computers to create a virtual environment to examine randomness and variation.
+
