@@ -4,9 +4,1084 @@ knit: bookdown::preview_chapter
 
 # Model fitting and optimisation
 
+<!--
 This chapter has these topics
 
 - Basic optimisation methods
 - Least squares, LAD
 - Linear models
 - Decision trees
+-->
+
+## Overview
+
+- Why models?
+- Linear models and correlation
+- Model fit, and predictions
+- Model basics in R
+- Optimisation for model fitting
+- Components of variation
+- Model goodness of fit statistics
+- Beyond a single model
+- Fitting many models
+- Transformations: building on a stable platform
+- Adding interactions to the model - what does this mean?
+- Model building - how do you decide when you've got the bets possible model?
+
+
+![](images/magnifyingglass.jpg)
+Image source: Anton Croos [Art of Photography](https://art-of-photography-com.blogspot.com/)
+
+## Why models?
+
+- a simple low-dimensional summary of a dataset
+- **family of models** express a relationship between different variables.
+- allows us to predict outcomes of interest, given other variables!
+- **prediction** is critical in many fields
+
+### Example 
+
+```{r echo=FALSE, fig.height=3}
+library(tidyverse)
+library(nycflights13)
+library(gridExtra)
+flgt_weath <- flights %>% 
+  filter(origin == "LGA") %>%
+  left_join(weather, by=c("origin", "time_hour")) %>%
+  filter(wind_speed > 25)
+p1 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
+  geom_point(alpha=0.1) + 
+  ggtitle("Data alone")
+p2 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
+  geom_point(alpha=0.1) + 
+  geom_smooth(se=FALSE) + 
+  ggtitle("Data + model")
+p3 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
+  geom_smooth(se=FALSE) + 
+  ggtitle("Model only")
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+![](images/LGA_Airport_diagram.pdf.jpg)
+
+### Model families
+
+- A **model family** is the functional form that describes a relationship between an outcome $(Y)$ and an input, covariate, pre-determined variable $(X)$, e.g.
+    - $f(X)=b_0 + b_1 X +b_2 X^2+...+b_p X^p$
+    - $f(X)=b_0\exp(b_1X)$
+    - $f(X_1, X_2)=b_0 + b_1 X_1 + b_2 X_1^2 + b_3 X_2$
+- The **fitted model** makes this explicit ($e$ is the residual)
+    - $y_i = 2+3x_i+x_i^2-2x_i^3+e_i, i=1, ...., n$ **or** $\widehat{y}=2+3x+x^2-2x^3$
+    - $y_i=3\exp(2x_i)+e_i$ **or** $\widehat{y}=3\exp(2x)$
+    - $y_i=-5 + 4 x_{i1} - 2 x_{i1}^2 + 10x_{i2}+e_i$ **or** $\widehat{y}=-5 + 4 x- 2 x^2+ 10x$
+
+```{r fig.width=8, fig.height=2.5}
+library(tidyverse)
+library(gridExtra)
+# This sets the domain of the function to be -1, 1
+# and randomly generates values in this domain
+x <- runif(100, -1, 1)
+df <- tibble(x, y=2+3*x+x^2-2*x^3+rnorm(100)*0.2)
+p1 <- ggplot(df, aes(x=x, y=y)) + geom_point()
+df <- tibble(x, y=3*exp(2*x)+rnorm(100)*0.5)
+p2 <- ggplot(df, aes(x=x, y=y)) + geom_point()
+x1 <- runif(200, -1, 1)
+x2 <- runif(200, -1, 1)
+df <- tibble(x1, x2, y=-5+4*x1-2*x1^2+10*x2+rnorm(200)*0.1)
+p3 <- ggplot(df, aes(x=x1, y=x2, colour=y)) + geom_point(size=3, alpha=0.5) + theme(aspect.ratio=1)
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+### Your turn
+
+- Try the sample code to generate data with different functional forms
+- Change the domain of the explanatory variable, and see what happens to the shape of the data
+- Make up some new functions, and simulate some samples
+
+## Linear models
+
+### Correlation vs linear model
+
+- Linear association between two variables can be described by correlation, but 
+- a multiple regression model can describe linear relationship between a response variable and many explanatory variables. 
+
+For two variables $X, Y$, correlation is:
+
+$$r=\frac{\sum_{i=1}^{n} (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}} = \frac{cov(X,Y)}{s_xs_y}$$
+
+### Correlation
+
+```{r echo=FALSE}
+library(mvtnorm)
+df <- tibble(r=seq(-0.9, 0.9, 0.1))
+vfun <- function(df) {
+  vc <- matrix(c(1, df$r, df$r, 1), ncol=2, byrow=TRUE)
+  d <- as_tibble(rmvnorm(100, mean=c(0,0), vc))
+  return(d)
+}
+smp <- df %>%
+  split(.$r) %>%
+  map(vfun)
+smp_df <- bind_rows(smp) %>% mutate(r = rep(df$r, rep(100, 19)))
+ggplot(smp_df, aes(x=V1, y=V2)) + geom_point(alpha=0.5) +
+  facet_wrap(~r, ncol=5, labeller = "label_both") + 
+  theme(aspect.ratio=1) +
+  xlab("X") + ylab("Y")
+```
+
+### Simple regression
+
+$$y_i=\beta_0+\beta_1x_{i}+\varepsilon_i, ~~~ i=1, \dots, n$$
+
+where (least squares) estimates for $\beta_0, \beta_1$ are:
+
+$$b_1 = r\frac{s_y}{s_x}, ~~~~~~~~ b_0=\bar{y}-b_1\bar{x}$$
+
+Slope is related to correlation, but it also depends on the
+variation of observations, in both of the variables. 
+
+```{r echo=FALSE}
+b1 <- smp %>% map_dbl(~ coefficients(lm(V2 ~ V1, data=.x))[2]) 
+sample_r <- smp %>% map_dbl(~ cor(.x$V1, .x$V2))
+df2 <- tibble(b1=b1, rs=sample_r, r=names(b1), V1=0, V2=4) %>%
+  mutate(r=fct_relevel(r, as.character(df$r)))
+smp_df$r <- fct_relevel(as.character(smp_df$r), as.character(df$r))
+ggplot(smp_df, aes(x=V1, y=V2)) + geom_point(alpha=0.5) +
+  facet_wrap(~r, ncol=5, labeller = "label_both") + 
+  theme(aspect.ratio=1) + geom_smooth(method="lm") + 
+  xlab("X") + ylab("Y") + 
+  geom_text(data=df2, aes(x=V1, y=V2, 
+    label=paste0("b1=", b1=round(b1, 2), ", r=", r=round(rs, 2))), 
+    size=3)
+```
+
+### Multiple regression model
+
+$$y_i=\beta_0+\beta_1x_{i1}+\dots +\beta_px_{ip}+\varepsilon_i, ~~~ i=1, \dots, n$$
+where $\varepsilon$ is a sample from a normal distribution, $N(0, \sigma^2)$.
+
+### What a model says
+
+- The fitted model allows us to predict a value for the response, e.g.
+    - Suppose $\widehat{y}=2+3x+x^2-2x^3$, then for $x=0.5, \widehat{y}=2+3*0.5+0.5^2-2*0.5^3=3.5$
+    - Suppose $\widehat{y}=3\exp(2x)$, then for $x=-1, \widehat{y}=3\exp(2*(-1))=0.406$
+- How useful the model prediction is depends on the residual error. If the model explains little of the relationship then the residual error will be large and predictions less useful.
+- Predictions within the domain of the explanatory variables used to fit the model will be more reliable than **extrapolating** outside the domain. Particularly this is true for nonlinear models. 
+
+```{r cor-quiz, echo=FALSE, eval=FALSE}
+library(learnr)
+library(mvtnorm)
+df1 <- rmvnorm(100, sigma=matrix(c(1,0.6,0.6,1),
+               ncol=2, byrow=TRUE))
+df2 <- rmvnorm(100, sigma=matrix(c(1,-0.7,-0.7,1),
+               ncol=2, byrow=TRUE))
+df3 <- rmvnorm(100, sigma=matrix(c(1,0.4,0.4,1),
+               ncol=2, byrow=TRUE))
+df <- data.frame(x1=c(df1[,1], df2[,1], df3[,1]), 
+                 x2=c(df1[,2], df2[,2], df3[,2]), 
+                 group=c(rep("A", 100), rep("B", 100), rep("C", 100)))
+ggplot(df, aes(x=x1, y=x2)) + geom_point() +
+  facet_wrap(~group) +
+  theme(aspect.ratio=1)
+quiz(
+  question("Which plot has correlation about -0.7?",
+    answer("A"),
+    answer("B", correct = TRUE),
+    answer("C")),
+  question("Which plot has correlation about 0.6?",
+    answer("A", correct = TRUE),
+    answer("B"),
+    answer("C")),
+  question("Which plot has correlation about 0.4?",
+    answer("A"),
+    answer("B"),
+    answer("C", correct = TRUE))
+)
+```
+
+## Let's fit a model to CO2
+
+```{r}
+library(lubridate)
+CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = -90.0, lon = 0, stn = "spo") %>%
+  filter(flg==0) %>%
+  mutate(date = ymd(date))
+ggplot(CO2.spo, aes(x=date, y=co2)) + geom_point()
+```
+
+### Try a linear fit
+
+```{r}
+CO2.spo
+```
+
+- Use the `day` variable as the explanatory variable. 
+- It needs to be re-scaled to start from 1 until the number of days in the time frame. 
+- Subtract the number of the earliest day
+
+```{r}
+CO2.spo <- CO2.spo %>% mutate(day0=day-min(day))
+summary(CO2.spo$day)
+summary(CO2.spo$day0)
+```
+
+```{r co2quiz, echo=FALSE, eval=FALSE}
+quiz(
+  question("What is the domain of this data?",
+    answer("1960-2018"),
+    answer("310-405"),
+    answer("0-21718", correct = TRUE))
+)
+```
+
+```{r}
+co2_fit <- lm(co2~day0, data=CO2.spo)
+library(broom)
+tidy(co2_fit)
+coef <- tidy(co2_fit)$estimate
+```
+
+Then the fitted model will be:
+
+$$\widehat{co2}=302.636+0.00423\times day0$$
+
+### Predict from the model
+
+- For day0=10000 
+- the model predicts co2 to be `r coef[1]`+`r coef[2]`*10000 = `r coef[1]+coef[2]*10000`. 
+
+```{r co2date, echo=FALSE, eval=FALSE}
+quiz(
+  question("What date is day0=10000? (Hint: use filter and select on the data to work it out)",
+    answer("1984-11-02"),
+    answer("1984-11-01", correct = TRUE),
+    answer("1994-11-02"))
+)
+```
+
+### Plot the model
+
+```{r}
+co2_model <- augment(co2_fit, CO2.spo)
+ggplot(co2_model, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+```
+
+### Examine residuals
+
+- **Residuals** are calculated for each observed $y$ by computing the difference: $y_i-\widehat{y_i}$.
+- Plotting the residuals against fitted values (or x in simple linear models) can reveal problems with the fit.
+
+```{r}
+ggplot(co2_model, aes(x=date, y=.std.resid)) + 
+  geom_point() 
+```
+
+### Assessment of fit
+
+- The relationship between co2 and day0 is nonlinear!
+- The linear model does a reasonable job of explaining the increasing trend over time, but it especially mismatches the observed data at the ends, and middle of the time period.
+
+### Your turn
+
+- Try to add a quadratic term (in day0), or more, to the model to improve the fit. 
+- Hints: (1) you may want to centre the day0 values, or even standardise them, to get a nice quadratic form, (2) If the fit is good, your residual vs fitted plot should have values evenly spread above and below 0, and relatively even across the time span. 
+
+```{r echo=FALSE, results='hide', fig.show='hide'}
+CO2.spo <- CO2.spo %>%
+  mutate(day0sq=(day0-median(day0))^2)
+co2_fit2 <- lm(co2~day0+day0sq, data=CO2.spo)
+tidy(co2_fit2)
+co2_model2 <- augment(co2_fit2, CO2.spo)
+ggplot(co2_model2, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(co2_model2, aes(x=date, y=.std.resid)) + 
+  geom_point() 
+co2_fit3 <- lm(co2~day0+I(day0^2), data=CO2.spo)
+tidy(co2_fit3)
+co2_model3 <- augment(co2_fit3, CO2.spo)
+ggplot(co2_model3, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(co2_model3, aes(x=date, y=.std.resid)) + 
+  geom_point() 
+```
+
+## Model basics in R
+
+- Formula
+    - `response ~ explanatory` specifies the reponse variable and explanatory variable from the data
+    - e.g. `y ~ x1+x2+x3` three explanatory variables to be used to model response, main effects only
+    - `y ~ x1*x2*x3` include interaction terms
+    - `y ~ x - 1` specifies to force model to go through 0, that $b_0$ will be set to 0.
+- Extract components using the broom package
+    - `tidy` extracts the coefficients
+    - `augment` extracts residuals and fitted values, and pointwise diagnostics
+    - `glance` extracts model fit summaries
+
+## Seasonality
+
+### Your turn
+
+- Below we have a plot the residuals on a short time frame, you can see that there is some seasonality. Values are high in spring, and low in autumn! 
+- Brainstorm with your table members - yes, please talk with each other - ideas on how to fit a model that takes seasonality into account. There are multiple solutions, and maybe some that we haven't thought of.
+
+```{r echo=FALSE}
+library(lubridate)
+ggplot(filter(co2_model2, year(date)>2002, year(date)<2005), aes(x=date, y=.std.resid)) + 
+  geom_point()
+```
+
+## Predict co2 at another location
+
+### Your turn
+
+Using your model, built using values collected the south pole sensor, see how well it fits values from Point Barrow, Alaska. 
+
+1. Download the data. You can use almost the same code as for SPO but check the file name at http://scrippsco2.ucsd.edu/data/atmospheric_co2/ptb.
+2. The code below is a way to fit new data. It needs a bit of modification.
+
+```
+co2_model_ptb <- augment(co2_fit2, newdata=CO2.ptb)
+```
+
+3. Plot the data, and overlay the fitted model. You can use code like this.
+
+```
+ggplot(co2_model, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+```
+
+```{r eval=FALSE, echo=FALSE}
+CO2.ptb <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/flask_co2/daily/daily_flask_co2_ptb.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = -90.0, lon = 0, stn = "ptb") %>%
+  filter(flg==0) %>%
+  mutate(date = ymd(date))
+CO2.ptb <- CO2.ptb %>% mutate(day0 = day - min(CO2.spo$day))
+co2_model_ptb <- augment(co2_fit3, newdata=CO2.ptb)
+ggplot(co2_model_ptb, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+# This will give the wrong model fit because day is not calculated correctly
+CO2.ptb <- CO2.ptb %>% mutate(day0 = day - min(day))
+co2_model_ptb2 <- augment(co2_fit3, newdata=CO2.ptb)
+ggplot(co2_model_ptb2, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+```
+
+## Using optimisation to get a good fit
+
+- GOAL: Fitted model is close to all observed points
+- APPROACH: Measure the distance between the observed and fitted value, for each observation. 
+- SOLUTION: Best model makes all these distances as small as possible
+
+### Typical distances
+
+- Squared: $\sum_{i=1}^n (y_i - \widehat{y_i})^2$ (Fit is called **least squares fit**)
+- Absolute: $\sum_{i}|~y_i - \widehat{y_i}~|$ (Fit called **least absolute deviations**)
+- Power $p$: $\sum_{i=1}^n (y_i - \widehat{y_i})^p$ ($p=2,4,6,... L_p$ distance)
+
+Let's take a look, for the examples from last lecture. Data is simulated from this model:
+
+$\widehat{y}=2+3x+x^2-2x^3$
+
+```{r echo=FALSE}
+library(tidyverse)
+x <- runif(100, -1, 1)
+df <- tibble(x, y=2+3*x+x^2-2*x^3+rnorm(100)*0.2)
+ggplot(df, aes(x=x, y=y)) + geom_point()
+```
+
+We know that $\beta_0=2, \beta_1=3, \beta_2=1, \beta_3=-2$. 
+
+From the data, assume we DO NOT KNOW these parameter values, (*but that we do know the model family*) and we will estimate the parameters from the data provided. We need to find values for $b_0, b_1, b_2, b_3$ that minimise the distance between the resulting fitted value ($\widehat{y}$) and the observed $y$.
+
+```{r}
+square_err <- function(par, data) {
+  sq <- sum((data$y-(par[1]+par[2]*data$x+par[3]*data$x^2+par[4]*data$x^3))^2)
+  return(sq)
+}
+fit <- optim(c(1,1,1,1), square_err, data=df)
+df <- df %>% mutate(fitted = fit$par[1] + fit$par[2]*x +
+                      fit$par[3]*x^2 + fit$par[4]*x^3)
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_line(aes(y=fitted), colour="blue") 
+```
+
+### Your turn
+
+1. Get my code to work for you. Your results might vary slightly from mine, because it is generating a different sample or data, and this might result in different parameter estimates
+2. Write a function to compute least absolute deviation, and run the optimisation with this instead of least squares
+3. Plot the data, least squares line, and the least absolute deviation model fits.
+
+```{r eval=FALSE, echo=FALSE}
+abs_dev_err <- function(par, data) {
+  ad <- sum(abs(data$y-(par[1]+par[2]*data$x+par[3]*data$x^2+par[4]*data$x^3)))
+  return(ad)
+}
+fit2 <- optim(c(1,1,1,1), abs_dev_err, data=df)
+df <- df %>% mutate(fitted2 = fit2$par[1] + fit2$par[2]*x +
+                      fit2$par[3]*x^2 + fit2$par[4]*x^3)
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_line(aes(y=fitted), colour="blue") +
+  geom_line(aes(y=fitted2), colour="red")
+```
+
+## Components of variation
+
+- total variation: how much does Y vary, which is what we want to explain using the other variables
+- variation explained by the model
+- residual variation:  what's left over after fitting the model
+
+Open the app available at [https://ebsmonash.shinyapps.io/SSregression/](https://ebsmonash.shinyapps.io/SSregression/). (The original version was obtained from [https://github.com/paternogbc/SSregression](https://github.com/paternogbc/SSregression), developed by Gustavo Brant Paterno, a PhD student from Brazil.)
+
+The app simulates some data using different slopes and error variance. It allows you to see how characteristics of the data affect model summaries. Time to play!
+
+1. Vary the slope from high positive to zero. What happens to the error variance? The total variance and the regression variance (due to model)? Does the proportion of variation of each component change? How? Is this the same if you vary from large negative slope to zero?
+2. Holding the slope fixed at 1, increase the standard deviation of the error model. What happens to components of variation?
+3. As the slope changes, what happens to the intercept?
+4. Why isn't the estimated slope the same as what is set by the slider?
+
+```{r variance, echo=FALSE, eval=FALSE}
+quiz(
+  question("Which following is the `total variation`?",
+    answer("The sum of squared difference between observed response and fitted values."),
+    answer("The sum of squared difference between observed response and average response.", correct = TRUE),
+    answer("The sum of squared difference between fitted response and average response.")),
+  question("Which following is the `model variation`?",
+    answer("The sum of squared difference between observed response and fitted values."),
+    answer("The sum of squared difference between observed response and average response."),
+    answer("The sum of squared difference between fitted response and average response.", correct = TRUE)), 
+  question("Which following is the `residual variance`?",
+    answer("The sum of squared difference between observed response and fitted values.", correct = TRUE),
+    answer("The sum of squared difference between observed response and average response."),
+    answer("The sum of squared difference between fitted response and average response."))
+)
+```
+
+## Model goodness of fit statistics
+
+Simulate data again from this model:
+
+$\widehat{y}=2+3x+x^2-2x^3$
+
+Then consider these two models:
+
+1. $\widehat{y}=b_0+b_1x+b_2x^2$
+2. $\widehat{y}=b_0+b_1x+b_2x^2+b_3x^3$
+
+Model 2 would be the correct family, because it matches how we generated the data. The model goodness of fit statistics should reflect this.
+
+```{r}
+library(broom)
+df <- df %>%
+  mutate(x2=x^2, x3=x^3)
+df_mod1 <- lm(y~x+x2, data=df)
+df_mod2 <- lm(y~x+x2+x3, data=df)
+glance(df_mod1)
+glance(df_mod2)
+```
+
+The statistics are:
+
+- $R^2$: (model variance)/(total variance), the amount of variance in response explained by the model. Always ranges between 0 and 1, with 1 indicating a perfect fit. Adding more variables to the model will always increase $R^2$, so what is important is how big an increase is gained. Adjusted $R^2$ reduces this for every additional variable added. 
+- Deviance is the residual variation, how much variation in response that IS NOT explained by the model. The close to 0 the better, but it is not on a standard scale. In comparing two models if one has substantially lower deviance, then it is a better model.
+- Similarly BIC (Bayes Information Criterion) indicates how well the model fits, best used to compare two models. The lower is better.
+- df is the degrees of freedom left from the model fit. Starts at $n$ (sample size) and drops for each additional parameter estimated by the model. 
+
+All of these statistics indicate the model 2 is substantially a better fit than model 1.
+
+### Your turn:
+
+- For the co2 model fitting from yesterday, examine the model fit statistics for the linear model vs the one with a quadratic term. What do they indicate is the better fit?
+- Try fitting the seasonal pattern with one of the ideas you came up with yesterday. Use the model fit statistics, and residual plots, to determine if the model is better than the quadratic model.
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(broom)
+CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = -90.0, lon = 0, stn = "spo") %>%
+  filter(flg==0) %>%
+  mutate(date = ymd(date))
+CO2.spo <- CO2.spo %>% mutate(day0=day-min(day))
+co2_fit1 <- lm(co2~day0, data=CO2.spo)
+co2_fit2 <- lm(co2~day0+I(day0^2), data=CO2.spo)
+glance(co2_fit1)
+glance(co2_fit2)
+library(lubridate)
+CO2.spo <- CO2.spo %>% mutate(month=month(date, label = TRUE, abbr = TRUE))
+co2_fit3 <- lm(co2~day0+I(day0^2)+month, data=CO2.spo)
+glance(co2_fit3)
+co2_model3 <- augment(co2_fit3, CO2.spo)
+ggplot(co2_model3, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(filter(co2_model3, year(date)>1975, year(date)<1987),
+       aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue") 
+tidy(co2_fit3)
+co2_fit4 <- lm(co2~day0*month+I(day0^2)*month, data=CO2.spo)
+glance(co2_fit4)
+co2_model4 <- augment(co2_fit4, CO2.spo)
+ggplot(co2_model4, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(filter(co2_model4, year(date)>1965, year(date)<1972),
+       aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue") 
+```
+
+
+## Beyond a single model
+
+![](images/blind-men-and-the-elephant.png)
+
+<br>
+
+Image source: https://balajiviswanathan.quora.com/Lessons-from-the-Blind-men-and-the-elephant
+
+## Gapminder
+
+Hans Rosling was a Swedish doctor, academic and statistician, Professor of International Health at Karolinska Institute. He passed away in 2017. He developed a keen interest in health and wealth across the globe, and the relationship with other factors like agriculture, education, energy. His presentations on data are amazing! A starting place is https://www.youtube.com/watch?v=jbkSRLYSojo. 
+
+And you can play with the gapminder data using animations at https://www.gapminder.org/tools/. 
+
+### R package
+
+The R package, called gapminder, contains a subset of the data. It has data on five year intervals from 1952 to 2007.
+
+```{r}
+library(gapminder)
+glimpse(gapminder)
+```
+
+## Fit linear models
+
+The question is "How has life expectancy changed over years, for each country?"
+
+Plot life expectancy by year, for each country.
+
+```{r fig.height=4}
+gapminder %>% 
+  ggplot(aes(year, lifeExp, group = country)) +
+    geom_line(alpha = 1/3)
+
+```
+
+- There generally appears to be an increase in life expectancy
+- A number of countries have big dips from the 70s through 90s
+- a cluster of countries starts off with low life expectancy but ends up close to the highest by the end of the period.
+
+### Mutate year
+
+1950 is the first year, so for model fitting we are going to shift year to begin in 1950, makes interpretability easier.
+
+```{r}
+gapminder2 <- gapminder %>% mutate(year1950 = year-1950)
+```
+
+## Australia
+
+Australia was already had one of the top life expectancies in the 1950s.
+
+```{r fig.height=3, fig.width=8}
+oz <- gapminder2 %>% filter(country=="Australia")
+head(oz)
+p1 <- ggplot(data=oz, aes(x=year, y=lifeExp)) + 
+  geom_line() 
+oz_lm <- lm(lifeExp~year1950, data=oz)
+tidy(oz_lm)
+oz_mod <- augment(oz_lm, oz)
+p2 <- ggplot(data=oz_mod, aes(x=year, y=.fitted)) + 
+  geom_line() 
+p3 <- ggplot(data=oz_mod, aes(x=year, y=.std.resid)) + 
+  geom_hline(yintercept=0, colour="white", size=2) +
+  geom_line() 
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+- Life expectancy has increased 2.3 years every decade, on average. 
+- There was a slow period from 1960 through to 1972, probably related to mortality during the Vietnam war.
+
+```{r life, echo=FALSE, eval=FALSE}
+quiz(
+  question("What was the average life expectancy in 1950?",
+    answer("50"),
+    answer("about 65"),
+    answer("67.9", correct=TRUE)),
+  question("What was the average life expectancy in 2000?",
+    answer("59"),
+    answer("about 69"),
+    answer("79", correct=TRUE)))
+```
+
+## Fit all countries
+
+```{r echo=TRUE}
+library(purrr)
+by_country <- gapminder2 %>% 
+  select(country, year1950, lifeExp, continent) %>%
+  group_by(country, continent) %>% 
+  nest()
+by_country <- by_country %>% 
+  mutate(
+    model = purrr::map(data, ~ lm(lifeExp ~ year1950, 
+                                  data = .))
+  )
+country_coefs <- by_country %>% 
+  unnest(model %>% purrr::map(broom::tidy))
+country_coefs <- country_coefs %>% 
+  select(country, continent, term, estimate) %>% 
+  spread(term, estimate) %>%
+  rename(intercept = `(Intercept)`)
+head(country_coefs)
+country_coefs %>%
+  filter(country == "Australia")
+```
+
+It is also possible to use a `for` loop to compute the slope and intercept for each country.
+
+```{r eval=FALSE}
+n <- length(table(gapminder2$country))
+country_coefs <- data.frame(country=gapminder2$country[seq(1, 1704, 12)],
+                   continent=gapminder2$continent[seq(1, 1704, 12)],
+                   intercept=rep(0,n), 
+                   year1950=rep(0,n))
+for (i in 1:n) {
+  sub <- gapminder2 %>% filter(country==country_coefs$country[i])
+  sub_lm <- lm(lifeExp~year1950, data=sub)
+  sub_lm_coefs <- coefficients(sub_lm)
+  country_coefs$intercept[i] <- sub_lm_coefs[1]
+  country_coefs$year1950[i] <- sub_lm_coefs[2]
+}
+head(country_coefs)
+```
+
+### Five minute challenge
+
+- Fit the models to all countries
+- Pick your favourite country (not Australia), print the coefficients, and make a hand sketch of the the model fit.
+
+### Plot all the models
+
+```{r fig.height=4}
+country_model <- by_country %>% 
+  unnest(model %>% 
+           purrr::map(broom::augment))
+
+p1 <- gapminder %>% 
+  ggplot(aes(year, lifeExp, group = country)) +
+    geom_line(alpha = 1/3) + ggtitle("Data")
+p2 <- ggplot(country_model) + 
+  geom_line(aes(x=year1950+1950, y=.fitted, group=country), alpha = 1/3) +
+  xlab("year") +
+  ggtitle("Fitted models")
+grid.arrange(p1, p2, ncol=2)
+```
+
+### Plot all the model coefficients
+
+```{r}
+p <- ggplot(country_coefs, aes(x=intercept, y=year1950, 
+                          colour=continent, label=country)) +
+  geom_point(alpha=0.5, size=2) +
+  scale_color_brewer(palette = "Dark2")
+library(plotly)
+ggplotly(p)
+```
+
+Let's summarise the information learned from the model coefficients.
+
+- Generally the relationship is negative: this means that if a country started with a high intercept tends to have lower rate of increase.
+- There is a difference across the continents: Countries in Europe and Oceania tended to start with higher life expectancy and increased; countries in Asia and America tended to start lower but have high rates of improvement; Africa tends to start lower and have a huge range in rate of change.
+- Three countries had negative growth in life expectancy: Rwand, Zimbabwe, Zambia
+
+```{r coefs, echo=FALSE, eval=FALSE}
+quiz(
+  question("Name the country that has the lowest improvement in life expectancy",
+    answer("Zimbabwe", correct=TRUE),
+    answer("Oman"),
+    answer("Norway"),
+    answer("Gambia")),
+  question("Name the country that has the highest improvement in life expectancy",
+    answer("Zimbabwe"),
+    answer("Oman", correct=TRUE),
+    answer("Norway"),
+    answer("Gambia")),
+  question("Name the country that has the lowest initial life expectancy",
+    answer("Zimbabwe"),
+    answer("Oman"),
+    answer("Norway"),
+    answer("Gambia", correct=TRUE)),
+  question("Name the country that has the highest initial life expectancy",
+    answer("Zimbabwe"),
+    answer("Oman"),
+    answer("Norway", correct=TRUE),
+    answer("Gambia"))
+)
+```
+
+## Model diagnostics by country
+
+```{r}
+country_fit <- by_country %>% 
+  unnest(model %>% 
+           purrr::map(broom::glance))
+```
+
+Or you can use a `for` loop to compute this.
+
+```{r eval=FALSE}
+n <- length(unique(gapminder2$country))
+country_fit <- data.frame(country=gapminder2$country[seq(1, 1704, 12)],
+                   continent=gapminder2$continent[seq(1, 1704, 12)],
+                   intercept=rep(0,n), 
+                   year1950=rep(0,n),
+                   r.squared=rep(0,n))
+for (i in 1:n) {
+  sub <- gapminder2 %>% filter(country==country_fit$country[i])
+  sub_lm <- lm(lifeExp~year1950, data=sub)
+  sub_lm_fit <- coefficients(sub_lm)
+  country_fit$intercept[i] <- sub_lm_coefs[1]
+  country_fit$year1950[i] <- sub_lm_coefs[2]
+  country_fit$r.squared[i] <- summary(sub_lm)$r.squared
+}
+head(country_fit)
+```
+
+### Plot the $R^2$ values as a histogram. 
+
+```{r}
+ggplot(country_fit, aes(x=r.squared)) + geom_histogram()
+```
+
+### Countries with worst fit
+
+Examine the countries with the worst fit, countries with $R^2<0.45$, by making scatterplots of the data, with the linear model overlaid. 
+
+```{r fig.height=4}
+badfit <- country_fit %>% filter(r.squared <= 0.45)
+gapminder2_sub <- gapminder2 %>% filter(country %in% badfit$country)
+ggplot(data=gapminder2_sub, aes(x=year, y=lifeExp)) + 
+         geom_point() +
+  facet_wrap(~country) +
+  scale_x_continuous(breaks=seq(1950,2000,10), 
+                     labels=c("1950", "60","70", "80","90","2000")) +
+  geom_smooth(method="lm", se=FALSE)
+```
+
+Each of these countries had been moving on a nice trajectory of increasing life expectancy, and then suffered a big dip during the time period.
+
+### Five minute challenge
+
+Use google to explain these dips using world history and current affairs information. 
+
+## Lab exercise
+
+- Download the children per woman (total fertility) data from the [gapminder web site](https://www.gapminder.org/data/)
+- Conduct the same analysis, as done for life expectancy.
+- Find the unusual countries
+
+The code below will help you read in the data and process it, but you will need to make some changes to do the full analysis.
+
+```{r eval=FALSE}
+library(readxl)
+fert <- read_xlsx("data/children_per_woman_total_fertility.xlsx") %>%
+  rename(country = geo)
+fert <- fert %>% gather(year, fert, -country) %>%
+  mutate(year = as.numeric(year)) %>%
+  filter(year > 1950) %>%
+  mutate(year1950 = year - 1950)
+ggplot(fert, aes(x=year, y=fert, group=country)) +
+  geom_line(alpha=0.1)
+```
+
+## Transformations
+
+*Transform your work larvae to butterfly* (Image source: Jan Thornhill http://sci-why.blogspot.com/2013/04/help-save-monarch-butterfly.html)
+
+<img src="http://1.bp.blogspot.com/-uKdxzn5o2Wg/UV7I3tbENHI/AAAAAAAAAHI/qyOIUonkKLY/s1600/shutterstock_4485247monarch+%2526+caterpillar.jpg" width="50%">
+
+- **Numerical variables**, whether they are explanatory or response, work better for modeling if they are reasonably spread out. If they are right- or left-skewed the model puts more weight on the extreme values. 
+- **Categorical variables** may need to be re-levelled to balance classes, or remove low count classes.
+
+```{r}
+x <- runif(100)
+df <- tibble(x, y=5-2*x+rnorm(100), x2=(2*x)^10)
+p1 <- ggplot(df, aes(x=x, y=y)) + geom_point() + 
+  geom_smooth(method="lm", se=FALSE) +
+  ggtitle("Ideal base for model")
+p2 <- ggplot(df, aes(x=x2, y=y)) + geom_point() + 
+  geom_smooth(method="lm", se=FALSE) +
+  ggtitle("Less stable base for model")
+p3 <- ggplot(df, aes(x=x2, y=y)) + geom_point() + 
+  scale_x_log10() + xlab("Log x2") +
+  geom_smooth(method="lm", se=FALSE) +
+  ggtitle("Log transform x over-corrects")
+p4 <- ggplot(df, aes(x=x2^(1/10), y=y)) + geom_point() + 
+  xlab("x2^(1/10)") +
+  geom_smooth(method="lm", se=FALSE) +
+  ggtitle("Power transform x fixes")
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
+### Power transformation
+
+This is a family of transformations you can make on quantitative data to help "symmetrise" or "normalise" (make is bell-shaped) the data. These are also called Box-Cox transformations. For $\lambda \in (-\infty, \infty)$, 
+
+$$x_i^{(\lambda)} = \frac{x_i^\lambda -1}{\lambda}  ~~~ \mbox{if} ~\lambda \neq 0$$
+
+but if $\lambda=0, x_i^{(\lambda)} =\ln{x_i}$
+
+```{r}
+df <- tibble(x1=rexp(500), x2=runif(500)^5, x3=abs(6-rexp(500)))
+p1 <- ggplot(df, aes(x=x1)) + geom_density(fill="black", alpha=0.7)
+p2 <- ggplot(df, aes(x=x2)) + geom_density(fill="black", alpha=0.7)
+p3 <- ggplot(df, aes(x=x3)) + geom_density(fill="black", alpha=0.7)
+p4 <- ggplot(df, aes(x=log(x1+0.1))) + geom_density(fill="black", alpha=0.7) + ggtitle("lambda=0")
+p5 <- ggplot(df, aes(x=((x2)^(1/5)-1)/(1/5))) + geom_density(fill="black", alpha=0.7) + ggtitle("lambda=1/5")
+p6 <- ggplot(df, aes(x=(x3^5-1)/5)) + geom_density(fill="black", alpha=0.7) + ggtitle("lambda=5")
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
+```
+
+It may be necessary to *shift* the values into the domain suitable for the function. For example, to take a log, all values must be bigger than 1.
+
+### Transforming categorical variables
+
+- Categories with small numbers of counts may need ot be combined. 
+- Ordered categories might be re-coded to reflect "real" difference between classes
+
+#### Example: flying etiquette
+
+```{r}
+fly <- read_csv("data/flying-etiquette.csv") %>% 
+  select(`How often do you travel by plane?`, `Do you ever recline your seat when you fly?`, `Is itrude to recline your seat on a plane?`) %>%
+  rename(travel_freq=`How often do you travel by plane?`,
+         recline=`Do you ever recline your seat when you fly?`,
+         rude=`Is itrude to recline your seat on a plane?`)
+fly %>% count(travel_freq, sort=TRUE)
+```
+
+How often a person flies, is a pretty important context variable for understanding people's responses in the survey. There are two issues here:
+
+- Categories `Every day`, `A few times per week` and even  `A few times per month` have small counts. You may not have enough subjects from which to infer to the larger population of flyers in these categories. 
+- Category `Never`!!! If they have never flown how can they provide useful information on flying etiquette?
+
+```{r}
+library(forcats)
+fly %>% count(recline, sort=TRUE)
+fly %>% count(rude, sort=TRUE)
+fly %>%   filter(!is.na(recline)) %>%
+  filter(!is.na(rude)) %>%
+  count(recline, rude, sort=TRUE)
+fly %>% 
+  filter(!is.na(recline)) %>%
+  filter(!is.na(rude)) %>%
+  mutate(recline = fct_recode(recline, Always = "Usually")) %>%
+  count(recline, rude, sort=TRUE)
+```
+
+- Single variables have healthy counts
+- But pairs of variables, some combinations of levels have low counts
+- Collapsing two or more categories into one, might build better support 
+
+## Adding interactions to the model
+
+![](images/interaction.png)
+
+
+### Interaction between quantitative and categorical variables
+
+An interaction term is needed in a model if the linear relationship is different for the response vs quantitative variable for different levels of the categorical variable. That is, a different *slope* needs to be used/estimated for each level. 
+
+Let's take a look at how this works for the [2015 OECD PISA data](http://www.oecd.org/pisa/data/2015database/). The question to be answered is whether more time spent studying science is associated with higher science scores, and how this varies with enjoyment of science. 
+
+```{r echo=FALSE, fig.width=6, fig.height=6}
+load("data/pisa_au_sub.rda")
+library(labelled)
+pisa_au_science <- pisa_au %>% 
+  filter(science_fun < 5) %>%
+  filter(!is.na(science_time)) %>% 
+  select(science, science_fun, science_time, stuweight) %>%
+  mutate(science_fun = to_factor(science_fun, ordered=TRUE, drop_unused_labels = TRUE)) %>%
+  mutate(science_time = as.numeric(science_time)) %>%
+  filter(science_time>0)
+  
+ggplot(pisa_au_science, aes(x=science_time, y=science,
+                            colour=science_fun)) + 
+  geom_point(alpha=0.1) + 
+  scale_colour_brewer("Enjoy science", palette="Dark2") +
+  facet_wrap(~science_fun, ncol=2) + 
+  scale_x_log10() +
+  # geom_smooth(method="lm", se=FALSE) + 
+  theme(legend.position="bottom") + 
+  xlab("Time spent studying science per week (mins") + 
+  ylab("Synthetic science score")
+```
+
+
+```{r pipeline, echo=FALSE, eval=FALSE}
+quiz(
+  question("How would you describe the relationship between science score and time spent studying?",
+    answer("Weak", correct = TRUE),
+    answer("Moderate"), 
+    answer("Strong")),
+  question("What do these lines of code do?   `filter(science_fun < 5) %>%
+  filter(!is.na(science_time))`", 
+    answer("Remove missing values", correct = TRUE),
+    answer("Remove extreme values, and missing values"),
+    answer("I have no idea")),
+  question("Why was `science_time` transformed to a log scale?",
+    answer("It has a right-skewed distribution.", correct = TRUE),
+    answer("It has a left-skewed distribution."),
+    answer("It is symmetric")),
+  question("Why were 0 values of `science_time` removed?",
+    answer("It could be argued that these are most likely missing values", correct = TRUE),
+    answer("They are outliers affecting the modeling"),
+    answer("No-one would be able to study science 0 minutes per week"))
+)
+```
+
+There are two possible models:
+
+$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\varepsilon_i$ (Model 1)
+
+$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i1}*x_{i2}+\varepsilon_i$ (Model 2)
+
+where $y=$ science score, $x_1=$ science study time, $x_2=$ science enjoyment. 
+
+Model 2 has an interaction term. This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.
+
+*Note:* Ordered factors are treated as "numeric" in the default model fit, so we should convert `science_fun` to be an unordered categorical variable. Also, `science_time` is heavily skewed so should be transformed.
+
+```{r}
+pisa_au_science <- pisa_au_science %>%
+  mutate(log_science_time = log10(science_time)) %>%
+  mutate(science_fun_c = factor(science_fun, ordered=FALSE))
+mod1 <- lm(science~log_science_time+science_fun_c, data=pisa_au_science, weights = stuweight)
+mod2 <- lm(science~log_science_time*science_fun_c, data=pisa_au_science, weights = stuweight)
+tidy(mod1)
+tidy(mod2)
+```
+
+### Five minute challenge
+
+- Write out the equations for both models. (Ignore the log transformation.)
+- Make a **hand** sketch of both models.
+
+### Which is the better model?
+
+```{r}
+glance(mod1)
+glance(mod2)
+```
+
+`r emo::ji("shocked")` they are both pretty bad! The interaction model (mod2) is slightly better but its really not.
+
+### Interaction between quantitative variables
+
+- Interactions for two quantitative variables in a model, can be thought of as allowing the paper sheet (model) to curl.
+
+```{r}
+library(viridis)
+x1 <- runif(500)
+x2 <- runif(500)
+df <- tibble(x1, x2, y1=5-2*x1+4*x2+rnorm(500)*0.5,
+             y2=5-2*x1+4*x2+10*(-x1)*x2+rnorm(500)*0.5)
+p1 <- ggplot(df, aes(x=x1, y=x2, colour=y1)) + 
+  geom_point(size=5, alpha=0.5) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Flat sheet: no interaction")
+p2 <- ggplot(df, aes(x=x1, y=x2, colour=y2)) + 
+  geom_point(size=5, alpha=0.5) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Curled sheet: needs an interaction term")
+df_loess1 <- loess(y1~x1+x2, data=df)
+df_loess2 <- loess(y2~x1+x2, data=df)
+df_grid <- expand.grid(x1=seq(0, 1, 0.1), x2=seq(0, 1, 0.1))
+df_grid <- df_grid %>%
+  mutate(y1 = as.vector(predict(df_loess1, newdata=df_grid)),
+         y2 = as.vector(predict(df_loess2, newdata=df_grid)))
+p3 <- ggplot(df_grid, aes(x=x1, y=x2, z=y1, colour=y1)) + 
+  geom_contour(aes(colour = stat(level))) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Flat sheet: no interaction") + 
+  geom_point(data=df, aes(x=x1, y=x2, colour=y1), size=0.5, alpha=0.5)
+p4 <- ggplot(df_grid, aes(x=x1, y=x2, z=y2)) + 
+  geom_contour(aes(colour = stat(level))) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Curled sheet: needs an interaction term") + 
+  geom_point(data=df, aes(x=x1, y=x2, colour=y2), size=0.5, alpha=0.5)
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
+
+
+### Five minute challenge
+
+Using the PISA data: How does science score relate to text anxiety and gender?
+- Make a plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?
+- Fit the model with `science` score as the response and `gender` and `anxtest`. 
+- Try an interaction between gender and anxtest. 
+- Which is the better model?
+
+The code below has `???` where you need to replace with something sensible.
+
+```{r eval=FALSE}
+pisa_au_science <- pisa_au %>% 
+  filter(!is.na(???)) %>%
+  select(science, gender, anxtest, stuweight) 
+ggplot(pisa_au_science, aes(x=anxtest, y=science, colour=gender)) + geom_smooth(method="lm")
+sci_lm1 <- lm(science ~ ??? + ???, data=pisa_au_science, weights=stuweight)
+sci_lm2 <- lm(science ~ ??? * ???, data=pisa_au_science, weights=stuweight)
+tidy(???)
+glance(???)
+```
+
+
+## Model building
+
+Goal: The simplest model possible that provides similar predictive accuracy to most complex model.
+
+Approach: 
+
+- Start simply, fit main effects models (single best variable, adding several more variables independently) and try to understand the effect that each has in the model. 
+- Explore transformations with the aim to build a stable foundation of explanatory variables for the model.
+- Check model diagnostics, residual plots.
+- Explore two variable interactions, and understand effect on model.
+- Explore three variable interactions.
+- Use model goodness of fit to help decide on final. There may be more than one model that are almost equally as good.
+
+*Aside:* Ideally, values of explanatory variables cover all possible combinations in their domain. There should *not be any association between explanatory variables*. If there is, then the there is more uncertainty in the parameter estimates. Its like building a table with only two legs, that table would be a bit wobbly, and unstable. A work around is to first regress one explanatory variable on the other, and add the residuals from this fit to the model, instead of the original variable. That is, suppose $X_1, X_2$ are strongly linearly associated, then model $X_2\sim b_0+b_1X_1+e$, and use $e$ (call it $X^*_2$) in the model instead of $X_2$. You would then only be using the part of $X_2$ that is not related to $X_1$ to expand the model. This approach can be used for multiple explanatory variables that are associated. 
+
+### Lab exercise
+
+Build the best model you can for science score, by exploring  these variables: math score, reading score, tvs, books, breakfast, feel free to choose others. (Code provided in Rmd is just a sample, and needs to be modified.)
+
+```{r echo=FALSE, eval=FALSE}
+pisa_au_science <- pisa_au %>% 
+  filter(science_fun < 5) %>%
+  filter(!is.na(science_time)) %>%
+  filter(!is.na(anxtest)) %>%
+  select(science, math, read, science_fun, science_time, breakfast, gender, anxtest, books, tvs, stuweight) %>%
+  mutate(science_time = as.numeric(science_time)) %>%
+  filter(science_time>0) %>%
+  mutate(log_science_time = log10(science_time)) %>%
+  mutate(science_fun_c = factor(science_fun, ordered=FALSE))
+sci_lm <- lm(science ~ math + read + science_fun_c + science_time + gender*anxtest, data=pisa_au_science, weights=stuweight)
+tidy(sci_lm)
+glance(sci_lm)
+```
+
