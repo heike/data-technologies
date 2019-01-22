@@ -46,7 +46,7 @@ Those facts can be (relatively easily) found from publicly available data after 
 
 ## What is computational statistical thinking?
 
-Statistical thinking is about understanding our world by modeling the variation we care about, and harnessing randomness to "white noise" the variation that is not of primary interest. There is definitely lots of history to statistical thinking. Florence Nightingale employed data collection, computation and data plots to improve hygiene and hence survival rates during the Crimean War. XXX more exaples to relate to
+Statistical thinking is about understanding our world by modeling the variation we care about, and harnessing randomness to "white noise" the variation that is not of primary interest. There is definitely lots of history to statistical thinking. Florence Nightingale employed data collection, computation and data plots to improve hygiene and hence survival rates during the Crimean War. XXX more examples to relate to...
 
 Computational statistical thinking is an exciting new way of doing statistics that makes use the computational tools of today. To understand randomness, we sample, re-sample, simulate or generate values from a model. We use these to learn how the problem might look if we'd collected different data, or if particular conditions hold. It allows us to create a sandbox to play in, a virtual world to examine randomness and variation. 
 
