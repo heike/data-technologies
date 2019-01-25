@@ -47,7 +47,7 @@ library(nycflights13)
 library(gridExtra)
 flgt_weath <- flights %>% 
   filter(origin == "LGA") %>%
-  left_join(weather, by=c("origin", "time_hour")) %>%
+  left_join(weather, by=c("time_hour")) %>%
   filter(wind_speed > 25)
 p1 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
   geom_point(alpha=0.1) + 
