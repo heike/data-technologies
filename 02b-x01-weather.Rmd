@@ -23,7 +23,8 @@ The process
 We want to scrape the daily information from Weather Underground for a particular station and some  time frame. 
 
 First, we write a scraper:
-```{r}
+
+```{r KAMWscraper}
 # functions
 
 getWeather <- function(station = "KAMW", year = 2015, month = 1, day = 1) {
@@ -60,7 +61,8 @@ getWeather <- function(station = "KAMW", year = 2015, month = 1, day = 1) {
 ```
 
 And now we scrape:
-```{r, eval=FALSE}
+
+```{r scrapeKAMW, eval=FALSE}
 ######################
 library(lubridate)
 
@@ -83,7 +85,8 @@ for (dateIDX in length(days):1) {
 ```
 
 And now it's time for the analysis. Create a vector of the previous days temperatures and plot in a scatterplot. Alternatively, a two-dimensional histogram (using hex binning) also works well in this example, because the focus here is on the high density areas:
-```{r, warning=FALSE}
+
+```{r analyseKAMW, warning=FALSE}
 weather <- read.csv("data/KAMW.csv", stringsAsFactors = FALSE)
 weather$Actual <- as.numeric(weather$Actual)
 weather$Average <- as.numeric(weather$Average)
@@ -105,6 +108,7 @@ ggplot(data = temps, aes(x = Previous, y = Actual)) +
   ylab("Today's maximum temperature") + 
   coord_equal()
 ```
+
 What we see is a strong linear pattern, i.e. tomorrow's maximum temperature is close to what we see today, making it a very strong predictor. There is a peak in density at temperatures around 30 degree Celsius (shown in the binned scatterplot by the light blue tiles). With higher temperatures we see less variability, while at lower temperatures this relationship is more variable. 
 
 
@@ -122,7 +126,8 @@ What we see is a strong linear pattern, i.e. tomorrow's maximum temperature is c
 ***Solution for last question***
 
 Scrape the data
-```{r, eval=FALSE}
+
+```{r KAMWsolution, eval=FALSE}
 last <- as.Date("2016-03-01")
 first <- as.Date("1995-01-01")
 
@@ -143,9 +148,10 @@ for (dateIDX in length(days):1) {
 }
 
 ```
+
 and plot the data:
 
-```{r, warning=FALSE, eval=FALSE}
+```{r plotKAMW, warning=FALSE, eval=FALSE}
 #weather <- read.csv("data/YMML.csv", stringsAsFactors = FALSE)
 weather <- read_csv("data/YMML.csv")
 
@@ -160,7 +166,8 @@ ggplot(data=temps) +
 
 In the paper by [@hyndman1996b] conditional densities are used: given today's temperature what is the density distribution for tomorrow's temperatures?
 We can use high-density region (HDR) boxplots to show the results. The location of the dot indicates the location of the density's highest mode.
-```{r, fig.width=6, fig.height=6}
+
+```{r HDR, fig.width=6, fig.height=6}
 # bin yesterday's temperatures and compute densities of today's temperatures for each level
 library(lubridate)
 #temps$Month <- month(temps$Date)

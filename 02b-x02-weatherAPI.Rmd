@@ -8,7 +8,7 @@ In many cases, you are not the first person attempting to use an online dataset 
 
 In some cases, there are even simplified interfaces to the site's API: for weather data, the `rnoaa` package provides R bindings to several APIs maintained by the National Oceanic and Atmospheric Administration. 
 
-```{r}
+```{r loadnoaa}
 if (!"rnoaa" %in% installed.packages()) {
   install.packages("rnoaa")
 }
@@ -18,7 +18,7 @@ library(rnoaa)
 
 First, we use the `meteo_nearby_stations` function to identify weather stations near Ames, IA:
 
-```{r}
+```{r getnoaa}
 lat_lon_df <- data.frame(id = "ames",
                          latitude = 42.034722,
                          longitude = -93.62)
@@ -31,11 +31,12 @@ nearby_stations <- meteo_nearby_stations(
 ```
 
 The `meteo_pull_monitors` function  pulls data from the specified variables for the specified date range, for each station id provided. 
-```{r, eval = T, include = F, echo = F}
+
+```{r librarynoaa, eval = T, include = F, echo = F}
 library(dplyr)
 ```
 
-```{r, message = F, eval = -1}
+```{r wranglenoaa, message = F, eval = -1}
 library(dplyr)
 
 # According to https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt, 
@@ -50,7 +51,7 @@ max_temperature <- meteo_pull_monitors(
 
 Formatting this data for plotting is relatively straightforward:
 
-```{r, message = F}
+```{r plotnoaa, message = F}
 max_temperature <- max_temperature %>%
   mutate(yday_tmax = lag(tmax, 1))
 

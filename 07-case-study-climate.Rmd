@@ -27,7 +27,7 @@ library(wilydata) # devtools::install_github("heike/wilydata")
 Get the data:
 
 ```{r CO2-data, eval=FALSE}
-CO2.ptb<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ptb.csv", sep=",", skip=69)
+CO2.ptb<-read.table("https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_ptb.csv", sep=",", skip=69)
 colnames(CO2.ptb)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
 CO2.ptb$lat<-71.3
 CO2.ptb$lon<-(-156.6)

@@ -32,7 +32,7 @@ CNT_count <- tb %>% count(CNT, sort=TRUE) %>% collect()
 save(CNT_count, file="data/pisa_counts.rda")
 scores <- tb %>% 
   select(CNT, ST004D01T, PV1MATH, PV1READ, PV1SCIE, SENWT) %>% collect()
-save(scores, file="data/pisa_scores.rda")
+save(scores, file="data/pisa_counts.rda")
 ```
 
 

@@ -41,10 +41,12 @@ Image source: Anton Croos [Art of Photography](https://art-of-photography-com.bl
 
 ### Example 
 
-```{r echo=FALSE, fig.height=3}
+```{r wind, echo=FALSE, fig.height=3}
 library(tidyverse)
 library(nycflights13)
 library(gridExtra)
+data(flights)
+data(weather)
 flgt_weath <- flights %>% 
   filter(origin == "LGA") %>%
   left_join(weather, by=c("time_hour")) %>%
@@ -75,7 +77,7 @@ grid.arrange(p1, p2, p3, ncol=3)
     - $y_i=3\exp(2x_i)+e_i$ **or** $\widehat{y}=3\exp(2x)$
     - $y_i=-5 + 4 x_{i1} - 2 x_{i1}^2 + 10x_{i2}+e_i$ **or** $\widehat{y}=-5 + 4 x- 2 x^2+ 10x$
 
-```{r fig.width=8, fig.height=2.5}
+```{r diffcorr, fig.width=8, fig.height=2.5}
 library(tidyverse)
 library(gridExtra)
 # This sets the domain of the function to be -1, 1
@@ -111,7 +113,7 @@ $$r=\frac{\sum_{i=1}^{n} (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\b
 
 ### Correlation
 
-```{r echo=FALSE}
+```{r corrplot, echo=FALSE}
 library(mvtnorm)
 df <- tibble(r=seq(-0.9, 0.9, 0.1))
 vfun <- function(df) {
@@ -121,8 +123,9 @@ vfun <- function(df) {
 }
 smp <- df %>%
   split(.$r) %>%
-  map(vfun)
-smp_df <- bind_rows(smp) %>% mutate(r = rep(df$r, rep(100, 19)))
+  purrr::map(vfun)
+smp_df <- bind_rows(smp) %>% 
+  mutate(r = rep(df$r, rep(100, 19)))
 ggplot(smp_df, aes(x=V1, y=V2)) + geom_point(alpha=0.5) +
   facet_wrap(~r, ncol=5, labeller = "label_both") + 
   theme(aspect.ratio=1) +
@@ -140,7 +143,7 @@ $$b_1 = r\frac{s_y}{s_x}, ~~~~~~~~ b_0=\bar{y}-b_1\bar{x}$$
 Slope is related to correlation, but it also depends on the
 variation of observations, in both of the variables. 
 
-```{r echo=FALSE}
+```{r reg, echo=FALSE}
 b1 <- smp %>% map_dbl(~ coefficients(lm(V2 ~ V1, data=.x))[2]) 
 sample_r <- smp %>% map_dbl(~ cor(.x$V1, .x$V2))
 df2 <- tibble(b1=b1, rs=sample_r, r=names(b1), V1=0, V2=4) %>%
@@ -201,9 +204,9 @@ quiz(
 
 ## Let's fit a model to CO2
 
-```{r}
+```{r CO2read}
 library(lubridate)
-CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+CO2.spo <- read_csv("https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
   mutate(lat = -90.0, lon = 0, stn = "spo") %>%
   filter(flg==0) %>%
   mutate(date = ymd(date))
@@ -212,7 +215,7 @@ ggplot(CO2.spo, aes(x=date, y=co2)) + geom_point()
 
 ### Try a linear fit
 
-```{r}
+```{r SPO}
 CO2.spo
 ```
 
@@ -220,7 +223,7 @@ CO2.spo
 - It needs to be re-scaled to start from 1 until the number of days in the time frame. 
 - Subtract the number of the earliest day
 
-```{r}
+```{r CO2.spo}
 CO2.spo <- CO2.spo %>% mutate(day0=day-min(day))
 summary(CO2.spo$day)
 summary(CO2.spo$day0)
@@ -235,7 +238,7 @@ quiz(
 )
 ```
 
-```{r}
+```{r CO2fit}
 co2_fit <- lm(co2~day0, data=CO2.spo)
 library(broom)
 tidy(co2_fit)
@@ -262,7 +265,7 @@ quiz(
 
 ### Plot the model
 
-```{r}
+```{r CO2plot}
 co2_model <- augment(co2_fit, CO2.spo)
 ggplot(co2_model, aes(x=date, y=co2)) + 
   geom_point() + 
@@ -274,7 +277,7 @@ ggplot(co2_model, aes(x=date, y=co2)) +
 - **Residuals** are calculated for each observed $y$ by computing the difference: $y_i-\widehat{y_i}$.
 - Plotting the residuals against fitted values (or x in simple linear models) can reveal problems with the fit.
 
-```{r}
+```{r CO2res}
 ggplot(co2_model, aes(x=date, y=.std.resid)) + 
   geom_point() 
 ```
@@ -289,7 +292,7 @@ ggplot(co2_model, aes(x=date, y=.std.resid)) +
 - Try to add a quadratic term (in day0), or more, to the model to improve the fit. 
 - Hints: (1) you may want to centre the day0 values, or even standardise them, to get a nice quadratic form, (2) If the fit is good, your residual vs fitted plot should have values evenly spread above and below 0, and relatively even across the time span. 
 
-```{r echo=FALSE, results='hide', fig.show='hide'}
+```{r CO2models, echo=FALSE, results='hide', fig.show='hide'}
 CO2.spo <- CO2.spo %>%
   mutate(day0sq=(day0-median(day0))^2)
 co2_fit2 <- lm(co2~day0+day0sq, data=CO2.spo)
@@ -329,7 +332,7 @@ ggplot(co2_model3, aes(x=date, y=.std.resid)) +
 - Below we have a plot the residuals on a short time frame, you can see that there is some seasonality. Values are high in spring, and low in autumn! 
 - Brainstorm with your table members - yes, please talk with each other - ideas on how to fit a model that takes seasonality into account. There are multiple solutions, and maybe some that we haven't thought of.
 
-```{r echo=FALSE}
+```{r CO2seas, echo=FALSE}
 library(lubridate)
 ggplot(filter(co2_model2, year(date)>2002, year(date)<2005), aes(x=date, y=.std.resid)) + 
   geom_point()
@@ -356,8 +359,8 @@ ggplot(co2_model, aes(x=date, y=co2)) +
   geom_line(aes(y=.fitted), colour="blue")
 ```
 
-```{r eval=FALSE, echo=FALSE}
-CO2.ptb <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/flask_co2/daily/daily_flask_co2_ptb.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+```{r CO2seasfit, eval=FALSE, echo=FALSE}
+CO2.ptb <- read_csv("https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/flask_co2/daily/daily_flask_co2_ptb.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
   mutate(lat = -90.0, lon = 0, stn = "ptb") %>%
   filter(flg==0) %>%
   mutate(date = ymd(date))
@@ -390,7 +393,7 @@ Let's take a look, for the examples from last lecture. Data is simulated from th
 
 $\widehat{y}=2+3x+x^2-2x^3$
 
-```{r echo=FALSE}
+```{r opt, echo=FALSE}
 library(tidyverse)
 x <- runif(100, -1, 1)
 df <- tibble(x, y=2+3*x+x^2-2*x^3+rnorm(100)*0.2)
@@ -401,7 +404,7 @@ We know that $\beta_0=2, \beta_1=3, \beta_2=1, \beta_3=-2$.
 
 From the data, assume we DO NOT KNOW these parameter values, (*but that we do know the model family*) and we will estimate the parameters from the data provided. We need to find values for $b_0, b_1, b_2, b_3$ that minimise the distance between the resulting fitted value ($\widehat{y}$) and the observed $y$.
 
-```{r}
+```{r loss}
 square_err <- function(par, data) {
   sq <- sum((data$y-(par[1]+par[2]*data$x+par[3]*data$x^2+par[4]*data$x^3))^2)
   return(sq)
@@ -419,7 +422,7 @@ ggplot(df, aes(x=x, y=y)) + geom_point() +
 2. Write a function to compute least absolute deviation, and run the optimisation with this instead of least squares
 3. Plot the data, least squares line, and the least absolute deviation model fits.
 
-```{r eval=FALSE, echo=FALSE}
+```{r absloss, eval=FALSE, echo=FALSE}
 abs_dev_err <- function(par, data) {
   ad <- sum(abs(data$y-(par[1]+par[2]*data$x+par[3]*data$x^2+par[4]*data$x^3)))
   return(ad)
@@ -477,7 +480,7 @@ Then consider these two models:
 
 Model 2 would be the correct family, because it matches how we generated the data. The model goodness of fit statistics should reflect this.
 
-```{r}
+```{r gof}
 library(broom)
 df <- df %>%
   mutate(x2=x^2, x3=x^3)
@@ -501,11 +504,11 @@ All of these statistics indicate the model 2 is substantially a better fit than 
 - For the co2 model fitting from yesterday, examine the model fit statistics for the linear model vs the one with a quadratic term. What do they indicate is the better fit?
 - Try fitting the seasonal pattern with one of the ideas you came up with yesterday. Use the model fit statistics, and residual plots, to determine if the model is better than the quadratic model.
 
-```{r}
+```{r CO2gof}
 library(tidyverse)
 library(lubridate)
 library(broom)
-CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+CO2.spo <- read_csv("https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
   mutate(lat = -90.0, lon = 0, stn = "spo") %>%
   filter(flg==0) %>%
   mutate(date = ymd(date))
@@ -558,7 +561,7 @@ And you can play with the gapminder data using animations at https://www.gapmind
 
 The R package, called gapminder, contains a subset of the data. It has data on five year intervals from 1952 to 2007.
 
-```{r}
+```{r gapminder}
 library(gapminder)
 glimpse(gapminder)
 ```
@@ -569,7 +572,7 @@ The question is "How has life expectancy changed over years, for each country?"
 
 Plot life expectancy by year, for each country.
 
-```{r fig.height=4}
+```{r  gapplot, fig.height=4}
 gapminder %>% 
   ggplot(aes(year, lifeExp, group = country)) +
     geom_line(alpha = 1/3)
@@ -584,7 +587,7 @@ gapminder %>%
 
 1950 is the first year, so for model fitting we are going to shift year to begin in 1950, makes interpretability easier.
 
-```{r}
+```{r gapvar}
 gapminder2 <- gapminder %>% mutate(year1950 = year-1950)
 ```
 
@@ -592,7 +595,7 @@ gapminder2 <- gapminder %>% mutate(year1950 = year-1950)
 
 Australia was already had one of the top life expectancies in the 1950s.
 
-```{r fig.height=3, fig.width=8}
+```{r gapmod, fig.height=3, fig.width=8}
 oz <- gapminder2 %>% filter(country=="Australia")
 head(oz)
 p1 <- ggplot(data=oz, aes(x=year, y=lifeExp)) + 
@@ -625,7 +628,7 @@ quiz(
 
 ## Fit all countries
 
-```{r echo=TRUE}
+```{r gapfitall, echo=TRUE}
 library(purrr)
 by_country <- gapminder2 %>% 
   select(country, year1950, lifeExp, continent) %>%
@@ -637,7 +640,8 @@ by_country <- by_country %>%
                                   data = .))
   )
 country_coefs <- by_country %>% 
-  unnest(model %>% purrr::map(broom::tidy))
+  mutate(model = purrr::map(model, broom::tidy)) %>%
+  unnest(model)
 country_coefs <- country_coefs %>% 
   select(country, continent, term, estimate) %>% 
   spread(term, estimate) %>%
@@ -649,7 +653,7 @@ country_coefs %>%
 
 It is also possible to use a `for` loop to compute the slope and intercept for each country.
 
-```{r eval=FALSE}
+```{r gaploop, eval=FALSE}
 n <- length(table(gapminder2$country))
 country_coefs <- data.frame(country=gapminder2$country[seq(1, 1704, 12)],
                    continent=gapminder2$continent[seq(1, 1704, 12)],
@@ -672,11 +676,10 @@ head(country_coefs)
 
 ### Plot all the models
 
-```{r fig.height=4}
+```{r gapplotall, fig.height=4}
 country_model <- by_country %>% 
-  unnest(model %>% 
-           purrr::map(broom::augment))
-
+  mutate(model = purrr::map(model, broom::augment)) %>%
+  unnest(model)
 p1 <- gapminder %>% 
   ggplot(aes(year, lifeExp, group = country)) +
     geom_line(alpha = 1/3) + ggtitle("Data")
@@ -689,7 +692,7 @@ grid.arrange(p1, p2, ncol=2)
 
 ### Plot all the model coefficients
 
-```{r}
+```{r gapcoefs}
 p <- ggplot(country_coefs, aes(x=intercept, y=year1950, 
                           colour=continent, label=country)) +
   geom_point(alpha=0.5, size=2) +
@@ -731,15 +734,15 @@ quiz(
 
 ## Model diagnostics by country
 
-```{r}
+```{r gapdiag}
 country_fit <- by_country %>% 
-  unnest(model %>% 
-           purrr::map(broom::glance))
+  mutate(model = purrr::map(model, broom::glance)) %>%
+  unnest(model)
 ```
 
 Or you can use a `for` loop to compute this.
 
-```{r eval=FALSE}
+```{r gapdiagloop, eval=FALSE}
 n <- length(unique(gapminder2$country))
 country_fit <- data.frame(country=gapminder2$country[seq(1, 1704, 12)],
                    continent=gapminder2$continent[seq(1, 1704, 12)],
@@ -759,7 +762,7 @@ head(country_fit)
 
 ### Plot the $R^2$ values as a histogram. 
 
-```{r}
+```{r gapr2}
 ggplot(country_fit, aes(x=r.squared)) + geom_histogram()
 ```
 
@@ -767,7 +770,7 @@ ggplot(country_fit, aes(x=r.squared)) + geom_histogram()
 
 Examine the countries with the worst fit, countries with $R^2<0.45$, by making scatterplots of the data, with the linear model overlaid. 
 
-```{r fig.height=4}
+```{r gappoor, fig.height=4}
 badfit <- country_fit %>% filter(r.squared <= 0.45)
 gapminder2_sub <- gapminder2 %>% filter(country %in% badfit$country)
 ggplot(data=gapminder2_sub, aes(x=year, y=lifeExp)) + 
@@ -792,7 +795,7 @@ Use google to explain these dips using world history and current affairs informa
 
 The code below will help you read in the data and process it, but you will need to make some changes to do the full analysis.
 
-```{r eval=FALSE}
+```{r gapfert, eval=FALSE}
 library(readxl)
 fert <- read_xlsx("data/children_per_woman_total_fertility.xlsx") %>%
   rename(country = geo)
@@ -813,7 +816,7 @@ ggplot(fert, aes(x=year, y=fert, group=country)) +
 - **Numerical variables**, whether they are explanatory or response, work better for modeling if they are reasonably spread out. If they are right- or left-skewed the model puts more weight on the extreme values. 
 - **Categorical variables** may need to be re-levelled to balance classes, or remove low count classes.
 
-```{r}
+```{r gaptransf}
 x <- runif(100)
 df <- tibble(x, y=5-2*x+rnorm(100), x2=(2*x)^10)
 p1 <- ggplot(df, aes(x=x, y=y)) + geom_point() + 
@@ -841,7 +844,7 @@ $$x_i^{(\lambda)} = \frac{x_i^\lambda -1}{\lambda}  ~~~ \mbox{if} ~\lambda \neq 
 
 but if $\lambda=0, x_i^{(\lambda)} =\ln{x_i}$
 
-```{r}
+```{r gaplambda}
 df <- tibble(x1=rexp(500), x2=runif(500)^5, x3=abs(6-rexp(500)))
 p1 <- ggplot(df, aes(x=x1)) + geom_density(fill="black", alpha=0.7)
 p2 <- ggplot(df, aes(x=x2)) + geom_density(fill="black", alpha=0.7)
@@ -861,7 +864,7 @@ It may be necessary to *shift* the values into the domain suitable for the funct
 
 #### Example: flying etiquette
 
-```{r}
+```{r fly}
 fly <- read_csv("data/flying-etiquette.csv") %>% 
   select(`How often do you travel by plane?`, `Do you ever recline your seat when you fly?`, `Is itrude to recline your seat on a plane?`) %>%
   rename(travel_freq=`How often do you travel by plane?`,
@@ -875,7 +878,7 @@ How often a person flies, is a pretty important context variable for understandi
 - Categories `Every day`, `A few times per week` and even  `A few times per month` have small counts. You may not have enough subjects from which to infer to the larger population of flyers in these categories. 
 - Category `Never`!!! If they have never flown how can they provide useful information on flying etiquette?
 
-```{r}
+```{r flywrangle}
 library(forcats)
 fly %>% count(recline, sort=TRUE)
 fly %>% count(rude, sort=TRUE)
@@ -904,7 +907,7 @@ An interaction term is needed in a model if the linear relationship is different
 
 Let's take a look at how this works for the [2015 OECD PISA data](http://www.oecd.org/pisa/data/2015database/). The question to be answered is whether more time spent studying science is associated with higher science scores, and how this varies with enjoyment of science. 
 
-```{r echo=FALSE, fig.width=6, fig.height=6}
+```{r pisa, echo=FALSE, fig.width=6, fig.height=6}
 load("data/pisa_au_sub.rda")
 library(labelled)
 pisa_au_science <- pisa_au %>% 
@@ -962,7 +965,7 @@ Model 2 has an interaction term. This means that the slope will be allowed to va
 
 *Note:* Ordered factors are treated as "numeric" in the default model fit, so we should convert `science_fun` to be an unordered categorical variable. Also, `science_time` is heavily skewed so should be transformed.
 
-```{r}
+```{r pisamod}
 pisa_au_science <- pisa_au_science %>%
   mutate(log_science_time = log10(science_time)) %>%
   mutate(science_fun_c = factor(science_fun, ordered=FALSE))
@@ -979,7 +982,7 @@ tidy(mod2)
 
 ### Which is the better model?
 
-```{r}
+```{r pisafit}
 glance(mod1)
 glance(mod2)
 ```
@@ -990,7 +993,7 @@ glance(mod2)
 
 - Interactions for two quantitative variables in a model, can be thought of as allowing the paper sheet (model) to curl.
 
-```{r}
+```{r pisainteract}
 library(viridis)
 x1 <- runif(500)
 x2 <- runif(500)
@@ -1070,7 +1073,7 @@ Approach:
 
 Build the best model you can for science score, by exploring  these variables: math score, reading score, tvs, books, breakfast, feel free to choose others. (Code provided in Rmd is just a sample, and needs to be modified.)
 
-```{r echo=FALSE, eval=FALSE}
+```{r pisabuild, echo=FALSE, eval=FALSE}
 pisa_au_science <- pisa_au %>% 
   filter(science_fun < 5) %>%
   filter(!is.na(science_time)) %>%

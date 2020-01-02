@@ -177,10 +177,12 @@ Examples of use are:
 
 ### Lexicons
 
-The `tidytext` package has a lexicon of sentiments, based on four major sources: [AFINN](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010), [bing](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html), [Loughran](https://sraf.nd.edu/textual-analysis/resources/#LM%20Sentiment%20Word%20Lists), [nrc](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm)
+The `tidytext` package has a lexicon of sentiments, based on four major sources: [AFINN](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010), [bing](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html), [Loughran](https://sraf.nd.edu/textual-analysis/resources/#LM%20Sentiment%20Word%20Lists), [nrc](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm) [@mohammad13]
+
+XXX Cite these lexicon sources
 
 ```{r}
-sentiments %>% count(lexicon, sort=TRUE)
+sentiments %>% count(sentiment, sort=TRUE)
 ```
 
 ```{r}
@@ -283,7 +285,7 @@ emma_afinn <- tidy_books %>%
   inner_join(get_sentiments("afinn")) 
 emma_nrc %>% count(sentiment) %>% mutate(n/sum(n))
 emma_bing %>% count(sentiment) %>% mutate(n/sum(n))
-emma_afinn %>% mutate(sentiment = ifelse(score>0, "positive", "negative")) %>% count(sentiment) %>% mutate(n/sum(n))
+emma_afinn %>% mutate(sentiment = ifelse(value>0, "positive", "negative")) %>% count(sentiment) %>% mutate(n/sum(n))
 ```
 
 #### Your turn
@@ -354,7 +356,7 @@ sc_s <- sc_word %>%
 
 ```{r}
 sc_s %>% group_by(name) %>% 
-  summarise(m=mean(score)) %>% 
+  summarise(m=mean(value)) %>% 
   arrange(desc(m))
 ```
 
@@ -366,7 +368,7 @@ keep <- sc %>% count(name, sort=TRUE) %>%
   filter(n > 999)
 sc_s %>% filter(name %in% keep$name) %>% 
   group_by(name) %>% 
-  summarise(m=mean(score)) %>% 
+  summarise(m=mean(value)) %>% 
   arrange(m)
 ```
 
@@ -390,7 +392,7 @@ bart_word <- bart %>%
 bart_s <- bart_word %>% 
   inner_join(get_sentiments("afinn"), by = "word")
 bart_s %>% group_by(name) %>% 
-  summarise(m=mean(score)) %>% 
+  summarise(m=mean(value)) %>% 
   arrange(desc(m))
 ```
 
@@ -453,7 +455,7 @@ afl_sentiment <- afl %>%
   group_by(status_id) %>%
   unnest_tokens(word, text) %>%
   inner_join(get_sentiments("afinn")) %>%
-  summarise(sentiment = mean(score, na.rm=T)) 
+  summarise(sentiment = mean(value, na.rm=T)) 
 afl_sentiment <- afl %>% select(status_id, screen_name, created_at, text) %>% 
   left_join(afl_sentiment, by="status_id")
 afl_sentiment %>% group_by(screen_name) %>%
