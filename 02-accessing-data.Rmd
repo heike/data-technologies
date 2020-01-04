@@ -4,6 +4,36 @@ knit: bookdown::preview_chapter
 
 # Accessing Data
 
-lots of ways to read  in data: flat file, databases, scraping, json, shape files, netcdfs,  ...
+<!-- Topics to cover here 
+lots of ways to read  in data: flat file, proprietary, data.table??, databases, scraping, json, shape files, netcdfs,  ...
 
 missing values
+-->
+
+Data can be delivered in many ways, which makes it necessary to have a multitude of ways to harvest it. 
+
+## Flat files
+
+Flat files, like comma or tab separated values (`csv`, `tsv`), or values specified by fixed column widths, can be accessed simply, once the format is determined. This is also a very common format is used for very large data, for example, hadoop, where the data is partitioned into many small chunks overlaid with a system to access it. 
+
+### Example: tuberculosis
+
+The World Health Organisation (WHO) distributes data on tuberculosis case notifications through their web site at https://www.who.int/tb/country/data/download/en/. Download the latest case notifications data set, which is provided in `csv` format. A data dictionary is also provided explaining the format of, and information provided by, the data. The data can be read into R using the code below:
+
+```{r}
+library(tidyverse)
+tb <- read_csv(here::here("data", "TB_notifications_2020-01-04.csv"))
+tb
+```
+
+This data has 8286 rows and 164 columns. Its not in tidy form yet, and we will use it in the tidying material to learn how to get a messy data set wrangled. The `read_csv` function provides a `tibble` data object in R. An alternative approach to reading is with the base function `read.csv` which will provide a `data.frame` object. 
+
+## Example: Program for International Student Assessment
+
+`read_fwf` from `learningtower`
+
+## Proprietary formats
+
+## JSON
+
+## Reading multiple files from a website

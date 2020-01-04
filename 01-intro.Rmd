@@ -4,7 +4,7 @@ knit: bookdown::preview_chapter
 
 # Introduction {#intro}
 
-This book is provides new approaches using data technologies and graphical methods to broadly develop quantitative citizenship. 
+This book provides new approaches using data technologies and graphical methods to broadly develop quantitative citizenship. 
 
 Tools of the trade  described lovingly and very detailed in @eda have moved on from paper and pencil. R [@R] has become the de-facto lingua franca for Statisticians and Data Analysts to communicate methods and findings. The RStudio IDE provides R users and developers infrastructure and support. To cite Julie Lowndes, NCEAS, ["if R were an airplane, RStudio is the airport." ](http://jules32.github.io/2016-07-12-Oxford/R_RStudio/)
 Founded by J.J. Allaire in 2009, RStudio provides an organizational framework that facilitates well-organized workflows, integration to versioning systems, and collaborations.
