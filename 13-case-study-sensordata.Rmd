@@ -2,36 +2,55 @@
 knit: bookdown::preview_chapter
 ---
 
-# Sensor data
+# Pedestrian counting sensor data
 
-The City of Melbourne has sensors set up in strategic locations across the inner city to keep tallies of hourly number of pedestrians. The data is available for download in monthly and yearly chunks from [http://www.pedestrian.melbourne.vic.gov.au/datadownload.html](http://www.pedestrian.melbourne.vic.gov.au/datadownload.html).
-We are going to show how to download the data and process it. Results will vary depending on when you download the data. 
-
-```{r eval=FALSE, echo=FALSE, message=FALSE}
-library(rvest)
-url <- "http://www.pedestrian.melbourne.vic.gov.au/datadownload.html"
-
-html <- read_html(url)
-tabs <- html %>%  html_nodes("a")
-datalinks <- tabs %>% html_attr("href")
-head(datalinks)
+```{r ped-pkgs, echo = FALSE}
+library(tidyverse)
 ```
-The second link serves as the base url for the download. FIles are sorted chronologically with the tallies for the most recent month first. 
-We can download data for the three most recent months as:
-```{r eval=FALSE, echo=FALSE, }
-baseURL <- datalinks[2]
-peds <- datalinks[3:5] %>% purrr::map_df(function(x) {
-  read.csv(paste0(baseURL, x), stringsAsFactors = FALSE)
-})
-```
-This gives us a dataset in a wide format, i.e. we have a data variable for every station, while each row in the data consists of the number of pedestrians counted at each of the 40 plus sensors during the course of a single hour.
+
+## Overview
+
+* metadata: temperatures & rainfall
+
+The City of Melbourne has sensors set up in strategic locations across the inner city to keep hourly tallies of pedestrians. The data is updated on a monthly basis and available for download from [Melbourne Open Data Portal](https://data.melbourne.vic.gov.au/Transport/Pedestrian-Counting-System-2009-to-Present-counts-/b2ak-trbp). The **rwalkr** package provides an API to easily access sensor counts and locations in R. In this case study, we focus on the foot traffic of 2017 at 4 sensors.
 
 ```{r ped-data}
 library(rwalkr)
-peds <- run_melb(year=2017, sensor = c("Southern Cross Station", "Melbourne Central", "Flinders Street Station Underpass", "Birrarung Marr"))
-#dim(peds)
-#head(peds[, 1:10])
+sensors <- c("Southern Cross Station", "Melbourne Central",
+  "Flinders Street Station Underpass", "Birrarung Marr")
+peds <- melb_walk_fast(year = 2017, sensor = sensors)
+peds
 ```
+
+```{r ped-sensor}
+library(ggmap)
+ped_loc <- pull_sensor()
+melb_map <- read_rds("data/melb_map.rds")
+selected <- ped_loc %>% 
+  filter(sensor %in% sensors)
+nonselected <- ped_loc %>% 
+  filter(!(sensor %in% sensors))
+ggmap(melb_map) +
+  geom_point(
+    data = nonselected, aes(x = longitude, y = latitude),
+    colour = "grey70", alpha = 0.8, size = 3
+  ) +
+  geom_point(
+    data = selected, aes(x = longitude, y = latitude, colour = sensor),
+    size = 4, shape = 17
+  ) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  scale_colour_brewer(palette = "Dark2", name = "Sensor") +
+  guides(col = guide_legend(nrow = 2, byrow = TRUE)) +
+  theme(legend.position = "bottom")
+```
+
+## Different temporal patterns
+
+## Effects of other information
+
+## Setting up coffee business
 
 For an analysis we want to re-organize the data to contain all numbers in a single data variable:
 ```{r}
