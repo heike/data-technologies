@@ -26,9 +26,20 @@ tb <- read_csv(here::here("data", "TB_notifications_2020-01-04.csv"))
 tb
 ```
 
-This data has 8286 rows and 164 columns. Its not in tidy form yet, and we will use it in the tidying material to learn how to get a messy data set wrangled. The `read_csv` function provides a `tibble` data object in R. An alternative approach to reading is with the base function `read.csv` which will provide a `data.frame` object. 
+This data has 8286 rows and 164 columns. Its not in tidy form yet, so you will see this again in the tidying material to learn how to get a messy data set wrangled. The `read_csv` function provides a `tibble` data object in R. An alternative approach to reading is with the base function `read.csv` which will provide a `data.frame` object. 
 
-## Example: Programme for International Student Assessment
+### Your turn: atmospheric carbon dioxide 
+
+Atmospheric carbon dioxide recordings are delivered by the Scripps CO$_2$ program, and available at https://scrippsco2.ucsd.edu/data/atmospheric_co2/sampling_stations.html.
+
+Choose a station and download or directly read the csv file. You will need to skip over a number of lines at the top of the file in order to read only the data.
+
+```{r eval=FALSE, echo=FALSE}
+CO2.spo <- read_csv("https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69)
+```
+
+
+### Example: standardised test scores for reading, science and math
 
 Every three years the OECD's Programme for International Student Assessment measures the ability of 15 year old students across the globe in reading, science and mathematics skills. This data is made available at https://www.oecd.org/pisa/. The format that the data is distributed in, is different from survey to survey, with the earliest years being text files, and later years in proprietary formats. The text files have fixed width format, where each variable occupies a fixed set of columns in the text. 
 
@@ -47,8 +58,44 @@ glimpse(d)
 
 The`learningtower` package available at https://github.com/ropenscilabs/learningtower contains the data for multiple years and code to process the source files.
 
+### Your turn: land surface weather station data
+
+The [Global Historical Climate Network](https://www.ncdc.noaa.gov/ghcn-daily-description) delivers data from land surface stations across the globe. Records for individual stations are provided using a fixed width format flat file. Find a station near you, and download the file. The list of [stations can be found here](https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt). Your station file is identified by the station id. For example, the Melbourne airport station ID is ASN00086282, and thus the data file can be downloaded directly from ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/all/ASN00086282.dly.
+
+Documentation on the file format and how to cite the archive is available at https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt. The column widths of the variables can be determined from this information. 
+
+1. Work out the column widths for each variable
+2. Write the code to read in this fixed width format
+
+```{r eval=FALSE, echo=FALSE}
+# Remote address for file
+# fl <- "ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/all/ASN00086282.dly"
+# Copy available with book
+fl <- "data/ASN00086282.dly"
+melb <- read_fwf(fl,    
+                 col_positions=fwf_widths(c(11, 4, 2, 4, rep(c(5, 1, 1, 1), 31))))
+glimpse(melb)
+```
+
+The data is far from tidy, and needs considerable work to get it into a suitable format for analysis. 
+
+A more friendly and tider `csv` formatted data have been made available recently which can be acessed through the https server on the same location.
+
+```{r eval=FALSE, echo=FALSE}
+melb <- read_csv("https://www.ncei.noaa.gov/data/global-historical-climatology-network-daily/access/ASN00086282.csv")
+```
+
+
 ## Proprietary formats
+
+ABS - excel
+
+PISA - sav
 
 ## JSON
 
+cross-currency
+
 ## Reading multiple files from a website
+
+sawfish
