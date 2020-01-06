@@ -10,6 +10,17 @@ link-citations: yes
 delete_merged_file: true
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE,
+                      comment = NA )
+```
 
 
 # Preamble

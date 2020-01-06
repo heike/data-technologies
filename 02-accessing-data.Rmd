@@ -22,8 +22,9 @@ The World Health Organisation (WHO) distributes data on tuberculosis case notifi
 
 ```{r}
 library(tidyverse)
+library(DT)
 tb <- read_csv(here::here("data", "TB_notifications_2020-01-04.csv"))
-tb
+datatable(tb %>% top_n(10))
 ```
 
 This data has 8286 rows and 164 columns. Its not in tidy form yet, so you will see this again in the tidying material to learn how to get a messy data set wrangled. The `read_csv` function provides a `tibble` data object in R. An alternative approach to reading is with the base function `read.csv` which will provide a `data.frame` object. 
@@ -99,3 +100,7 @@ cross-currency
 ## Reading multiple files from a website
 
 sawfish
+
+## Shapefiles
+
+## Databases
