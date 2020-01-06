@@ -51,15 +51,51 @@ The map above gives a snapshot of `r nrow(ped_loc)` active sensors in 2018 with 
 
 ## Different temporal patterns
 
+Pedestrian sensor data is a typical temporal data set. We're interested in exploiting temporal patterns at various time resolutions and across different locations. We often start off plotting time series over a whole period. [TODO: describe in detail?]
+
+```{r}
+peds %>% 
+  ggplot(aes(x = Date_Time, y = Count)) +
+  geom_line(size = 0.3) +
+  facet_grid(Sensor ~ ., labeller = labeller(Sensor = label_wrap_gen(20))) +
+  scale_x_datetime(date_labels = "%d %b %Y", date_minor_breaks = "1 month") +
+  xlab("Date Time")
+```
+
+However, the overall time series plot cannot reveal peoples' everyday life in detail. We should be able to plot hourly counts against time of the day, shown in Figure ??. This complements Figure ?? by unfolding daily patterns. In particular, there are two distinct clusters popping out from two train stations.
+
+```{r}
+peds %>% 
+  ggplot(aes(x = Time, y = Count, group = Date)) +
+  geom_line(size = 0.3, alpha = 0.3) +
+  facet_wrap(~ Sensor, labeller = labeller(Sensor = label_wrap_gen(20)))
+```
+
+We further tease out work versus non-work days to explain variations arisen from these disparities. Except for Birrarung Marr, the most dominant pattern is driven by the workforce, with commuters' spikes at 8am and 5pm and a lunch hour rush. These spikes are completely absent on weekends and public holidays.
+
+```{r}
+hol2018 <- tsibble::holiday_aus(2018, state = "VIC") %>% 
+  bind_rows(tibble(holiday = "AFL", date = ymd("20180929")))
+workday <- fct_inorder(c("Work day", "Non-work day"))
+peds <- peds %>% 
+  mutate(
+    Day = wday(Date_Time, label = TRUE, week_start = 1),
+    Workday = if_else(
+      (Date %in% hol2018$date) | Day %in% c("Sat", "Sun"),
+      workday[2], workday[1])
+  )
+```
+
+```{r}
+peds %>% 
+  ggplot(aes(x = Time, y = Count, group = Date)) +
+  geom_line(size = 0.3, alpha = 0.3) +
+  facet_grid(Sensor ~ Workday, labeller = labeller(Sensor = label_wrap_gen(20)))
+```
+
 ## Effects of other information
 
 ## Setting up coffee business
-
-Figure \@ref(fig:peds-counts) shows the hourly tallies of pedestrians at 40 different locations across Melbourne. There is a distinct weekday/weekend pattern: during the week, the most dominant pattern is driven by the workforce, with commuters' spikes at 8am and 5pm and a lunch hour rush. These spikes are completely absent on weekends. 
-
-```{r peds-counts, fig.cap="Hourly pedestrian counts at 40 locations in Melbourne over three months.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-ggplot(aes(x=Time, y=Count), data=peds) + facet_grid(.~Weekday) + geom_line(aes(group=interaction(Sensor, Day)), alpha=0.3)
-```
 
 We can investigate the working force pattern a bit more closer by location. Rescaling the counts for each location reveals the difference in patterns much more clearly and shows the three workforce spikes much more pronounced (cf Figure \@ref(fig:ped_adjcounts)).
 
