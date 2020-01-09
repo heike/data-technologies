@@ -494,7 +494,7 @@ ggplotly(p)
 
 ```{r echo=FALSE, eval=FALSE}
 library(readxl)
-passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+passengers <- read_xlsx(here::here("data", "WebAirport_FY_1986-2019.xlsx"), sheet=3, skip=6)
 library(tidyverse)
 passengers <- passengers %>% 
   filter(!is.na(AIRPORT)) %>%

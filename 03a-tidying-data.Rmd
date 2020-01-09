@@ -382,13 +382,13 @@ ggplot(rates_long, aes(x=date, y=rate)) +
   facet_wrap(~currency, ncol=1, scales="free_y")
 ```
 
-4. This is tough! From the web site [Department of Infrastructure, Regional Development and Cities](https://bitre.gov.au/publications/ongoing/airport_traffic_data.aspx) download the Airport Traffic Data 1985–86 to 2016–17. It is 2.7Mb.
+4. This is tough! From the web site [Department of Infrastructure, Regional Development and Cities](https://bitre.gov.au/publications/ongoing/airport_traffic_data.aspx) download the latest "Airport Traffic Data 1985–86 to ...". It is reasonably small.
 
 Extract the "Airport Passengers" table into R with this code
 
 ```{r practiceair}
 library(readxl)
-passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+passengers <- read_xlsx(here::here("data", "WebAirport_FY_1986-2019.xlsx"), sheet=3, skip=6)
 passengers
 ```
 

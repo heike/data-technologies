@@ -54,7 +54,7 @@ load(here::here("data", "PISA_student_2006_varwidths.rda"))
 d <- read_fwf(file=here::here("data", "INT_Stu06_Dec07_2k.txt"), 
               col_positions=fwf_widths(var_widths$widths, 
                                        col_names=var_widths$names))
-glimpse(d)
+datatable(d %>% top_n(10))
 ```
 
 The`learningtower` package available at https://github.com/ropenscilabs/learningtower contains the data for multiple years and code to process the source files.
@@ -88,6 +88,22 @@ melb <- read_csv("https://www.ncei.noaa.gov/data/global-historical-climatology-n
 
 
 ## Proprietary formats
+
+Data is often delivered in a specialist formats developed by a company, or individual, that has a  special encoding scheme. Examples include excel files, SAS or SPSS files. These require decoding in order to read. 
+
+### Example: Australia air traffic data
+
+The [Australian Department of Infrastructure, Transport, Cities and Regional Development](https://www.bitre.gov.au/publications/ongoing/airport_traffic_data) provides excel format files summarising air traffic at airports. Download the most recent data, and open the excel file. There are multiple sheets. The third sheet has passenger numbers. There are 6 rows of meta-information, which need to be ignored when reading the data. 
+
+```{r}
+library(readxl)
+passengers <- read_xlsx(here::here("data", "WebAirport_FY_1986-2019.xlsx"), sheet=3, skip=6)
+datatable(passengers)
+```
+
+
+
+### Your turn: Australian Bureau of Statistics data
 
 ABS - excel
 
