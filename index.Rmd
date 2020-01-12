@@ -1,5 +1,5 @@
 --- 
-title: "Data Science and Statistical Thinking: With wild-caught data and R"
+title: "Data Science and Statistical Thinking: With Wild-Caught Data and R"
 author: "Heike Hofmann, Dianne Cook, Susan Vanderplas and Earo Wang"
 date: "`r Sys.Date()`"
 knit: "bookdown::render_book"
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 At the heart of this book are these assumptions:
 
-- Data-Driven: we are at our core rationale beings and base our decisions on quantifiable evidence 
+- Data-driven: we are at our core, rationale beings, and base our decisions on quantifiable evidence 
 - Exploration: we  haven't lost our innate curiosity about the world and are not only willing but eager to learn
 
 Please stop reading, if those two assumptions are not fulfilled and pick up a different book.
