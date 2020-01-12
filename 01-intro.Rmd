@@ -53,13 +53,12 @@ Like sustainable high quality wild data is traceable to its source, and the sour
 
 Text book data is like highly processed food. Once upon a time it may have been fresh data, but its now been processed beyoond recognition, molded into shape that fits the tool being described. 
 
+Wild data is sustainable, and will be continuously updated as new measurements arrive. Many data delivery sites, like https://data.gov.au, or even kaggle.com, should be considered to be data orphanages, the data has been dropped off and abandoned. Fresh and local wild data has meaning and relevance for the audience.
 What to look for in wild data 
 
 - Traceable source
 - Data collection methods and processing procedures are clear and (theoretically) reproducible
 - Updates have been made over time
-
-Data orphanages
 
 ## What is computational statistical thinking?
 
