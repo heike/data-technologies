@@ -10,8 +10,6 @@ library(tidyverse)
 
 ## Overview
 
-* metadata: temperatures & rainfall
-
 The City of Melbourne has sensors set up in strategic locations across the inner city to keep hourly tallies of pedestrians. The data is updated on a monthly basis and available for download from [Melbourne Open Data Portal](https://data.melbourne.vic.gov.au/Transport/Pedestrian-Counting-System-2009-to-Present-counts-/b2ak-trbp). The **rwalkr** package provides an API to easily access sensor counts and geographic locations in R. In this case study, we focus on the foot traffic of 2018 at 4 sensors.
 
 ```{r ped-data}
@@ -51,9 +49,9 @@ The map above gives a snapshot of `r nrow(ped_loc)` active sensors in 2018 with 
 
 ## Different temporal patterns
 
-Pedestrian sensor data is a typical temporal data set. We're interested in exploiting temporal patterns at various time resolutions and across different locations. We often start off plotting time series over a whole period. [TODO: describe in detail?]
+Pedestrian sensor data is a typical temporal data set. We're interested in exploiting temporal patterns at various time resolutions and across different locations.
 
-```{r}
+```{r eval = FALSE}
 peds %>% 
   ggplot(aes(x = Date_Time, y = Count)) +
   geom_line(size = 0.3) +
@@ -66,12 +64,14 @@ However, the overall time series plot cannot reveal peoples' everyday life in de
 
 ```{r}
 peds %>% 
-  ggplot(aes(x = Time, y = Count, group = Date)) +
+  ggplot(aes(x = Time, y = Count, group = Date, colour = Sensor)) +
   geom_line(size = 0.3, alpha = 0.3) +
-  facet_wrap(~ Sensor, labeller = labeller(Sensor = label_wrap_gen(20)))
+  facet_wrap(~ Sensor, labeller = labeller(Sensor = label_wrap_gen(20))) +
+  scale_colour_brewer(palette = "Dark2", name = "Sensor") +
+  theme(legend.position = "none")
 ```
 
-We further tease out work versus non-work days to explain variations arisen from these disparities. Except for Birrarung Marr, the most dominant pattern is driven by the workforce, with commuters' spikes at 8am and 5pm and a lunch hour rush. These spikes are completely absent on weekends and public holidays.
+We further tease out work versus non-work days to explain variations arisen from the discrepancy. Except for Birrarung Marr, the most dominant pattern is driven by the workforce, with commuters' spikes at 8am and 5pm and a lunch hour rush. These spikes are completely absent on weekends and public holidays.
 
 ```{r}
 hol2018 <- tsibble::holiday_aus(2018, state = "VIC") %>% 
@@ -88,14 +88,88 @@ peds <- peds %>%
 
 ```{r}
 peds %>% 
-  ggplot(aes(x = Time, y = Count, group = Date)) +
+  ggplot(aes(x = Time, y = Count, group = Date, colour = Sensor)) +
   geom_line(size = 0.3, alpha = 0.3) +
-  facet_grid(Sensor ~ Workday, labeller = labeller(Sensor = label_wrap_gen(20)))
+  facet_grid(Sensor ~ Workday, labeller = labeller(Sensor = label_wrap_gen(20))) +
+  scale_colour_brewer(palette = "Dark2", name = "Sensor") +
+  theme(legend.position = "none")
+```
+
+```{r}
+library(sugrrants)
+flinders <- peds %>% 
+  filter(Sensor == "Flinders Street Station Underpass")
+flinders_cal <- flinders %>% 
+  frame_calendar(x = Time, y = Count, date = Date)
+gg_cal <- flinders_cal %>% 
+  ggplot(aes(x = .Time, y = .Count, colour = Workday, group = Date)) +
+  geom_line()
+prettify(gg_cal) +
+  theme(legend.position = "bottom")
 ```
 
 ## Effects of other information
 
+```{r}
+stations <- read_table(
+  "https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt", 
+  col_names = c("ID", "lat", "lon", "elev", "state", "name", 
+    "v1", "v2", "v3"), skip = 353, n_max = 17081)
+oz <- map_data("world", xlim = range(stations$lon), ylim = range(stations$lat))
+ggplot(oz, aes(x = long, y = lat)) + 
+  geom_path(aes(group = group)) + 
+  geom_point(data = stations, 
+    aes(x = lon, y = lat), colour = "red", alpha = 0.5) +
+  coord_quickmap()
+```
+
+```{r eval = FALSE}
+# melb_stns <- stations %>% 
+#   filter(
+#     lon > min(ped_loc$longitude), lon < max(ped_loc$longitude), 
+#     lat > min(ped_loc$latitude), lat < max(ped_loc$latitude))
+melb_stns <- stations %>% 
+  filter(state == "MELBOURNE AIRPORT")
+library(vroom)
+ghcn2018 <- vroom(
+  "https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/2018.csv.gz",
+  col_names = FALSE, col_select = 1:4)
+melb_ghcn <- ghcn2018 %>% 
+  filter(X1 == melb_stns$ID, X3 %in% c("PRCP", "TMAX", "TMIN")) %>% 
+  rename_all(~ c("station", "date", "variable", "value")) %>% 
+  mutate(date = ymd(date), value = value / 10) %>% 
+  pivot_wider(names_from = variable, values_from = value) %>% 
+  rename_all(tolower)
+write_rds(melb_ghcn, path = "data/melb_ghcn.rds", compress = "gz")
+```
+
+```{r}
+melb_ghcn <- read_rds("data/melb_ghcn.rds")
+melb_ghcn <- melb_ghcn %>% 
+  mutate(
+    high_prcp = ifelse(prcp > 5, "rain", "none"), 
+    high_temp = ifelse(tmax > 33, "hot", "not"), 
+    low_temp = ifelse(tmin < 6, "cold", "not"),
+    high_prcp = factor(high_prcp, levels = c("none", "rain")),
+    high_temp = factor(high_temp, levels = c("not", "hot")),
+    low_temp = factor(low_temp, levels = c("not", "cold"))
+  )
+peds_weather <- peds %>% 
+  left_join(melb_ghcn, by = c("Date" = "date"))
+```
+
+```{r}
+peds_fit <- peds_weather %>% 
+  mutate(Time = as_factor(Time)) %>% 
+  glm(Count ~ Time * Workday * Sensor + high_prcp + high_temp + low_temp,
+    data = ., family = poisson(link = "log"))
+coef(peds_fit)[c("high_prcprain", "high_temphot", "low_tempcold")]
+# confint(peds_fit, c("high_prcprain", "high_temphot", "low_tempcold"))
+```
+
 ## Setting up coffee business
+
+<!--
 
 We can investigate the working force pattern a bit more closer by location. Rescaling the counts for each location reveals the difference in patterns much more clearly and shows the three workforce spikes much more pronounced (cf Figure \@ref(fig:ped_adjcounts)).
 
@@ -185,3 +259,5 @@ ggplot(aes(x=Hour, y=Count, group=interaction(Location, Day)),
   facet_grid(.~Weekday) + 
   geom_line(alpha=0.3) 
 ```
+
+-->
