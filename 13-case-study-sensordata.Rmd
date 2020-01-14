@@ -164,22 +164,22 @@ peds_fit <- peds_weather %>%
   glm(Count ~ Time * Workday * Sensor + high_prcp + high_temp + low_temp,
     data = ., family = poisson(link = "log"))
 coef(peds_fit)[c("high_prcprain", "high_temphot", "low_tempcold")]
-# confint(peds_fit, c("high_prcprain", "high_temphot", "low_tempcold"))
 ```
 
 ```{r}
 peds_aug <- broom::augment(peds_fit, data = peds_weather,
   type.predict = "response")
-peds_aug %>% 
-  ggplot(aes(x = .fitted, y = Count)) +
-  geom_point() +
-  theme(aspect.ratio = 1)
-peds_aug %>% 
-  ggplot(aes(x = .fitted, y = .resid)) +
-  geom_point() +
-  theme(aspect.ratio = 1)
+flinders_aug <- peds_aug %>% 
+  filter(Sensor == "Flinders Street Station Underpass")
+flinders_aug_cal <- flinders_aug %>% 
+  frame_calendar(x = Time, y = vars(Count, .fitted), date = Date)
+gg_cal_aug <- flinders_aug_cal %>% 
+  ggplot(aes(x = .Time, group = Date)) +
+  geom_line(aes(y = .Count)) +
+  geom_line(aes(y = ..fitted), colour = "hotpink")
+prettify(gg_cal_aug) +
+  theme(legend.position = "bottom")
 ```
-
 
 ## Setting up coffee business
 
