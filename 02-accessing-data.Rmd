@@ -157,12 +157,16 @@ NZ <- NZ %>%
 
 ### Example: SPSS binary
 
-The 2015 and 2018 PISA surveys are available in bniary file format, which is a more complete data format in the sense of variable typing and level descriptions integrated with the data. The R package `haven` can be used to read foreign binary formats. Download the 2018 data from https://www.oecd.org/pisa/data/2018database/ (494Mb), and use the following code to read it into R.
+The 2015 and 2018 PISA surveys are available in bniary file format, which is a more complete data format in the sense of variable typing and level descriptions integrated with the data. The R package `haven` can be used to read foreign binary formats. Download the 2018 data from https://www.oecd.org/pisa/data/2018database/ (494Mb), and use the following code to read it into R. There is a data dictionary on the same site which describes fields in detail. This is really useful for deciding which variables to keep.
 
 ```{r eval=FALSE}
-stu_qqq <- read_sav(here("/Data/Raw/2018/CY07_MSU_STU_QQQ.sav")) 
-PISA_au_2018 <- stu_qq %>% 
-  filter(CNT == "AUS")
+library(haven)
+stu_qqq <- read_sav(here::here("data", "SPSS_STU_QQQ.zip")) 
+PISA_au_2018 <- stu_qqq %>% 
+  filter(CNT == "AUS") %>%
+  select(CNT, ST004D01T, ST012Q01TA, ST013Q01TA, PV1MATH:PV10SCIE) 
+# Keep country, gender, num TVs, num books, 
+saveRDS(PISA_au_2018, file=here::here("data", "PISA_au_2018.rds"))
 ```
 
 ## Reading multiple files from a website
@@ -191,11 +195,63 @@ datatable(t1 %>% top_n(10))
 
 ## JSON
 
-cross-currency
+With the advent of web communication, comes JavaScript Object Notation (JSON). It is a language-independent data format, and supplants extensible markup language (XML). It is a verbose data descriptor. Here's an example from [wikipedia](https://en.wikipedia.org/wiki/JSON) describing a person:
+
+```
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "isAlive": true,
+  "age": 25,
+  "address": {
+    "streetAddress": "21 2nd Street",
+    "city": "New York",
+    "state": "NY",
+    "postalCode": "10021-3100"
+  },
+  "phoneNumbers": 
+    {
+      "type": "home",
+      "number": "212 555-1234"
+    },
+    {
+      "type": "office",
+      "number": "646 555-4567"
+    },
+    {
+      "type": "mobile",
+      "number": "123 456-7890"
+    }
+  ],
+  "children": [],
+  "spouse": null
+}
+```
+
+### Example: Crossrates 
+
+An example we have seen is the cross rates data available at [https://openexchangerates.org/](https://openexchangerates.org/). To access this data you need to:
+
+1. Get a free plan from https://openexchangerates.org/signup/free
+2. Tell this function your API key -- `Sys.setenv("OER_KEY" = "your-key-here")`
+
+```{r eval=FALSE}
+u <- sprintf(
+    "https://openexchangerates.org/api/historical/%s.json?app_id=%s",
+    day, Sys.getenv("OER_KEY")
+  )
+res <- jsonlite::fromJSON(u)
+```
 
 
 ## Shapefiles
 
 ## APIs
+
+rwalkr
+
+bomrang
+
+## Image data
 
 ## Databases
