@@ -66,3 +66,6 @@ Statistical thinking is about understanding our world by modeling the variation 
 
 Computational statistical thinking is an exciting new way of doing statistics that makes use the computational tools of today. To understand randomness, we sample, re-sample, simulate or generate values from a model. We use these to learn how the problem might look if we'd collected different data, or if particular conditions hold. It allows us to create a sandbox to play in, a virtual world to examine randomness and variation. 
 
+## Workflow
+
+`here`

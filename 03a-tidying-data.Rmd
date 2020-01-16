@@ -113,6 +113,19 @@ fly
 
 What are the variables?
 
+## ABS Datapack
+
+The Australian Bureau of Statistics (ABS) collects, maintains and delivers data and official statistics on a wide range of economic, social, population and environmental matters of importance to Australia. There are many different access points for data, but primarily aggregated data is the main type available. Examples at accessing the Census data from the ABS can be found in the `eechidna` package. 
+
+1. The individual `csv` files must be held locally. They come from a zip file and can be downloaded from: https://datapacks.censusdata.abs.gov.au/datapacks/
+2. Select: 2016 Census Datapacks, General Community Profile, Commonwealth Electoral Divisons
+3. Download for all of Australia
+4. Unzip the package - its necessary, because the data is delivered in many small csv files. There is also the license information detailing appropriate usage, and detailed information about the formats.
+
+```{r eval=FALSE}
+G1_Main <- read_csv(here::here("data/2016 Census GCP Commonwealth Electoral Divisions for AUST/", "2016Census_G01_AUS_CED.csv"))
+```
+
 ## Messy vs tidy
 
 Messy data is messy in its own way. You can make unique solutions, but then another data set comes along, and you have to again make a unique solution. 

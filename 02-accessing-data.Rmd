@@ -101,11 +101,61 @@ passengers <- read_xlsx(here::here("data", "WebAirport_FY_1986-2019.xlsx"), shee
 datatable(passengers)
 ```
 
+### Your turn: Munging spreadsheets
+
+The book [Spreaadsheet Munging Strategies](https://nacnudus.github.io/spreadsheet-munging-strategies/index.html) by Duncan Garmonsway is a really good source of dealing with complicated excel spreadsheets. We recommend working through examples in this book to familiarise ways to deal with messy spreadsheets, and incorporating information such as special formatting into the data. 
+
+The [case study](https://nacnudus.github.io/spreadsheet-munging-strategies/vaccinations.html#vaccinations) developed from Bob Rudis's post on CDC vaccination data is especially recommended.
+
+<!--
+### Your turn: New Zealand Census data
+
+StatsNZ makes [tables of data from the five year censuses](http://nzdotstat.stats.govt.nz/) publicly available. Take a look at the 2018 Census data, the population and migration data. You need to expand the cells, and select the levels to use, to have the numbers broken down by age group, sex and ethnicity. (A sample file `NZ_census.xlsx` is provided as an example.) In excel format, the variables and levels of the variables are in the header names, with a twist, a row for each variable, in a multicolumn format. (The R package `tidyxl` has the capacity to deal with multiple headers like this, but requires `xlsx` format. The sample file has been opened and saved in this format, and the first two blank lines in the origial file were also manually removed.)
+
+Luckily, choosing the `csv` format will provide the data in tidy long form. 
+
+GIVING UP ON THE XLS FORMAT - ITS JUST REALLY IRREGULAR - AND tidyxl even cannot handle it.
+-->
+
+```{r eval=FALSE, echo=FALSE}
+library(tidyxl)
+library(unpivotr)
+NZ_all_cells <-
+  xlsx_cells(here::here("data", "NZ_census.xlsx")) %>%
+  dplyr::filter(!is_blank) %>%
+  select(row, col, data_type, character, numeric) %>%
+  dplyr::filter(row > 1)
+year <-
+  NZ_all_cells %>%
+  dplyr::filter(col >= 2, row == 5) %>%
+  select(row, col, year = character)
+ethnic <-
+  NZ_all_cells %>%
+  dplyr::filter(col >= 2, row == 4) %>%
+  select(row, col, ethnic = character)
+sex <-
+  NZ_all_cells %>%
+  dplyr::filter(col >= 2, row == 3) %>%
+  select(row, col, sex = character)
+age <-
+  NZ_all_cells %>%
+  dplyr::filter(col >= 2, row == 2) %>%
+  select(row, col, age = character)
+NZ <- read_xlsx(here::here("data", "NZ_census.xlsx"), skip=5, n_max=1) %>%
+  gather(v, count, -Area) %>%
+  filter(!is.na(count)) %>%
+  select(-v)
+NZ <- NZ %>%
+  mutate(year = year$year) %>%
+  mutate(ethnic = rep(ethnic$ethnic, c(rep(3, length(ethnic$ethnic)-1), 1))) %>%
+  mutate(sex = rep(sex$sex, 43))
+# NZ <- read_xls(here::here("data", "NZ_census.xls"), skip=2)
+# NZ <- read_csv("data/NZ_census.csv")
+```
 
 
-### Your turn: Australian Bureau of Statistics data
+### Example: SPSS binary
 
-ABS - excel
 
 PISA - sav
 
