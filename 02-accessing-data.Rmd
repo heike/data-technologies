@@ -115,6 +115,8 @@ StatsNZ makes [tables of data from the five year censuses](http://nzdotstat.stat
 Luckily, choosing the `csv` format will provide the data in tidy long form. 
 
 GIVING UP ON THE XLS FORMAT - ITS JUST REALLY IRREGULAR - AND tidyxl even cannot handle it.
+
+Similarly, TableBuilder now allows csv download which is in long format, so no need to struggle with the xlsx format.
 -->
 
 ```{r eval=FALSE, echo=FALSE}
@@ -153,20 +155,47 @@ NZ <- NZ %>%
 # NZ <- read_csv("data/NZ_census.csv")
 ```
 
-
 ### Example: SPSS binary
 
+The 2015 and 2018 PISA surveys are available in bniary file format, which is a more complete data format in the sense of variable typing and level descriptions integrated with the data. The R package `haven` can be used to read foreign binary formats. Download the 2018 data from https://www.oecd.org/pisa/data/2018database/ (494Mb), and use the following code to read it into R.
 
-PISA - sav
+```{r eval=FALSE}
+stu_qqq <- read_sav(here("/Data/Raw/2018/CY07_MSU_STU_QQQ.sav")) 
+PISA_au_2018 <- stu_qq %>% 
+  filter(CNT == "AUS")
+```
+
+## Reading multiple files from a website
+
+Often multiple datasets are available in a web site. It is tedious, and inefficient to manually download each file and read into R.  An example is data on the rental market in Tasmania from [data.gov.au](http://data.gov.au/dataset/rental-bond-and-rental-data-tasmania-2016-to-2017). The `sawfish` package makes it easier to download multiple files automatically. The package is only available on GitHub, and needs too be installed using the `devtools` package. Here is sample code to read all of the `xlsx` files on Tasmania's rental market. 
+
+```{r}
+library(readxl)
+# devtools::install_github("AnthonyEbert/sawfish")
+library(sawfish) 
+url<-"http://data.gov.au/data/dataset/rental-bond-and-rental-data-tasmania-2016-to-2017"
+fls <- find_files(url, "xlsx")
+# Check that one file can be read nicely
+f1 <- tempfile()
+download.file(fls[1], f1, mode="wb")
+t1 <- read_xlsx(path=f1, sheet=1)
+# Now read all files
+rentals <- NULL
+for (i in 1:length(fls)) {
+  download.file(fls[i], f1, mode="wb")
+  t1 <- read_xlsx(path=f1, sheet=1)
+  rentals <- bind_rows(rentals, t1)
+}
+datatable(t1 %>% top_n(10))
+```
 
 ## JSON
 
 cross-currency
 
-## Reading multiple files from a website
-
-sawfish
 
 ## Shapefiles
+
+## APIs
 
 ## Databases
