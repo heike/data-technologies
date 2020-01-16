@@ -235,12 +235,30 @@ An example we have seen is the cross rates data available at [https://openexchan
 1. Get a free plan from https://openexchangerates.org/signup/free
 2. Tell this function your API key -- `Sys.setenv("OER_KEY" = "your-key-here")`
 
+This code can be used to get the latest 10 days of crossrates.
+
 ```{r eval=FALSE}
-u <- sprintf(
+library(lubridate)
+library(jsonlite)
+library(glue)
+# Function to read in rate for one day, given dates and an API key
+getDay <- function(day, key) {
+  u <- sprintf(
     "https://openexchangerates.org/api/historical/%s.json?app_id=%s",
-    day, Sys.getenv("OER_KEY")
+    day, key
   )
-res <- jsonlite::fromJSON(u)
+  d <- jsonlite::fromJSON(u)
+  # convert timestamp to date object
+  # http://stackoverflow.com/questions/13456241/convert-unix-epoch-to-date-object-in-r
+  rates <- as.data.frame(d$rates)
+  rates$date <- as.POSIXct(res$timestamp, origin = "1970-01-01")
+  data.frame(rates)
+}
+
+# Read in a set of dates using purrr
+rates10 <- days %>% 
+  purrr::map_dfr(~getDay(day = ., key="your-API-key")) 
+saveRDS(rates10, file=here::here("data","rates.rds"))
 ```
 
 
