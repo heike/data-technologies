@@ -1,0 +1,6 @@
+The column names in a Shape file are limited to 10 characters
+This lists the short column name and the original column name in the database table
+ 
+UFI = UFI
+CFA_REGION = CFA_REGION
+UFI_CR = UFI_CREATED

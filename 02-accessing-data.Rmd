@@ -264,6 +264,19 @@ saveRDS(rates10, file=here::here("data","rates.rds"))
 
 ## Shapefiles
 
+The basic building block of a map is a set of points and an ordering variable which can be used to connect the dots with lines, so that a geographic region can be interpreted. Maps are important because they summarise our physical world, and provide the context for data collected for many different purposes -- political, health, environment, commerce.
+
+Map information is often recorded and shared in specialised formats, all of which efficiently keep the structural aspects of spatial data organised. The `sf` (FIXME:REF) package provides tools to access this data. Here is an example related to bush fires in Australia. 
+
+```{r}
+library(sf)
+library(tidyverse)
+library(rmapshaper)
+boundaries <- st_read("data/vic_cfa/cfa_region.shp")
+bound_sm <- ms_simplify(boundaries, keep_shapes = TRUE)
+ggplot(data=bound_sm) + geom_sf(aes(fill=CFA_REGION))
+```
+
 ## APIs
 
 ### Melbourne pedestrian traffic: `rwalkr`
