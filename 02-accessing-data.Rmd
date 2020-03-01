@@ -266,7 +266,9 @@ saveRDS(rates10, file=here::here("data","rates.rds"))
 
 The basic building block of a map is a set of points and an ordering variable which can be used to connect the dots with lines, so that a geographic region can be interpreted. Maps are important because they summarise our physical world, and provide the context for data collected for many different purposes -- political, health, environment, commerce.
 
-Map information is often recorded and shared in specialised formats, all of which efficiently keep the structural aspects of spatial data organised. The `sf` (FIXME:REF) package provides tools to access this data. Here is an example related to bush fires in Australia. 
+Map information is often recorded and shared in specialised formats, all of which efficiently keep the structural aspects of spatial data organised. The `sf` (FIXME:REF) package provides tools to access this data. 
+
+Here is an example related to bush fires in Australia. In Victoria, there are five County Fire Authority regions. These are organisational regions for fire management. The shape files associated with these regions can be downloaded from http://services.land.vic.gov.au/SpatialDatamart/. The file of Victorian CFA boundaries is provided with this repo. 
 
 ```{r}
 library(sf)
