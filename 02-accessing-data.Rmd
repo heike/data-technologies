@@ -266,10 +266,18 @@ saveRDS(rates10, file=here::here("data","rates.rds"))
 
 ## APIs
 
-rwalkr
+### Melbourne pedestrian traffic: `rwalkr`
 
-bomrang
+### Australian weather: `bomrang`
 
-## Image data
+### Atals of Living Austraila: `ala4R`
+
+## Images as data
+
+An example is http://fivethirtyeight.com/features/a-statistical-analysis-of-the-work-of-bob-ross/
+
+ETC3250 assignments from Di - simplify, maybe not full set of Bob Ross paintings
+
+maybe Susan's shoeprint?
 
 ## Databases

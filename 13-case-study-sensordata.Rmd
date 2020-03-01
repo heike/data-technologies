@@ -28,7 +28,7 @@ This gives us a dataset in a wide format, i.e. we have a data variable for every
 
 ```{r ped-data}
 library(rwalkr)
-peds <- run_melb(year=2017, sensor = c("Southern Cross Station", "Melbourne Central", "Flinders Street Station Underpass", "Birrarung Marr"))
+peds <- melb_walk_fast(year=2017, sensor = c("Southern Cross Station", "Melbourne Central", "Flinders Street Station Underpass", "Birrarung Marr"))
 #dim(peds)
 #head(peds[, 1:10])
 ```
