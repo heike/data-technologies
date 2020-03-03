@@ -268,16 +268,31 @@ The basic building block of a map is a set of points and an ordering variable wh
 
 Map information is often recorded and shared in specialised formats, all of which efficiently keep the structural aspects of spatial data organised. The `sf` (FIXME:REF) package provides tools to access this data. 
 
-Here is an example related to bush fires in Australia. In Victoria, there are five County Fire Authority regions. These are organisational regions for fire management. The shape files associated with these regions can be downloaded from http://services.land.vic.gov.au/SpatialDatamart/. The file of Victorian CFA boundaries is provided with this repo. 
+Here is an example related to bush fires in Australia. In Victoria, there are five Country Fire Authority (CFA) regions. These are organisational regions for fire management. The shapefiles associated with these regions can be downloaded from http://services.land.vic.gov.au/SpatialDatamart/, but these are also provided with this repo. The format is a folder of several binary files, which collectively describe the map geometry. A good explanation of shapefiles can be found [here](https://en.wikipedia.org/wiki/Shapefile). 
 
 ```{r}
 library(sf)
 library(tidyverse)
-library(rmapshaper)
 boundaries <- st_read("data/vic_cfa/cfa_region.shp")
+```
+
+Shapefiles are typically very detailed, and big in size. For data analysis, these are usually too detailed. Its a good idea to reduce the size, by removing some of the boundary points. This is a tricky task, because some boundary points are more important for defining the boundary than others, and they need to be kept. The `rmapshaper` package has a thinning function that works nicely to create a small and relatively map accurate shapefile. Note that, the `geom_sf` function from the `sf` package can be used to directly plot the shapefile. An alternative, albeit a lot more work, is to convert the object into a `tibble` of points, group ids, and and ordering variable and plot using the `geom_polygon`. 
+
+```{r}
+library(rmapshaper)
 bound_sm <- ms_simplify(boundaries, keep_shapes = TRUE)
 ggplot(data=bound_sm) + geom_sf(aes(fill=CFA_REGION))
 ```
+
+Shapefiles can also be used to contain point information, for example the locations of fire stations. Locations of fire stations in Victoria can be downloaded from the same Victorian Government site, and overlaid on the polygon data. 
+
+```{r}
+fire_stations <- st_read("data/vic_fire_stations/geomark_point.shp") %>%
+  filter(FEATSUBTYP =="fire station", STATE=="VIC")
+ggplot(data=bound_sm) + geom_sf() +
+  geom_sf(data=fire_stations, colour="red", shape=3)
+```
+
 
 ## APIs
 
