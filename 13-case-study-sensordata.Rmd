@@ -10,7 +10,7 @@ library(tidyverse)
 
 ## Overview
 
-The City of Melbourne has sensors set up in strategic locations across the inner city to keep hourly tallies of pedestrians. The data is updated on a monthly basis and available for download from [Melbourne Open Data Portal](https://data.melbourne.vic.gov.au/Transport/Pedestrian-Counting-System-2009-to-Present-counts-/b2ak-trbp). The **rwalkr** package provides an API to easily access sensor counts and geographic locations in R. In this case study, we focus on the foot traffic of 2018 at 4 sensors.
+The City of Melbourne has sensors set up in strategic locations across the inner city to keep hourly tallies of pedestrians. The data is updated on a monthly basis and available for download from [Melbourne Open Data Portal](https://data.melbourne.vic.gov.au/Transport/Pedestrian-Counting-System-2009-to-Present-counts-/b2ak-trbp). The **rwalkr** package provides an API in R to easily access sensor counts and geographic locations. In this case study, we focus on the foot traffic of 2018 at 4 sensors.
 
 ```{r ped-data}
 library(rwalkr)
@@ -24,7 +24,9 @@ library(ggmap)
 library(lubridate)
 ped_loc <- pull_sensor() %>% 
   filter(year(installation_date) < 2019, status == "A")
-melb_map <- read_rds("data/melb_map.rds")
+melb_bbox <- c(min(ped_loc$longitude) - .001, min(ped_loc$latitude) - 0.001,
+  max(ped_loc$longitude) + .001, max(ped_loc$latitude) + 0.001)
+melb_map <- get_map(location = melb_bbox, source = "osm")
 selected <- ped_loc %>% 
   filter(sensor %in% sensors)
 nonselected <- ped_loc %>% 
@@ -32,7 +34,7 @@ nonselected <- ped_loc %>%
 ggmap(melb_map) +
   geom_point(
     data = nonselected, aes(x = longitude, y = latitude),
-    colour = "grey70", alpha = 0.8, size = 3
+    colour = "#2b8cbe", alpha = 0.6, size = 3
   ) +
   geom_point(
     data = selected, aes(x = longitude, y = latitude, colour = sensor),
@@ -45,11 +47,9 @@ ggmap(melb_map) +
   theme(legend.position = "bottom")
 ```
 
-The map above gives a snapshot of `r nrow(ped_loc)` active sensors in 2018 with 4 selected sensors highlighted. The majority of sensors are installed on the east of the city, where crowds of people are likely to congregate due to various types of activities, such as commuting (Southern Cross Stations and Flinders Street Stations), shopping (Melbourne Central), and cultural events (Birrarung Marr).
+The map above gives a snapshot of `r nrow(ped_loc)` active sensors in 2018 with 4 sensors highlighted. The selection of sensors here covers some human activity types: commuting at Southern Cross Stations and Flinders Street Stations, a mix of shopping and commuting at Melbourne Central, and cultural events around Birrarung Marr.
 
 ## Different temporal patterns
-
-Pedestrian sensor data is a typical temporal data set. We're interested in exploiting temporal patterns at various time resolutions and across different locations.
 
 ```{r eval = FALSE}
 peds %>% 
@@ -60,7 +60,7 @@ peds %>%
   xlab("Date Time")
 ```
 
-However, the overall time series plot cannot reveal peoples' everyday life in detail. We should be able to plot hourly counts against time of the day, shown in Figure ??. This complements Figure ?? by unfolding daily patterns. In particular, there are two distinct clusters popping out from two train stations.
+We're primarily interested in exploiting pedestrian patterns at various time resolutions and across different locations. In light of people's daily schedules, we plot the counts against time of the day, shown in Figure ??. At these train stations, two distinct clusters pop out to the viewers.
 
 ```{r}
 peds %>% 
@@ -72,6 +72,7 @@ peds %>%
 ```
 
 We further tease out work versus non-work days to explain variations arisen from the discrepancy. Except for Birrarung Marr, the most dominant pattern is driven by the workforce, with commuters' spikes at 8am and 5pm and a lunch hour rush. These spikes are completely absent on weekends and public holidays.
+However, non-typical days are yet to be discovered.
 
 ```{r}
 hol2018 <- tsibble::holiday_aus(2018, state = "VIC") %>% 
@@ -94,6 +95,8 @@ peds %>%
   scale_colour_brewer(palette = "Dark2", name = "Sensor") +
   theme(legend.position = "none")
 ```
+
+To locate those unusual moments, Flinders Street Station data is calendarised on the canvas, using the **sugrrants** package. The calendar plot unfolds the day-to-day life in a fresh way. The White Night event saw the 17th night spike in February. Weeks of the data went missing in the middle of August. The underpass shut down from the midday of November 19 until the end of the following day.
 
 ```{r}
 library(sugrrants)
