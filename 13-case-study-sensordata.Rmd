@@ -111,9 +111,9 @@ prettify(gg_cal) +
   theme(legend.position = "bottom")
 ```
 
-## Effects of other information
+## Does the weather make a difference to the number of people walking out?
 
-```{r}
+```{r eval = FALSE}
 stations <- read_table(
   "https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt", 
   col_names = c("ID", "lat", "lon", "elev", "state", "name", 
@@ -146,20 +146,24 @@ melb_ghcn <- ghcn2018 %>%
 write_rds(melb_ghcn, path = "data/melb_ghcn.rds", compress = "gz")
 ```
 
+Time of day and day of week are the predominant driving force of the number of pedestrian, depicted in the previous data plots. Apart from these temporal factors, the weather condition could possibly affect how many people are walking in the city. In particular, people are likely to stay indoors, when the day is too hot or too cold, or raining hard. Daily meteorological data as a separate source, available on [National Climatic Data Center](https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/), is used and joined to the main pedestrian data table using common dates. Binary variables are created to serve as the tipping points and avoid multicollinearity issues for modelling later, rather than the original numerics.
+
 ```{r}
 melb_ghcn <- read_rds("data/melb_ghcn.rds")
+high_prcp_fct <- fct_inorder(c("none", "rain"))
+high_temp_fct <- fct_inorder(c("not", "hot"))
+low_temp_fct = fct_inorder(c("not", "cold"))
 melb_ghcn <- melb_ghcn %>% 
   mutate(
-    high_prcp = ifelse(prcp > 5, "rain", "none"), 
-    high_temp = ifelse(tmax > 33, "hot", "not"), 
-    low_temp = ifelse(tmin < 6, "cold", "not"),
-    high_prcp = factor(high_prcp, levels = c("none", "rain")),
-    high_temp = factor(high_temp, levels = c("not", "hot")),
-    low_temp = factor(low_temp, levels = c("not", "cold"))
+    high_prcp = ifelse(prcp > 5, high_prcp_fct[2], high_prcp_fct[1]), 
+    high_temp = ifelse(tmax > 33, high_temp_fct[2], high_temp_fct[1]), 
+    low_temp = ifelse(tmin < 6, low_temp_fct[2], low_temp_fct[1])
   )
 peds_weather <- peds %>% 
   left_join(melb_ghcn, by = c("Date" = "date"))
 ```
+
+We are going to fit a Poisson model on hourly counts, regressed on a three-way interactions between `Time`, `Workday`, and `Sensor`, and three meteorological variables. It is an appropriate choice to fit the Poisson model, since the response takes non-negative integers only. All the variables have a significant effect on counts. The coefficients of the weather variables are all negative, meaning that the higher/lower temperature and raining days tend to have lower counts than the other days.
 
 ```{r}
 peds_fit <- peds_weather %>% 
@@ -169,7 +173,9 @@ peds_fit <- peds_weather %>%
 coef(peds_fit)[c("high_prcprain", "high_temphot", "low_tempcold")]
 ```
 
-```{r}
+To examine the goodness of fit for the model, we plot the fitted values against the observed values for the Flinders Street Station, laid out on the calendar again. The pink lines indicate the fitted data. The model performs well in general, excepting for a couple of misfits due to the unusual events we spotted earlier.
+
+```{r echo = FALSE}
 peds_aug <- broom::augment(peds_fit, data = peds_weather,
   type.predict = "response")
 flinders_aug <- peds_aug %>% 
