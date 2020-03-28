@@ -60,9 +60,9 @@ peds %>%
   xlab("Date Time")
 ```
 
-We're primarily interested in exploiting pedestrian patterns at various time resolutions and across different locations. In light of people's daily schedules, we plot the counts against time of the day, shown in Figure ??. At these train stations, two distinct clusters pop out to the viewers.
+We're primarily interested in exploiting pedestrian patterns at various time resolutions and across different locations. In light of people's daily schedules, we plot the counts against time of the day, shown in Figure \@ref(fig:ped-sensor). At these train stations, two distinct clusters pop out to the viewers.
 
-```{r}
+```{r ped-sensor, fig.cap = "Counts plotted against time of the day, faceted by sensors."}
 peds %>% 
   ggplot(aes(x = Time, y = Count, group = Date, colour = Sensor)) +
   geom_line(size = 0.3, alpha = 0.3) +
@@ -190,16 +190,24 @@ prettify(gg_cal_aug) +
   theme(legend.position = "bottom")
 ```
 
-## Setting up coffee business
+## If setting up a coffee business
 
-* At Flinders, the proportion of pedestrians passing by who will buy a coffee is 0.1 between 7-10am, 0.05 between 10-4, 0.01 between 4-8. At Melbourne Central, the proportion who will buy coffee is 0.08 between 7-10am, 0.06 between 10-4, 0.02 between 4-10pm. At all other times assume no purchases.
+Melbourne is world-renowned for its coffee culture. Location matters a lot to small business, particularly coffee shops. An ideal site should provide constant streams of potential customers all week around. To help decide which site we open the coffee shop, Flinders Street Station or Melbourne Central, we run a simulation study using the fitted model given the following assumptions:
+
+* At Flinders Street Station, the proportion of pedestrians passing by who will buy a coffee is 0.1 between 7-10am, 0.05 between 10-4pm, 0.01 between 4-8pm. At Melbourne Central, the proportion who will buy coffee is 0.08 between 7-10am, 0.06 between 10-4pm, 0.02 between 4-8pm. No purchases at all other times.
 * Each coffee purchase is \$4.
-* To open the coffee shop with one attendant costs \$100/hour. Two attendants is \$150/hour. Three attendants is \$200/hour and four attendants is \$250/hour. One attendant per hour can handle 30 customers, if the number is more than the number the staff can handle the customers will walk out without purchasing.
+* One attendant costs \$100/hour. Two attendants is \$150/hour. Three attendants is \$200/hour and four attendants is \$250/hour.
+* Each attendant can handle 30 customers per hour. If the number is more than the number the staff can handle, customers will walk out without purchasing.
+
+The `compute_profit()` calculates the profit based on one set of simulated data given the date-times and the number of attendants for two locations.
 
 ```{r}
 compute_profit <- function(date, time, flinders = 1, central = 1) {
+  peds_sim <- peds_weather %>% 
+    filter(!is.na(Count)) %>% 
+    mutate(.simulated = simulate(peds_fit, seed = 2020)$sim_1)
   fl_rate <- c(rep(0, 6), rep(0.1, 3), rep(0.05, 6), rep(0.01, 4), rep(0, 5))[time]
-  mc_rate <- c(rep(0, 6), rep(0.08, 3), rep(0.06, 6), rep(0.02, 6), rep(0, 5))[time]
+  mc_rate <- c(rep(0, 6), rep(0.08, 3), rep(0.06, 6), rep(0.02, 4), rep(0, 5))[time]
   peds_sim <- peds_sim %>% 
     filter(Date == date, Time %in% time)
   fl_count <- peds_sim %>% 
@@ -216,12 +224,15 @@ compute_profit <- function(date, time, flinders = 1, central = 1) {
 }
 ```
 
+With three attendants at Flinders and two attendants at Melbourne Central, earnings and losses are reported for a Thursday on 2018-03-28.
+
 ```{r}
-peds_sim <- peds_weather %>% 
-  filter(!is.na(Count)) %>% 
-  mutate(.simulated = simulate(peds_fit, 2, seed = 2020)$sim_1)
 compute_profit("2018-03-28", 7:19, flinders = 3, central = 2)
 ```
+
+## Your turn
+
+Modify the `compute_profit()` to take account of time-variant attendant numbers and generate 10 simulated sets for a possible range of profits.
 
 <!--
 
