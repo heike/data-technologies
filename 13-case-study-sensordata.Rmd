@@ -2,54 +2,239 @@
 knit: bookdown::preview_chapter
 ---
 
-# Sensor data
+# Pedestrian counting sensor data
 
-The City of Melbourne has sensors set up in strategic locations across the inner city to keep tallies of hourly number of pedestrians. The data is available for download in monthly and yearly chunks from [http://www.pedestrian.melbourne.vic.gov.au/datadownload.html](http://www.pedestrian.melbourne.vic.gov.au/datadownload.html).
-We are going to show how to download the data and process it. Results will vary depending on when you download the data. 
-
-```{r eval=FALSE, echo=FALSE, message=FALSE}
-library(rvest)
-url <- "http://www.pedestrian.melbourne.vic.gov.au/datadownload.html"
-
-html <- read_html(url)
-tabs <- html %>%  html_nodes("a")
-datalinks <- tabs %>% html_attr("href")
-head(datalinks)
+```{r ped-pkgs, echo = FALSE}
+library(tidyverse)
 ```
-The second link serves as the base url for the download. FIles are sorted chronologically with the tallies for the most recent month first. 
-We can download data for the three most recent months as:
-```{r eval=FALSE, echo=FALSE, }
-baseURL <- datalinks[2]
-peds <- datalinks[3:5] %>% purrr::map_df(function(x) {
-  read.csv(paste0(baseURL, x), stringsAsFactors = FALSE)
-})
-```
-This gives us a dataset in a wide format, i.e. we have a data variable for every station, while each row in the data consists of the number of pedestrians counted at each of the 40 plus sensors during the course of a single hour.
+
+## Overview
+
+The City of Melbourne has sensors set up in strategic locations across the inner city to keep hourly tallies of pedestrians. The data is updated on a monthly basis and available for download from [Melbourne Open Data Portal](https://data.melbourne.vic.gov.au/Transport/Pedestrian-Counting-System-2009-to-Present-counts-/b2ak-trbp). The **rwalkr** package provides an API in R to easily access sensor counts and geographic locations. In this case study, we focus on the foot traffic of 2018 at 4 sensors.
 
 ```{r ped-data}
 library(rwalkr)
-peds <- melb_walk_fast(year=2017, sensor = c("Southern Cross Station", "Melbourne Central", "Flinders Street Station Underpass", "Birrarung Marr"))
-#dim(peds)
-#head(peds[, 1:10])
+sensors <- c("Southern Cross Station", "Melbourne Central",
+  "Flinders Street Station Underpass", "Birrarung Marr")
+peds <- melb_walk_fast(year = 2018, sensor = sensors)
 ```
 
-For an analysis we want to re-organize the data to contain all numbers in a single data variable:
-```{r}
-library(tidyverse)
+```{r ped-sensor, echo = FALSE}
+library(ggmap)
 library(lubridate)
-#mpeds <- peds %>% select(Sensor, Date_Time, Count) %>% gather(key=Sensor, value=Count, 3:ncol(peds))
-#mpeds$Date <- lubridate::dmy(mpeds$Date)
-peds$Month <- lubridate::month(peds$Date)
-peds$Weekday <- lubridate::wday(peds$Date, label=TRUE)
-# get Sunday from first to last position:
-peds$Weekday <- factor(peds$Weekday, levels = levels(peds$Weekday)[c(2:7, 1)])
-peds$Day <- lubridate::mday(peds$Date)
+ped_loc <- pull_sensor() %>% 
+  filter(year(installation_date) < 2019, status == "A")
+melb_bbox <- c(min(ped_loc$longitude) - .001, min(ped_loc$latitude) - 0.001,
+  max(ped_loc$longitude) + .001, max(ped_loc$latitude) + 0.001)
+melb_map <- get_map(location = melb_bbox, source = "osm")
+selected <- ped_loc %>% 
+  filter(sensor %in% sensors)
+nonselected <- ped_loc %>% 
+  filter(!(sensor %in% sensors))
+ggmap(melb_map) +
+  geom_point(
+    data = nonselected, aes(x = longitude, y = latitude),
+    colour = "#2b8cbe", alpha = 0.6, size = 3
+  ) +
+  geom_point(
+    data = selected, aes(x = longitude, y = latitude, colour = sensor),
+    size = 4, shape = 17
+  ) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  scale_colour_brewer(palette = "Dark2", name = "Sensor") +
+  guides(col = guide_legend(nrow = 2, byrow = TRUE)) +
+  theme(legend.position = "bottom")
 ```
-Figure \@ref(fig:peds-counts) shows the hourly tallies of pedestrians at 40 different locations across Melbourne. There is a distinct weekday/weekend pattern: during the week, the most dominant pattern is driven by the workforce, with commuters' spikes at 8am and 5pm and a lunch hour rush. These spikes are completely absent on weekends. 
 
-```{r peds-counts, fig.cap="Hourly pedestrian counts at 40 locations in Melbourne over three months.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
-ggplot(aes(x=Time, y=Count), data=peds) + facet_grid(.~Weekday) + geom_line(aes(group=interaction(Sensor, Day)), alpha=0.3)
+The map above gives a snapshot of `r nrow(ped_loc)` active sensors in 2018 with 4 sensors highlighted. The selection of sensors here covers some human activity types: commuting at Southern Cross Stations and Flinders Street Stations, a mix of shopping and commuting at Melbourne Central, and cultural events around Birrarung Marr.
+
+## Different temporal patterns
+
+```{r eval = FALSE}
+peds %>% 
+  ggplot(aes(x = Date_Time, y = Count)) +
+  geom_line(size = 0.3) +
+  facet_grid(Sensor ~ ., labeller = labeller(Sensor = label_wrap_gen(20))) +
+  scale_x_datetime(date_labels = "%d %b %Y", date_minor_breaks = "1 month") +
+  xlab("Date Time")
 ```
+
+We're primarily interested in exploiting pedestrian patterns at various time resolutions and across different locations. In light of people's daily schedules, we plot the counts against time of the day, shown in Figure \@ref(fig:ped-sensor). At these train stations, two distinct clusters pop out to the viewers.
+
+```{r ped-sensor, fig.cap = "Counts plotted against time of the day, faceted by sensors."}
+peds %>% 
+  ggplot(aes(x = Time, y = Count, group = Date, colour = Sensor)) +
+  geom_line(size = 0.3, alpha = 0.3) +
+  facet_wrap(~ Sensor, labeller = labeller(Sensor = label_wrap_gen(20))) +
+  scale_colour_brewer(palette = "Dark2", name = "Sensor") +
+  theme(legend.position = "none")
+```
+
+We further tease out work versus non-work days to explain variations arisen from the discrepancy. Except for Birrarung Marr, the most dominant pattern is driven by the workforce, with commuters' spikes at 8am and 5pm and a lunch hour rush. These spikes are completely absent on weekends and public holidays.
+However, non-typical days are yet to be discovered.
+
+```{r}
+hol2018 <- tsibble::holiday_aus(2018, state = "VIC") %>% 
+  bind_rows(tibble(holiday = "AFL", date = ymd("20180929")))
+workday <- fct_inorder(c("Work day", "Non-work day"))
+peds <- peds %>% 
+  mutate(
+    Day = wday(Date_Time, label = TRUE, week_start = 1),
+    Workday = if_else(
+      (Date %in% hol2018$date) | Day %in% c("Sat", "Sun"),
+      workday[2], workday[1])
+  )
+```
+
+```{r}
+peds %>% 
+  ggplot(aes(x = Time, y = Count, group = Date, colour = Sensor)) +
+  geom_line(size = 0.3, alpha = 0.3) +
+  facet_grid(Sensor ~ Workday, labeller = labeller(Sensor = label_wrap_gen(20))) +
+  scale_colour_brewer(palette = "Dark2", name = "Sensor") +
+  theme(legend.position = "none")
+```
+
+To locate those unusual moments, Flinders Street Station data is calendarised on the canvas, using the **sugrrants** package. The calendar plot unfolds the day-to-day life in a fresh way. The White Night event saw the 17th night spike in February. Weeks of the data went missing in the middle of August. The underpass shut down from the midday of November 19 until the end of the following day.
+
+```{r}
+library(sugrrants)
+flinders <- peds %>% 
+  filter(Sensor == "Flinders Street Station Underpass")
+flinders_cal <- flinders %>% 
+  frame_calendar(x = Time, y = Count, date = Date)
+gg_cal <- flinders_cal %>% 
+  ggplot(aes(x = .Time, y = .Count, colour = Workday, group = Date)) +
+  geom_line()
+prettify(gg_cal) +
+  theme(legend.position = "bottom")
+```
+
+## Does the weather make a difference to the number of people walking out?
+
+```{r eval = FALSE}
+stations <- read_table(
+  "https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt", 
+  col_names = c("ID", "lat", "lon", "elev", "state", "name", 
+    "v1", "v2", "v3"), skip = 353, n_max = 17081)
+oz <- map_data("world", xlim = range(stations$lon), ylim = range(stations$lat))
+ggplot(oz, aes(x = long, y = lat)) + 
+  geom_path(aes(group = group)) + 
+  geom_point(data = stations, 
+    aes(x = lon, y = lat), colour = "red", alpha = 0.5) +
+  coord_quickmap()
+```
+
+```{r eval = FALSE}
+# melb_stns <- stations %>% 
+#   filter(
+#     lon > min(ped_loc$longitude), lon < max(ped_loc$longitude), 
+#     lat > min(ped_loc$latitude), lat < max(ped_loc$latitude))
+melb_stns <- stations %>% 
+  filter(state == "MELBOURNE AIRPORT")
+library(vroom)
+ghcn2018 <- vroom(
+  "https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/2018.csv.gz",
+  col_names = FALSE, col_select = 1:4)
+melb_ghcn <- ghcn2018 %>% 
+  filter(X1 == melb_stns$ID, X3 %in% c("PRCP", "TMAX", "TMIN")) %>% 
+  rename_all(~ c("station", "date", "variable", "value")) %>% 
+  mutate(date = ymd(date), value = value / 10) %>% 
+  pivot_wider(names_from = variable, values_from = value) %>% 
+  rename_all(tolower)
+write_rds(melb_ghcn, path = "data/melb_ghcn.rds", compress = "gz")
+```
+
+Time of day and day of week are the predominant driving force of the number of pedestrian, depicted in the previous data plots. Apart from these temporal factors, the weather condition could possibly affect how many people are walking in the city. In particular, people are likely to stay indoors, when the day is too hot or too cold, or raining hard. Daily meteorological data as a separate source, available on [National Climatic Data Center](https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/), is used and joined to the main pedestrian data table using common dates. Binary variables are created to serve as the tipping points and avoid multicollinearity issues for modelling later, rather than the original numerics.
+
+```{r}
+melb_ghcn <- read_rds("data/melb_ghcn.rds")
+high_prcp_fct <- fct_inorder(c("none", "rain"))
+high_temp_fct <- fct_inorder(c("not", "hot"))
+low_temp_fct = fct_inorder(c("not", "cold"))
+melb_ghcn <- melb_ghcn %>% 
+  mutate(
+    high_prcp = ifelse(prcp > 5, high_prcp_fct[2], high_prcp_fct[1]), 
+    high_temp = ifelse(tmax > 33, high_temp_fct[2], high_temp_fct[1]), 
+    low_temp = ifelse(tmin < 6, low_temp_fct[2], low_temp_fct[1])
+  )
+peds_weather <- peds %>% 
+  left_join(melb_ghcn, by = c("Date" = "date"))
+```
+
+We are going to fit a Poisson model on hourly counts, regressed on a three-way interactions between `Time`, `Workday`, and `Sensor`, and three meteorological variables. It is an appropriate choice to fit the Poisson model, since the response takes non-negative integers only. All the variables have a significant effect on counts. The coefficients of the weather variables are all negative, meaning that the higher/lower temperature and raining days tend to have lower counts than the other days.
+
+```{r}
+peds_fit <- peds_weather %>% 
+  mutate(Time = as_factor(Time)) %>% 
+  glm(Count ~ Time * Workday * Sensor + high_prcp + high_temp + low_temp,
+    data = ., family = poisson(link = "log"))
+coef(peds_fit)[c("high_prcprain", "high_temphot", "low_tempcold")]
+```
+
+To examine the goodness of fit for the model, we plot the fitted values against the observed values for the Flinders Street Station, laid out on the calendar again. The pink lines indicate the fitted data. The model performs well in general, excepting for a couple of misfits due to the unusual events we spotted earlier.
+
+```{r echo = FALSE}
+peds_aug <- broom::augment(peds_fit, data = peds_weather,
+  type.predict = "response")
+flinders_aug <- peds_aug %>% 
+  filter(Sensor == "Flinders Street Station Underpass")
+flinders_aug_cal <- flinders_aug %>% 
+  frame_calendar(x = Time, y = vars(Count, .fitted), date = Date)
+gg_cal_aug <- flinders_aug_cal %>% 
+  ggplot(aes(x = .Time, group = Date)) +
+  geom_line(aes(y = .Count)) +
+  geom_line(aes(y = ..fitted), colour = "hotpink")
+prettify(gg_cal_aug) +
+  theme(legend.position = "bottom")
+```
+
+## If setting up a coffee business
+
+Melbourne is world-renowned for its coffee culture. Location matters a lot to small business, particularly coffee shops. An ideal site should provide constant streams of potential customers all week around. To help decide which site we open the coffee shop, Flinders Street Station or Melbourne Central, we run a simulation study using the fitted model given the following assumptions:
+
+* At Flinders Street Station, the proportion of pedestrians passing by who will buy a coffee is 0.1 between 7-10am, 0.05 between 10-4pm, 0.01 between 4-8pm. At Melbourne Central, the proportion who will buy coffee is 0.08 between 7-10am, 0.06 between 10-4pm, 0.02 between 4-8pm. No purchases at all other times.
+* Each coffee purchase is \$4.
+* One attendant costs \$100/hour. Two attendants is \$150/hour. Three attendants is \$200/hour and four attendants is \$250/hour.
+* Each attendant can handle 30 customers per hour. If the number is more than the number the staff can handle, customers will walk out without purchasing.
+
+The `compute_profit()` calculates the profit based on one set of simulated data given the date-times and the number of attendants for two locations.
+
+```{r}
+compute_profit <- function(date, time, flinders = 1, central = 1) {
+  peds_sim <- peds_weather %>% 
+    filter(!is.na(Count)) %>% 
+    mutate(.simulated = simulate(peds_fit, seed = 2020)$sim_1)
+  fl_rate <- c(rep(0, 6), rep(0.1, 3), rep(0.05, 6), rep(0.01, 4), rep(0, 5))[time]
+  mc_rate <- c(rep(0, 6), rep(0.08, 3), rep(0.06, 6), rep(0.02, 4), rep(0, 5))[time]
+  peds_sim <- peds_sim %>% 
+    filter(Date == date, Time %in% time)
+  fl_count <- peds_sim %>% 
+    filter(Sensor == "Flinders Street Station Underpass") %>% 
+    pull(.simulated)
+  mc_count <- peds_sim %>% 
+    filter(Sensor == "Melbourne Central") %>% 
+    pull(.simulated)
+  fl_ncustomers <- pmin(round(fl_count * fl_rate, 0), 30 * flinders)
+  mc_ncustomers <- pmin(round(mc_count * mc_rate, 0), 30 * central) 
+  fl_profit <- fl_ncustomers * 4 - (100 + 50 * (flinders - 1))
+  mc_profit <- mc_ncustomers * 4 - (100 + 50 * (central - 1))
+  tibble(time = time, flinders = fl_profit, central = mc_profit)
+}
+```
+
+With three attendants at Flinders and two attendants at Melbourne Central, earnings and losses are reported for a Thursday on 2018-03-28.
+
+```{r}
+compute_profit("2018-03-28", 7:19, flinders = 3, central = 2)
+```
+
+## Your turn
+
+Modify the `compute_profit()` to take account of time-variant attendant numbers and generate 10 simulated sets for a possible range of profits.
+
+<!--
 
 We can investigate the working force pattern a bit more closer by location. Rescaling the counts for each location reveals the difference in patterns much more clearly and shows the three workforce spikes much more pronounced (cf Figure \@ref(fig:ped_adjcounts)).
 
@@ -81,8 +266,8 @@ The [geographic location of the sensors](https://data.melbourne.vic.gov.au/Trans
 ```{r eval=FALSE}
 sensors <- read.csv("data/Pedestrian_Sensor_Locations.csv")
 ```
-Unfortunately, we cannot match the names of the locations directly, because they are formatted (slightly) differently between the two sources. The sensor location data set e.g. contains the string ```Lygon St (West)```, whereas the pedestrian count data contains the same location encoded as ```Lygon.St..West.``` (note the . introduced by R as a substitute for any special character such as a white space in a variable name).
-In order to match these locations, we make use of fuzzy matching as implemented in ```adist```, which is based on the generalized Levenshtein distance:
+Unfortunately, we cannot match the names of the locations directly, because they are formatted (slightly) differently between the two sources. The sensor location data set e.g. contains the string Lygon St (West), whereas the pedestrian count data contains the same location encoded as Lygon.St..West. (note the . introduced by R as a substitute for any special character such as a white space in a variable name).
+In order to match these locations, we make use of fuzzy matching as implemented in `adist`, which is based on the generalized Levenshtein distance:
 ```{r eval=FALSE}
 src1 <- as.character(sensors$Sensor.Description)
 src2 <- as.character(unique(weekhourlies$Location))
@@ -103,7 +288,7 @@ summary(sensors$MatchQuality)
 sensors <- sensors[order(sensors$MatchQuality),]
 tail(sensors)[,c("Location", "Sensor.Description")]
 ```
-These matches all look good except for two: ```Lonsdale St-Spring St (West)``` and ```Fitzroy Gardens Visitor Centre``` should probably not be matched at all (these two sensors are not actually included in the pedestrian count data at this time). We will set those two locations to NA, and then match via Location to include the grouping information:
+These matches all look good except for two: `Lonsdale St-Spring St (West)` and `Fitzroy Gardens Visitor Centre` should probably not be matched at all (these two sensors are not actually included in the pedestrian count data at this time). We will set those two locations to NA, and then match via Location to include the grouping information:
 ```{r eval=FALSE}
 sensors$Location[sensors$Sensor.Description %in% c("Lonsdale St-Spring St (West)","Fitzroy Gardens Visitor Centre")] <- NA
 sensors <- merge(sensors, weekhourlies[,c("Location", "Group")], by="Location")
@@ -139,3 +324,5 @@ ggplot(aes(x=Hour, y=Count, group=interaction(Location, Day)),
   facet_grid(.~Weekday) + 
   geom_line(alpha=0.3) 
 ```
+
+-->
