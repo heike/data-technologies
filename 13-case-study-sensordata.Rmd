@@ -238,7 +238,7 @@ Modify the `compute_profit()` to take account of time-variant attendant numbers 
 
 We can investigate the working force pattern a bit more closer by location. Rescaling the counts for each location reveals the difference in patterns much more clearly and shows the three workforce spikes much more pronounced (cf Figure \@ref(fig:ped_adjcounts)).
 
-```{r peds-adjcounts, fig.cap="Adjusted counts of pedestrians reveals the three workforce spikes on weekdays more clearly.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+```{r peds-adjcounts, fig.cap="Adjusted counts of pedestrians reveals the three workforce spikes on weekdays more clearly.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE, eval=FALSE}
 weekhourlies <- peds %>% group_by(Sensor, Weekday, Time) %>%
   summarize(Count = median(Count, na.rm=TRUE))
 weekhourlies <- weekhourlies %>% group_by(Sensor) %>% 
@@ -249,7 +249,7 @@ ggplot(aes(x=Time, y=adjCount), data=weekhourlies) + facet_grid(.~Weekday) + geo
 
 Figure \@ref(fig:loc-cluster) gives an overview of the hourly pattern observed at each location. Locations are grouped by their pattern, resulting into three groups, that can be described mostly by their pedestrian counts at 8am, noon, and 5pm. One ofthe groups shows a strong morning and afternoon peak, with only a slight increase during lunch. The other two groups are not nearly as much affected by the pedestrian rush hours. One group shows almost the same pattern on weekdays as on weekends (with tiny spikes added on weekdays), while pedestrian traffic for the last groups is generally higher for the last group on weekdays than on weekends and increases during the day until peaking at 5pm. 
 
-```{r loc-cluster, fig.cap="Location of sensors clustered by observed patterns of pedestrian counts.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE}
+```{r loc-cluster, fig.cap="Location of sensors clustered by observed patterns of pedestrian counts.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE, eval=FALSE}
 hourlies <- weekhourlies %>% group_by(Time, Sensor) %>% summarize(
   adjCount = mean(adjCount, na.rm=TRUE)
 )
