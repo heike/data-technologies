@@ -60,9 +60,9 @@ peds %>%
   xlab("Date Time")
 ```
 
-We're primarily interested in exploiting pedestrian patterns at various time resolutions and across different locations. In light of people's daily schedules, we plot the counts against time of the day, shown in Figure \@ref(fig:ped-sensor). At these train stations, two distinct clusters pop out to the viewers.
+We're primarily interested in exploiting pedestrian patterns at various time resolutions and across different locations. In light of people's daily schedules, we plot the counts against time of the day, shown in Figure \@ref(fig:ped-lineplots). At these train stations, two distinct clusters pop out to the viewers.
 
-```{r ped-sensor, fig.cap = "Counts plotted against time of the day, faceted by sensors."}
+```{r ped-lineplots, fig.cap = "Counts plotted against time of the day, faceted by sensors."}
 peds %>% 
   ggplot(aes(x = Time, y = Count, group = Date, colour = Sensor)) +
   geom_line(size = 0.3, alpha = 0.3) +
