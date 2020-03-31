@@ -2,7 +2,69 @@
 knit: bookdown::preview_chapter
 ---
 
-# Dates and time
+# Temporal data
+
+## Tackling time zones
+
+```{r warning = FALSE}
+library(tidyverse)
+library(lubridate)
+step_count <- read_csv("data/step-count.csv")
+tz(step_count[["date_time"]])
+step_count <- step_count %>% 
+  rename_with(~ c("date_time", "count")) %>% 
+  mutate(date_time = with_tz(date_time, tzone = "Australia/Melbourne")) %>% 
+  filter(year(date_time) == 2019)
+
+step_count %>% 
+  ggplot(aes(x = hour(date_time), y = count)) +
+  geom_jitter(position = position_jitter(0.3)) +
+  stat_summary(fun.data = mean_cl_boot, geom = "pointrange", color = "red") +
+  xlab("time")
+
+austin <- seq(ymd("2019-01-15"), ymd("2019-01-25"), by = "1 day")
+denver <- seq(ymd("2019-07-28"), ymd("2019-08-01"), by = "1 day")
+sf <- seq(ymd("2019-08-02"), ymd("2019-08-06"), by = "1 day")
+
+library(sugrrants)
+step_cal <- step_count %>% 
+  complete(date_time = full_seq(date_time, 3600), fill = list(count = 0)) %>% 
+  mutate(
+    hour = hour(date_time), 
+    date = as_date(date_time),
+    overseas = ifelse(date %in% c(austin, denver, sf), "overseas", "local")
+  ) %>% 
+  frame_calendar(x = hour, y = count, date = date)
+p_cal <- step_cal %>% 
+  ggplot(aes(x = .hour, y = .count, group = date, colour = overseas)) +
+  geom_line()
+prettify(p_cal) +
+  theme(legend.position = "bottom")
+
+lock_local_time <- function(x, tz) {
+  force_tz(with_tz(x, tz = tz), tzone = "Australia/Melbourne")
+}
+
+local_step_count <- step_count %>% 
+  mutate(
+    date = as_date(date_time),
+    date_time = case_when(
+      date %in% austin ~ lock_local_time(date_time, tz = "US/Central"),
+      date %in% denver ~ lock_local_time(date_time, tz = "US/Mountain"),
+      date %in% sf ~ lock_local_time(date_time, tz = "US/Pacific"),
+      TRUE ~ date_time
+    )
+  )
+
+local_step_count %>% 
+  ggplot(aes(x = hour(date_time), y = count)) +
+  geom_jitter(position = position_jitter(0.3)) +
+  stat_summary(fun.data = mean_cl_boot, geom = "pointrange", color = "red") +
+  xlab("time")
+```
+
+
+<!--
 
 ## Overview
 
@@ -269,3 +331,4 @@ Pull the 2017 data for the sensor Birrarung Marr. Make plots to answer these que
 1. Is there the same daily pattern as observed at Melbourne Central? If not, how does it differ?
 2. Can you detect special events, like the Australian Open tennis, based on pedestrian counts?  What dates does it appear that there were events on? Can you match these with known events, found from web searching?
 
+-->
