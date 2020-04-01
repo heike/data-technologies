@@ -4,24 +4,80 @@ knit: bookdown::preview_chapter
 
 # Temporal data
 
-## Tackling time zones
+Temporal data uses time as a fundamental variable to index different positional states in past-to-future order.
+
+* annual/quarterly/monthly macroeconomic figures to personal wearables data
+* Time itself provides abundant source to reveal our life's trajectories, decomposed time components
+* down to date/date-time resolution, time zones can be a problem: not reproducible across systems and locations
+
+The **lubridate** package makes it easy and robust to work with dates/times in R:
+
+```{r}
+library(lubridate)
+(x <- ymd_h("2020-04-02 9", tz = "Australia/Melbourne"))
+as.Date(x)
+as_date(x)
+```
+
+## Steps counting towards the end of PhD
 
 ```{r warning = FALSE}
 library(tidyverse)
-library(lubridate)
-step_count <- read_csv("data/step-count.csv")
+step_count <- read_csv("data/step-count.csv") %>% 
+  rename_with(~ c("date_time", "count"))
+```
+
+### Calibrating time zones
+
+* `with_tz()`
+* `force_tz()`
+
+```{r}
 tz(step_count[["date_time"]])
 step_count <- step_count %>% 
-  rename_with(~ c("date_time", "count")) %>% 
   mutate(date_time = with_tz(date_time, tzone = "Australia/Melbourne")) %>% 
   filter(year(date_time) == 2019)
+```
 
+### Aggregating by time: 10,000 steps per day?
+
+```{r}
+daily_step_count <- step_count %>% 
+  group_by(date = as_date(date_time)) %>% 
+  summarise(daily_count = sum(count))
+daily_step_count %>% 
+  ggplot(aes(x = date, y = daily_count)) +
+  geom_col(colour = "white", fill = "#e6550d") +
+  geom_hline(yintercept = 10000, colour = "#3182bd", linetype = "dashed")
+```
+
+```{r}
+daily_step_count %>% 
+  summarise(days = sum(daily_count >= 10000))
+```
+
+```{r}
+library(tsibble)
+step_count %>% 
+  group_by(yrmth = yearmonth(date_time)) %>% 
+  summarise(monthly_count = sum(count)) %>% 
+  ggplot(aes(x = yrmth, y = monthly_count)) +
+  geom_col(colour = "white", fill = "#e6550d")
+```
+
+### Beyond aggregation
+
+```{r}
 step_count %>% 
   ggplot(aes(x = hour(date_time), y = count)) +
   geom_jitter(position = position_jitter(0.3)) +
   stat_summary(fun.data = mean_cl_boot, geom = "pointrange", color = "red") +
   xlab("time")
+```
 
+### Calendar plots for eyeballing abnormal patterns
+
+```{r}
 austin <- seq(ymd("2019-01-15"), ymd("2019-01-25"), by = "1 day")
 denver <- seq(ymd("2019-07-28"), ymd("2019-08-01"), by = "1 day")
 sf <- seq(ymd("2019-08-02"), ymd("2019-08-06"), by = "1 day")
@@ -40,7 +96,11 @@ p_cal <- step_cal %>%
   geom_line()
 prettify(p_cal) +
   theme(legend.position = "bottom")
+```
 
+### Calibrating time zones (continued)
+
+```{r}
 lock_local_time <- function(x, tz) {
   force_tz(with_tz(x, tz = tz), tzone = "Australia/Melbourne")
 }
@@ -62,7 +122,6 @@ local_step_count %>%
   stat_summary(fun.data = mean_cl_boot, geom = "pointrange", color = "red") +
   xlab("time")
 ```
-
 
 <!--
 
