@@ -4,7 +4,7 @@ knit: bookdown::preview_chapter
 
 # Temporal data
 
-Temporal data uses time as a fundamental variable to index different positional states in past-to-future order.
+Temporal data uses time as a fundamentally contextual variable to index different positional states in past-to-future order.
 
 * annual/quarterly/monthly macroeconomic figures to personal wearables data
 * Time itself provides abundant source to reveal our life's trajectories, decomposed time components
@@ -16,10 +16,13 @@ The **lubridate** package makes it easy and robust to work with dates/times in R
 library(lubridate)
 (x <- ymd_h("2020-04-02 9", tz = "Australia/Melbourne"))
 as.Date(x)
+as.Date(x, tz = "Australia/Melbourne")
 as_date(x)
 ```
 
 ## Steps counting towards the end of PhD
+
+Admittedly, it's a clickbait title: we're not going to discuss steps required for getting PhD done, instead explore more on personal health data--step counts, in Dr Wang's final year of her PhD. A rich depiction of individual agendas can be built up by simply slicing and dicing temporal variables.
 
 ```{r warning = FALSE}
 library(tidyverse)
@@ -27,7 +30,7 @@ step_count <- read_csv("data/step-count.csv") %>%
   rename_with(~ c("date_time", "count"))
 ```
 
-### Calibrating time zones
+## Calibrating time zones
 
 * `with_tz()`
 * `force_tz()`
@@ -39,7 +42,7 @@ step_count <- step_count %>%
   filter(year(date_time) == 2019)
 ```
 
-### Aggregating by time: 10,000 steps per day?
+## Aggregating by time: 10,000 steps per day?
 
 ```{r}
 daily_step_count <- step_count %>% 
@@ -58,14 +61,23 @@ daily_step_count %>%
 
 ```{r}
 library(tsibble)
-step_count %>% 
+monthly_step_count <- step_count %>% 
   group_by(yrmth = yearmonth(date_time)) %>% 
   summarise(monthly_count = sum(count)) %>% 
+  mutate(avg_count = monthly_count / days_in_month(yrmth))
+
+monthly_step_count %>% 
   ggplot(aes(x = yrmth, y = monthly_count)) +
   geom_col(colour = "white", fill = "#e6550d")
+
+monthly_step_count %>% 
+  ggplot(aes(x = yrmth, y = avg_count)) +
+  geom_line() +
+  geom_point() +
+  ylim(c(0, 10000))
 ```
 
-### Beyond aggregation
+## Slicing and dicing
 
 ```{r}
 step_count %>% 
@@ -75,7 +87,7 @@ step_count %>%
   xlab("time")
 ```
 
-### Calendar plots for eyeballing abnormal patterns
+## Calendar plots for eyeballing abnormal patterns
 
 ```{r}
 austin <- seq(ymd("2019-01-15"), ymd("2019-01-25"), by = "1 day")
@@ -98,7 +110,7 @@ prettify(p_cal) +
   theme(legend.position = "bottom")
 ```
 
-### Calibrating time zones (continued)
+## Calibrating time zones (continued)
 
 ```{r}
 lock_local_time <- function(x, tz) {
