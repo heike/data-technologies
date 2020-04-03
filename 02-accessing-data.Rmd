@@ -300,7 +300,7 @@ ggplot(data=bound_sm) + geom_sf() +
 
 ### Australian weather: `bomrang`
 
-### Atals of Living Austraila: `ala4R`
+### Atlas of Living Austraila: `ala4R`
 
 ## Images as data
 

@@ -4,43 +4,177 @@ knit: bookdown::preview_chapter
 
 # PISA: Programme for International Student Assessment
 
-Every three years an international survey is conducted to assess the educational systems across the globe by testing 15 year olds on math, science and reading. Each child, school, parent are also asked to complete extensive questionnaires. The most recent results are from 2012. Approximately 510,000 students participated from 65 economies, with a sampling scheme that means results represent about 28 million children worldwide. 
+<!-- 
+description of data and why is this interesting
+processing the data
+examining selected features, including gender, tvs, books by country using dotplots and maps
+within country
+how you can tell the data is synthetic
+-->
 
-The data can be downloaded from [http://www.oecd.org/pisa/pisaproducts/](http://www.oecd.org/pisa/pisaproducts/database-cbapisa2012.htm). There are five text files containing the student questionnaire and test results, school and parent questionnaire reults, and two cognitive item responses. In this analysis we focus on the student file. It is approximately 580Mb, contains 615 attributes on more than 270,000 students. A 15Mb subset is provided with this book. 
 
-The student data set contains many categorical variables, in addition to numerical variables, and maps can be used to compare across countries.
+Every three years an international survey is conducted to assess the educational systems across the globe by testing 15 year olds on math, science and reading, called the Programme for International Student Assessment (PISA). It measures their readiness to meet life challenges and workforce preparedness. As of 2020, according to the PISA web site more than 90 countries and 3 million students have been involved. 
 
-## Is the math gap universal?
+Each student, school, parent are also asked to complete extensive questionnaires.  Schools provide information about their resources staff qualifications and staffing levels. Parents are asked about the household environment and student support. Students are asked about their interest in different subjects and their friend networks. 
 
-```{r createdb, eval=FALSE, echo=FALSE}
+The data is used by individual countries to inform education policy and improve learning. The news media take this as an opportunity to measure and comment on their country against other countries, and raising the concern about girls and math. Here's a sample of headlines after the 2018 data release:
+
+*Vital Signs: Australia's slipping student scores will lead to greater income inequality* [Richard Holden, The Conversation](https://theconversation.com/vital-signs-australias-slipping-student-scores-will-lead-to-greater-income-inequality-128301)
+
+*In China, Nicholas studied maths 20 hours a week. In Australia, it's three* [Michael Fowler and Adam Carey, Sydney Morning Herald](https://www.smh.com.au/education/in-china-nicholas-studied-maths-20-hours-a-week-in-australia-it-s-three-20191203-p53ggv.html)
+
+*New Zealand top-end in OECD's latest PISA report but drop in achievements 'worrying'* [Jessica Long and Mandy Te, Stuff](https://www.stuff.co.nz/national/education/117890945/new-zealand-topend-in-oecds-latest-pisa-report-but-drop-in-achievements-worrying)
+
+*Not even mediocre? Indonesian students score low in math, reading, science: PISA report* [Karina M. Tehusijarana, The Jakarta Post](https://www.thejakartapost.com/news/2019/12/04/not-even-mediocre-indonesian-students-score-low-in-math-reading-science-pisa-report.html)
+
+*A significant gender gap in maths performance in favour of male students has returned, despite closing in 2015* [Natassia Chrysanthos, Sydney Morning Herald](https://www.smh.com.au/national/nsw/urgent-need-to-address-maths-performance-as-nsw-slumps-in-international-test-20191203-p53ge2.html)
+
+## Data access
+
+The data, from 2000 through to  the most recent survey, can be accessed at  [http://www.oecd.org/pisa/data/](http://www.oecd.org/pisa/data/). The format of the data by year is different, but in recent years it is provided in proprietary binary formats. The variables collected differ slightly from year to year, although there is a core set of variables that are always included and coded identically. 
+
+There are multiple files associated with each survey, containing the student questionnaire responses and test scores, school and parent questionnaire responses, two cognitive item responses, and assoociated data dictionaries. In the following analysis we focus on the 2015 student data. It is approximately 580Mb, contains 615 attributes on more than 270,000 students. 
+
+## Data pre-processing
+
+Read the  data directly from the web site. 
+
+```{r createdb, eval=FALSE}
+# From http://www.oecd.org/pisa/data/2015database/ download 
+# the SPSS format zip file `Student questionnaire data file (419MB)'
 library(haven)
-pisa_2015 <- read_sav(file.choose()) # http://www.oecd.org/pisa/data/2015database/. The SPSS format zip file `Student questionnaire data file (419MB)'
+pisa_2015 <- read_sav("https://webfs.oecd.org/pisa/PUF_SAS_COMBINED_CMB_STU_QQQ.zip") 
 ```
 
-```{r make_sqlite, eval=FALSE, echo=FALSE}
-cat("reading SQL \n")
+Create a local SQLite database to make it faster to make various summaries and subsets. 
+
+```{r make_sqlite, eval=FALSE}
+library(tidyverse)
+library(dbplyr)
 library(sqldf)
 library(DBI)
 db <- dbConnect(SQLite(), dbname="data/PISA.sqlite")
-#dbWriteTable(conn=db, name="student", value=pisa_2015)
-#dbListFields(db, "student")
-
-library(tidyverse)
-library(dbplyr)
-tb <- tbl(db, "student")
-CNT_count <- tb %>% count(CNT, sort=TRUE) %>% collect()
-save(CNT_count, file="data/pisa_counts.rda")
-scores <- tb %>% 
-  select(CNT, ST004D01T, PV1MATH, PV1READ, PV1SCIE, SENWT) %>% collect()
-save(scores, file="data/pisa_counts.rda")
+dbWriteTable(conn=db, name="student", value=pisa_2015)
+dbListFields(db, "student")
 ```
 
+Use the database to extract a subset of variables.
 
-```{r maps}
+```{r make_counts, eval=FALSE}
+db <- dbConnect(SQLite(), dbname="data/PISA.sqlite")
+
+tb <- tbl(db, "student")
+scores <- tb %>% 
+  select(CNT, ST004D01T, PV1MATH, PV1READ, PV1SCIE, SENWT) %>% collect()
+scores <- scores %>%
+  rename(gender=ST004D01T, 
+         math=PV1MATH, reading=PV1READ, science=PV1SCIE, 
+         w=SENWT)
+save(scores, file="data/pisa_scores.rda")
+```
+
+## Examining the gender gap across countries
+
+The gender gap in math is a common discussion, with the concern being that girls tend to score lower than boys *on average* in standardized math tests. The PISA data provides an opportunity to explore the gender gap across numerous countries. 
+### Clean up country codes
+
+```{r gender_means}
+library(tidyverse)
+library(ISOcodes)
+library(ggthemes)
+data("ISO_3166_1")
+
+# Load data
+load("data/pisa_scores.rda")
+
+# The country information will be used to jooin the data with map data 
+# and the ISOcodes package provides information about codes and country
+scores <- scores %>% 
+  mutate(CNT=recode(CNT, "QES"="ESP", "QCH"="CHN", "QAR"="ARG", "TAP"="TWN")) %>%
+  filter(CNT != "QUC") %>%
+  filter(CNT != "QUD") %>%
+  filter(CNT != "QUE") %>%
+  mutate(gender=factor(gender, levels=c(1,2), labels=c("female","male")))
+score_gap <- scores %>% 
+  group_by(CNT, gender) %>%
+  summarise(math=weighted.mean(math, w=w, na.rm=T),
+            reading=weighted.mean(reading, w=w, na.rm=T),
+            science=weighted.mean(science, w=w, na.rm=T)) %>%
+  pivot_longer(cols=math:science, names_to="test", values_to="score") %>%
+  pivot_wider(names_from=gender, values_from=score) %>%
+  mutate(gap = male - female) %>%
+  pivot_wider(id_cols=CNT, names_from=test, values_from=gap)
+```
+
+```{r}
+library(boot)
+# Compute confidence intervals
+cifn <- function(d, i) {
+  x <- d[i,]
+  ci <- weighted.mean(x$math[x$gender=="male"], 
+                                   w=x$w[x$gender=="male"], na.rm=T)-
+                     weighted.mean(x$math[x$gender=="female"],
+                                   w=x$w[x$gender=="female"], na.rm=T)
+  ci
+}
+bootfn <- function(d) {
+  r <- boot(d, statistic=cifn, R=100)
+  l <- sort(r$t)[5]
+  u <- sort(r$t)[95]
+  ci <- c(l, u)
+  return(ci)
+}
+#student2012.sub.summary.gap.boot <- ddply(student2012.sub, .(CNT), bootfn)
+score_gap_boot <- scores %>% 
+  split(.$CNT) %>% purrr::map(bootfn) %>% as_tibble() %>%
+  pivot_longer(cols=ALB:VNM, names_to="CNT", values_to="value") %>%
+  arrange(CNT) %>%
+  mutate(bound=rep(c("ml","mu"), length(unique(scores$CNT)))) %>%
+  pivot_wider(names_from = bound, values_from = value)
+score_gap <- score_gap %>%
+  left_join(score_gap_boot, by="CNT")
+```
+
+```{r}
+score_gap <- score_gap %>%
+  left_join(ISO_3166_1[,c("Alpha_3", "Name")], by=c("CNT"="Alpha_3")) %>%
+  rename(name = Name)
+score_gap$name[score_gap$CNT == "KSV"] <- "Kosovo"
+```
+
+```{r gap_dots, fig.height=8, fig.width=6, out.width="100%"}
+library(forcats)
+score_gap <- score_gap %>% 
+  mutate(name = recode(name, "Czechia"="Czech Republic",
+                       "Korea, Republic of"="South Korea",
+                       "Macedonia, Republic of"="Macedonia",
+                       "Moldova, Republic of"="Moldova",
+                       "Russian Federation"="Russia",
+                       "Taiwan, Province of China"="Taiwan",
+                       "Trinidad and Tobago"="Trinidad",
+                       "United States"="USA",
+                       "United Kingdom"="UK",
+                       "Viet Nam"="Vietnam")) 
+
+
+ggplot(data=score_gap, aes(x=fct_reorder(name, math), y=math)) +
+  geom_hline(yintercept=0, colour="red") +
+  geom_point() + 
+  geom_errorbar(aes(ymin=ml, ymax=mu)) +
+  coord_flip() + 
+  xlab("") + ylab("Gender gap") + ylim(c(-35, 35))
+
+```
+
+```{r cnt_code, eval=FALSE}
+# Load data
 load("data/pisa_counts.rda")
+
+# The country information will be used to jooin the data with map data 
+# and the ISOcodes package provides information about codes and  coountry
 library(ISOcodes)
 data("ISO_3166_1")
-# Codes are not standard
+# Some codes in PISA are not standard and need to be recoded
 CNT_count <- CNT_count %>% 
   mutate(CNT=recode(CNT, "QES"="ESP", "QCH"="CHN", "QAR"="ARG", "TAP"="TWN")) %>%
   group_by(CNT) %>% summarise(n=sum(n)) %>%
@@ -52,37 +186,6 @@ countries <- CNT_count %>%
 countries$Name[countries$CNT == "KSV"] <- "Kosovo"
 ```
 
-```{r gendermap}
-library(ISOcodes)
-library(ggthemes)
-data("ISO_3166_1")
-
-load("data/pisa_scores.rda")
-scores <- scores %>% 
-  mutate(CNT=recode(CNT, "QES"="ESP", "QCH"="CHN", "QAR"="ARG", "TAP"="TWN")) %>%
-  filter(CNT != "QUC") %>%
-  filter(CNT != "QUD") %>%
-  filter(CNT != "QUE")
-countries <- scores %>%
-  left_join(ISO_3166_1[,c("Alpha_3", "Name")], by=c("CNT"="Alpha_3"))
-countries$Name[countries$CNT == "KSV"] <- "Kosovo"
-countries <- countries %>% 
-  mutate(ST004D01T=factor(ST004D01T, levels=c(1,2), labels=c("female","male")))
-score_gap <- countries %>% 
-  group_by(Name) %>%
-  summarise(wmathgap=weighted.mean(PV1MATH[ST004D01T=="male"],
-                       w=SENWT[ST004D01T=="male"], na.rm=T)-
-                     weighted.mean(PV1MATH[ST004D01T=="female"],
-                       w=SENWT[ST004D01T=="female"], na.rm=T),
-            wreadgap=weighted.mean(PV1READ[ST004D01T=="male"],
-                       w=SENWT[ST004D01T=="male"], na.rm=T)-
-                     weighted.mean(PV1READ[ST004D01T=="female"],
-                       w=SENWT[ST004D01T=="female"], na.rm=T),
-            wsciegap=weighted.mean(PV1SCIE[ST004D01T=="male"],
-                       w=SENWT[ST004D01T=="male"], na.rm=T)-
-                     weighted.mean(PV1SCIE[ST004D01T=="female"],
-                       w=SENWT[ST004D01T=="female"], na.rm=T))
-```
 
 ```{r eval=FALSE}
 world_map <- map_data("world")
@@ -114,7 +217,7 @@ ggplot(to_map, aes(map_id = region)) +
          axis.text =  element_blank()) 
 ```
 
-```{r dotplots}
+```{r dotplots, eval=FALSE}
 library(forcats)
 scores_sumry <- countries %>% 
   group_by(Name, ST004D01T) %>%
