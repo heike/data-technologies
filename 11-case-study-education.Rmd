@@ -160,7 +160,7 @@ score_gap <- score_gap %>%
 ggplot(data=score_gap, aes(x=fct_reorder(name, math), y=math)) +
   geom_hline(yintercept=0, colour="red") +
   geom_point() + 
-  geom_errorbar(aes(ymin=ml, ymax=mu)) +
+  geom_errorbar(aes(ymin=ml, ymax=mu), width=0) +
   coord_flip() + 
   xlab("") + ylab("Gender gap") + ylim(c(-35, 35))
 
