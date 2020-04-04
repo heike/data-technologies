@@ -22,29 +22,42 @@ as_date(x)
 
 ## Steps counting towards the end of PhD
 
-Admittedly, it's a clickbait title: we're not going to discuss steps required for getting PhD done, instead explore more on personal health data--step counts, in Dr Wang's final year of her PhD. A rich depiction of individual agendas can be built up by simply slicing and dicing temporal variables.
+Admittedly, it's a clickbait title: we're not going to discuss steps required for getting PhD done, instead explore more on personal health data--step counts, in Dr Wang's final year of her PhD. A richer depiction of individual agendas can be built up by simply slicing and dicing temporal variables. This data set is tidy and *nearly clean*, with two variables: `date_time` at hourly interval and the associated `count`.
 
 ```{r warning = FALSE}
 library(tidyverse)
 step_count <- read_csv("data/step-count.csv") %>% 
   rename_with(~ c("date_time", "count"))
+step_count
 ```
 
-## Calibrating time zones
+## Calibrating time zones: a night owl?
 
-* `with_tz()`
-* `force_tz()`
+Is Dr Wang a night owl, wandering around ghostly in late evenings? Yes, if I'd have been in GMT+0. But no, back then I was based in Melbourne, Australia. The data was exported in UTC, and read in UTC as default by `readr::read_csv()`.
 
 ```{r}
 tz(step_count[["date_time"]])
+```
+
+Two functions in **lubridate** turn out useful in tackling time zones:
+
+* `with_tz()`: change the clock time and adapt to new time zone.
+* `force_tz()`: keep the clock time as is but replace with new time zone. Its sibling `force_tzs()` can pass multiple time zones at once.
+
+We convert UTC to "Australia/Melbourne" using `with_tz()`. The timestamps show that my movement is rather normal.
+
+```{r}
 step_count <- step_count %>% 
   mutate(date_time = with_tz(date_time, tzone = "Australia/Melbourne")) %>% 
   filter(year(date_time) == 2019)
+step_count
 ```
 
 ## Aggregating by time: 10,000 steps per day?
 
-```{r}
+Time can be aggregated to higher levels in the temporal hierarchy, for example sub-daily resolutions to daily/weekly/monthly/quarterly/annually.
+
+```{r, out.width = "100%", fig.height = 3}
 daily_step_count <- step_count %>% 
   group_by(date = as_date(date_time)) %>% 
   summarise(daily_count = sum(count))
