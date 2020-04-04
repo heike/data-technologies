@@ -76,12 +76,14 @@ save(scores, file="data/pisa_scores.rda")
 ## Examining the gender gap across countries
 
 The gender gap in math is a common discussion, with the concern being that girls tend to score lower than boys *on average* in standardized math tests. The PISA data provides an opportunity to explore the gender gap across numerous countries. 
+
 ### Clean up country codes
 
-```{r gender_means}
+Each country is coded using three letters, which mirror international standard ISO codes, except that a few are unique to this data. In order to join the data, with country names, or map data, these need to be recoded or the records dropped. 
+
+```{r ISO_recode}
 library(tidyverse)
 library(ISOcodes)
-library(ggthemes)
 data("ISO_3166_1")
 
 # Load data
@@ -95,6 +97,13 @@ scores <- scores %>%
   filter(CNT != "QUD") %>%
   filter(CNT != "QUE") %>%
   mutate(gender=factor(gender, levels=c(1,2), labels=c("female","male")))
+```
+
+### Compute weighted means by country and gender
+
+Each observation in the student records has an associated survey weight. This reflects the representation of the demographic of the student in comparison to the population demographics. Using the weights to compute a weighted average produces an estimate that better reflects the population mean. The math gap is measured by differencing the boys and girls averages. 
+
+```{r gender_means}
 score_gap <- scores %>% 
   group_by(CNT, gender) %>%
   summarise(math=weighted.mean(math, w=w, na.rm=T),
@@ -105,6 +114,8 @@ score_gap <- scores %>%
   mutate(gap = male - female) %>%
   pivot_wider(id_cols=CNT, names_from=test, values_from=gap)
 ```
+
+Confidence intervals for the population mean difference can be constructed usng bootstrap. The 90% confidence intervals are computed below, and these are joined with the mean difference for each country.
 
 ```{r}
 library(boot)
@@ -124,7 +135,6 @@ bootfn <- function(d) {
   ci <- c(l, u)
   return(ci)
 }
-#student2012.sub.summary.gap.boot <- ddply(student2012.sub, .(CNT), bootfn)
 score_gap_boot <- scores %>% 
   split(.$CNT) %>% purrr::map(bootfn) %>% as_tibble() %>%
   pivot_longer(cols=ALB:VNM, names_to="CNT", values_to="value") %>%
@@ -135,15 +145,15 @@ score_gap <- score_gap %>%
   left_join(score_gap_boot, by="CNT")
 ```
 
+### Examine the math gap by country
+
+To get the country name added to the plot, we join the data with a standard ISO code database. Some country names need improving. The mean differences are plotted against countries which are sorted from largest difference to smallest.  
+
 ```{r}
 score_gap <- score_gap %>%
   left_join(ISO_3166_1[,c("Alpha_3", "Name")], by=c("CNT"="Alpha_3")) %>%
   rename(name = Name)
 score_gap$name[score_gap$CNT == "KSV"] <- "Kosovo"
-```
-
-```{r gap_dots, fig.height=8, fig.width=6, out.width="100%"}
-library(forcats)
 score_gap <- score_gap %>% 
   mutate(name = recode(name, "Czechia"="Czech Republic",
                        "Korea, Republic of"="South Korea",
@@ -155,7 +165,10 @@ score_gap <- score_gap %>%
                        "United States"="USA",
                        "United Kingdom"="UK",
                        "Viet Nam"="Vietnam")) 
+```
 
+```{r gap_dots, fig.height=8, fig.width=6, out.width="100%"}
+library(forcats)
 
 ggplot(data=score_gap, aes(x=fct_reorder(name, math), y=math)) +
   geom_hline(yintercept=0, colour="red") +
@@ -166,45 +179,31 @@ ggplot(data=score_gap, aes(x=fct_reorder(name, math), y=math)) +
 
 ```
 
-```{r cnt_code, eval=FALSE}
-# Load data
-load("data/pisa_counts.rda")
 
-# The country information will be used to jooin the data with map data 
-# and the ISOcodes package provides information about codes and  coountry
-library(ISOcodes)
-data("ISO_3166_1")
-# Some codes in PISA are not standard and need to be recoded
-CNT_count <- CNT_count %>% 
-  mutate(CNT=recode(CNT, "QES"="ESP", "QCH"="CHN", "QAR"="ARG", "TAP"="TWN")) %>%
-  group_by(CNT) %>% summarise(n=sum(n)) %>%
-  filter(CNT != "QUC") %>%
-  filter(CNT != "QUD") %>%
-  filter(CNT != "QUE")
-countries <- CNT_count %>%
-  left_join(ISO_3166_1, by=c("CNT"="Alpha_3"))
-countries$Name[countries$CNT == "KSV"] <- "Kosovo"
-```
 
+
+
+### What we learn 
+
+The math gap is not universal, and in some countries girls score higher than boys on average. There are also many countries where there is no significant difference between the gender averages. 
+
+## Your turn
+
+1. A problem with the dot plot is that the mean difference axis uses negative numbers, whenever the girls average is higher than the boys. A more accurate reflection on the gender difference would be to use only positive numbers, and label left of 0 to be "girls higher" and right of 0 to be "boys higher". It could also be useful to have a finer resolution of grid lines on the mean difference. Improve the mean difference axis, so that it has positive numbers only and enhanced labels, and ticks at increments of 5 points.
+2. Re-do the analysis using reading scores by gender. Discuss the reading gap across the globe.
+
+## Mapping the scores
+
+To generate a map using colour to represent the mean difference,  requires joining the data to a map data  set. There's a world map as polygons available in the `ggplot2` package, which enables a quick and easy map tp be constructed. The map data needs a few corrections to match the names with the scores data. Colour can be important when representing a numeric variable, so the colour scale is manually constructed. 
 
 ```{r eval=FALSE}
+library(ggthemes)
 world_map <- map_data("world")
-score_gap <- score_gap %>%
-  mutate(Name = recode(Name, "Czechia"="Czech Republic",
-                       "Korea, Republic of"="South Korea",
-                       "Macedonia, Republic of"="Macedonia",
-                       "Moldova, Republic of"="Moldova",
-                       "Russian Federation"="Russia",
-                       "Taiwan, Province of China"="Taiwan",
-                       "Trinidad and Tobago"="Trinidad",
-                       "United States"="USA",
-                       "United Kingdom"="UK",
-                       "Viet Nam"="Vietnam"))
 world_map$region[world_map$subregion == "Hong Kong"] <- "Hong Kong"
 world_map$region[world_map$subregion == "Macao"] <- "Macao"
-to_map <- left_join(world_map, score_gap, by=c("region"="Name"))
+to_map <- left_join(world_map, score_gap, by=c("region"="name"))
 ggplot(to_map, aes(map_id = region)) + 
-    geom_map(aes(fill=wmathgap), map = world_map, 
+    geom_map(aes(fill=math), map = world_map, 
              color="grey70", size=0.1) + 
     scale_fill_gradient2("Math gap", limits=c(-35, 35), na.value="grey90",
                          low="#1B9E77", high="#D95F02", mid="white") +
@@ -217,59 +216,12 @@ ggplot(to_map, aes(map_id = region)) +
          axis.text =  element_blank()) 
 ```
 
-```{r dotplots, eval=FALSE}
-library(forcats)
-scores_sumry <- countries %>% 
-  group_by(Name, ST004D01T) %>%
-  summarise(min=min(PV1MATH, na.rm=T), 
-            max=max(PV1MATH, na.rm=T),
-            m=weighted.mean(PV1MATH, w=SENWT, na.rm=T)) %>%
-  ungroup() %>%
-  mutate(Name = fct_reorder(Name, m)) %>%
-  mutate(Name = recode(Name, "Czechia"="Czech Republic",
-                       "Korea, Republic of"="South Korea",
-                       "Macedonia, Republic of"="Macedonia",
-                       "Moldova, Republic of"="Moldova",
-                       "Russian Federation"="Russia",
-                       "Taiwan, Province of China"="Taiwan",
-                       "Trinidad and Tobago"="Trinidad",
-                       "United States"="USA",
-                       "United Kingdom"="UK",
-                       "Viet Nam"="Vietnam"))
-
-ggplot(data=scores_sumry, aes(x=Name, y=m, 
-                        colour=ST004D01T)) +
-  geom_point() + coord_flip() + 
-  scale_colour_brewer(palette="Dark2") +
-  xlab("") + ylab("Mean")
-ggplot(data=scores_sumry, aes(x=Name, y=m, 
-                        colour=ST004D01T)) +
-  #geom_point() + 
-  coord_flip() + 
-  geom_errorbar(aes(x=Name, ymin=min, ymax=max), position=position_dodge()) +
-  scale_colour_brewer(palette="Dark2") +
-  xlab("") + ylab("Mean") +
-  ylim(c(0,1000)) + geom_point(alpha=0.5) +
-  theme(legend.position="none") #+
-  #facet_wrap(~ST004D01T, ncol=1)
-```
-
+We learn that there are a few regions where the gender gap is reversed or non-existent. These tend to be Scandinavian countries, south-east Asia and the middle east. 
 
 ## Your turn
 
-+ Compute the difference in the weighted means of reading scores by gender. Discuss the reading gap across the globe.
+Make the world map using reading gap, and summarise your findings.
 
-```{r echo=FALSE, eval=FALSE}
-ggplot(to_map, aes(map_id = region)) + 
-    geom_map(aes(fill=wreadgap), map = world_map, 
-             color="grey70", size=0.1) + 
-    scale_fill_gradient2("Reading gap", limits=c(-35, 35), na.value="grey90",
-                         low="#1B9E77", high="#D95F02", mid="white") +
-    expand_limits(x = world_map$long, y = world_map$lat) +
-    theme_few() +
-    theme(legend.position = "bottom",
-          legend.key.width=unit(1.5, "cm"),
-         axis.ticks = element_blank(), 
-         axis.title = element_blank(), 
-         axis.text =  element_blank()) 
-```
+## Change in scores over time
+
+FIXME: Add some `learningtower` examples.
