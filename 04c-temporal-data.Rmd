@@ -42,7 +42,7 @@ tz(step_count[["date_time"]])
 Two functions in **lubridate** turn out useful in tackling time zones:
 
 * `with_tz()`: change the clock time and adapt to new time zone.
-* `force_tz()`: keep the clock time as is but replace with new time zone. Its sibling `force_tzs()` can pass multiple time zones at once.
+* `force_tz()`: keep the clock time as is but overwritten with new time zone. Its sibling `force_tzs()` can pass multiple time zones at once.
 
 We convert UTC to "Australia/Melbourne" using `with_tz()`. The timestamps show that my movement is rather normal.
 
@@ -55,9 +55,9 @@ step_count
 
 ## Aggregating by time: 10,000 steps per day?
 
-Time can be aggregated to higher levels in the temporal hierarchy, for example sub-daily resolutions to daily/weekly/monthly/quarterly/annually.
+Time can be aggregated to higher levels in the temporal hierarchy, for example sub-daily resolutions to daily/weekly/monthly/quarterly/annually. By aggregation, it makes easier to grasp signals that might have been buried in lower-level details otherwise. Does Dr Wang set a fitness goal, say 10000 steps per day? "Apparently not", the plot answers. The horizontal dashed line sets the daily step goal, which has been randomly hit by 108 bars representing counts.
 
-```{r, out.width = "100%", fig.height = 3}
+```{r, fig.width = 12, fig.height = 3}
 daily_step_count <- step_count %>% 
   group_by(date = as_date(date_time)) %>% 
   summarise(daily_count = sum(count))
@@ -74,20 +74,22 @@ daily_step_count %>%
 
 ```{r}
 library(tsibble)
+library(patchwork)
 monthly_step_count <- step_count %>% 
   group_by(yrmth = yearmonth(date_time)) %>% 
   summarise(monthly_count = sum(count)) %>% 
   mutate(avg_count = monthly_count / days_in_month(yrmth))
 
-monthly_step_count %>% 
+p_sum <- monthly_step_count %>% 
   ggplot(aes(x = yrmth, y = monthly_count)) +
   geom_col(colour = "white", fill = "#e6550d")
 
-monthly_step_count %>% 
+p_avg <- monthly_step_count %>% 
   ggplot(aes(x = yrmth, y = avg_count)) +
   geom_line() +
   geom_point() +
   ylim(c(0, 10000))
+p_sum + p_avg
 ```
 
 ## Slicing and dicing
