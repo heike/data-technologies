@@ -113,7 +113,7 @@ The [Melbourne pedestrian sensor portal](http://www.pedestrian.melbourne.vic.gov
 
 ```{r eval=FALSE}
 library(rwalkr)
-ped <- run_melb(year=2017, sensor="Melbourne Central")
+ped <- melb_walk_fast(year=2019, sensor="Southern Cross Station")
 save(ped, file="data/ped.rda")
 ```
 
@@ -236,7 +236,8 @@ ped %>% ggplot(aes(x=Time, y=Count, group=Date)) +
 
 ### On a calendar
 
-```{r fig.height=6}
+```{r fig.height=6, eval=FALSE}
+# Turned this chunk off because not sure why it fails
 library(sugrrants)
 p1 <- ped %>% 
   frame_calendar(x = Time, y = Count, date = Date, nrow = 4) %>%
@@ -251,6 +252,7 @@ prettify(p1)
 
 ```{r fig.height=6}
 library(tsibble)
+library(sugrrants)
 vic_holidays <- holiday_aus(2017, state = "VIC")
 ped <- ped %>%
   mutate(holiday = ifelse(Date %in% vic_holidays$date, "yes", "no")) %>%
@@ -264,7 +266,7 @@ prettify(p1)
 
 ## Exercise
 
-Pull the 2017 data for the sensor Birrarung Marr. Make plots to answer these questions. 
+Pull the 2019 data for the sensor Birrarung Marr. Make plots to answer these questions. 
 
 1. Is there the same daily pattern as observed at Melbourne Central? If not, how does it differ?
 2. Can you detect special events, like the Australian Open tennis, based on pedestrian counts?  What dates does it appear that there were events on? Can you match these with known events, found from web searching?
