@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Data Visualization | Data Science and Statistical Thinking: With Wild-Caught Data and R</title>
+  <meta name="description" content="Chapter 7 Data Visualization | Data Science and Statistical Thinking: With Wild-Caught Data and R" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Data Visualization | Data Science and Statistical Thinking: With Wild-Caught Data and R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Data Visualization | Data Science and Statistical Thinking: With Wild-Caught Data and R" />
+  
+  
+  
+
+<meta name="author" content="Heike Hofmann, Dianne Cook, Susan Vanderplas and Earo Wang" />
+
+
+<meta name="date" content="2023-06-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="handling-missings.html"/>
+<link rel="next" href="text-data-and-strings.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.27/datatables.js"></script>
+<link href="libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/plotly-binding-4.10.1.9000/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Science and Statistical Thinking</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preamble</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#what-is-exploratory-data-analysis"><i class="fa fa-check"></i><b>2.1</b> What is exploratory data analysis?</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#what-is-wild-data"><i class="fa fa-check"></i><b>2.2</b> What is <strong>wild</strong> data?</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#what-is-computational-statistical-thinking"><i class="fa fa-check"></i><b>2.3</b> What is computational statistical thinking?</a></li>
+<li class="chapter" data-level="2.4" data-path="intro.html"><a href="intro.html#workflow"><i class="fa fa-check"></i><b>2.4</b> Workflow</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="accessing-data.html"><a href="accessing-data.html"><i class="fa fa-check"></i><b>3</b> Accessing Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="accessing-data.html"><a href="accessing-data.html#flat-files"><i class="fa fa-check"></i><b>3.1</b> Flat files</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="accessing-data.html"><a href="accessing-data.html#example-tuberculosis"><i class="fa fa-check"></i><b>3.1.1</b> Example: tuberculosis</a></li>
+<li class="chapter" data-level="3.1.2" data-path="accessing-data.html"><a href="accessing-data.html#your-turn-atmospheric-carbon-dioxide"><i class="fa fa-check"></i><b>3.1.2</b> Your turn: atmospheric carbon dioxide</a></li>
+<li class="chapter" data-level="3.1.3" data-path="accessing-data.html"><a href="accessing-data.html#example-standardised-test-scores-for-reading-science-and-math"><i class="fa fa-check"></i><b>3.1.3</b> Example: standardised test scores for reading, science and math</a></li>
+<li class="chapter" data-level="3.1.4" data-path="accessing-data.html"><a href="accessing-data.html#your-turn-land-surface-weather-station-data"><i class="fa fa-check"></i><b>3.1.4</b> Your turn: land surface weather station data</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="accessing-data.html"><a href="accessing-data.html#proprietary-formats"><i class="fa fa-check"></i><b>3.2</b> Proprietary formats</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="accessing-data.html"><a href="accessing-data.html#example-australia-air-traffic-data"><i class="fa fa-check"></i><b>3.2.1</b> Example: Australia air traffic data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="accessing-data.html"><a href="accessing-data.html#your-turn-munging-spreadsheets"><i class="fa fa-check"></i><b>3.2.2</b> Your turn: Munging spreadsheets</a></li>
+<li class="chapter" data-level="3.2.3" data-path="accessing-data.html"><a href="accessing-data.html#example-spss-binary"><i class="fa fa-check"></i><b>3.2.3</b> Example: SPSS binary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="accessing-data.html"><a href="accessing-data.html#reading-multiple-files-from-a-website"><i class="fa fa-check"></i><b>3.3</b> Reading multiple files from a website</a></li>
+<li class="chapter" data-level="3.4" data-path="accessing-data.html"><a href="accessing-data.html#json"><i class="fa fa-check"></i><b>3.4</b> JSON</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="accessing-data.html"><a href="accessing-data.html#example-crossrates"><i class="fa fa-check"></i><b>3.4.1</b> Example: Crossrates</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="accessing-data.html"><a href="accessing-data.html#shapefiles"><i class="fa fa-check"></i><b>3.5</b> Shapefiles</a></li>
+<li class="chapter" data-level="3.6" data-path="accessing-data.html"><a href="accessing-data.html#apis"><i class="fa fa-check"></i><b>3.6</b> APIs</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="accessing-data.html"><a href="accessing-data.html#melbourne-pedestrian-traffic-rwalkr"><i class="fa fa-check"></i><b>3.6.1</b> Melbourne pedestrian traffic: <code>rwalkr</code></a></li>
+<li class="chapter" data-level="3.6.2" data-path="accessing-data.html"><a href="accessing-data.html#australian-weather-bomrang"><i class="fa fa-check"></i><b>3.6.2</b> Australian weather: <code>bomrang</code></a></li>
+<li class="chapter" data-level="3.6.3" data-path="accessing-data.html"><a href="accessing-data.html#atlas-of-living-austraila-ala4r"><i class="fa fa-check"></i><b>3.6.3</b> Atlas of Living Austraila: <code>ala4R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="accessing-data.html"><a href="accessing-data.html#images-as-data"><i class="fa fa-check"></i><b>3.7</b> Images as data</a></li>
+<li class="chapter" data-level="3.8" data-path="accessing-data.html"><a href="accessing-data.html#databases"><i class="fa fa-check"></i><b>3.8</b> Databases</a></li>
+<li class="chapter" data-level="3.9" data-path="accessing-data.html"><a href="accessing-data.html#working-with-text"><i class="fa fa-check"></i><b>3.9</b> Working with text</a></li>
+<li class="chapter" data-level="3.10" data-path="accessing-data.html"><a href="accessing-data.html#scraping-data"><i class="fa fa-check"></i><b>3.10</b> Scraping Data</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="accessing-data.html"><a href="accessing-data.html#examples"><i class="fa fa-check"></i><b>3.10.1</b> Examples</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html"><i class="fa fa-check"></i><b>4</b> Tidying Common Data Formats</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#terminology"><i class="fa fa-check"></i><b>4.1</b> Terminology</a></li>
+<li class="chapter" data-level="4.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidy-tabular-form"><i class="fa fa-check"></i><b>4.2</b> Tidy tabular form</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#wide-format"><i class="fa fa-check"></i><b>4.2.1</b> Wide format</a></li>
+<li class="chapter" data-level="4.2.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#long-format"><i class="fa fa-check"></i><b>4.2.2</b> Long format</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#raw-data-examples"><i class="fa fa-check"></i><b>4.3</b> Raw data examples</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#gene-expression-experiment"><i class="fa fa-check"></i><b>4.3.1</b> Gene expression experiment</a></li>
+<li class="chapter" data-level="4.3.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#melbourne-weather"><i class="fa fa-check"></i><b>4.3.2</b> Melbourne weather</a></li>
+<li class="chapter" data-level="4.3.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tb-incidence"><i class="fa fa-check"></i><b>4.3.3</b> TB incidence</a></li>
+<li class="chapter" data-level="4.3.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#french-fries"><i class="fa fa-check"></i><b>4.3.4</b> French fries</a></li>
+<li class="chapter" data-level="4.3.5" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#contingency-table"><i class="fa fa-check"></i><b>4.3.5</b> Contingency table</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#abs-datapack"><i class="fa fa-check"></i><b>4.4</b> ABS Datapack</a></li>
+<li class="chapter" data-level="4.5" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#messy-vs-tidy"><i class="fa fa-check"></i><b>4.5</b> Messy vs tidy</a></li>
+<li class="chapter" data-level="4.6" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidy-verbs"><i class="fa fa-check"></i><b>4.6</b> Tidy verbs</a></li>
+<li class="chapter" data-level="4.7" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidying-genes-data"><i class="fa fa-check"></i><b>4.7</b> Tidying genes data</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#separate-columns"><i class="fa fa-check"></i><b>4.7.1</b> Separate columns</a></li>
+<li class="chapter" data-level="4.7.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#now-spread-to-examine-different-aspects"><i class="fa fa-check"></i><b>4.7.2</b> Now spread to examine different aspects</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#try-this-yourself"><i class="fa fa-check"></i><b>4.8</b> Try this yourself</a>
+<ul>
+<li class="chapter" data-level="4.8.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-1"><i class="fa fa-check"></i><b>4.8.1</b> Exercise 1</a></li>
+<li class="chapter" data-level="4.8.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-2"><i class="fa fa-check"></i><b>4.8.2</b> Exercise 2</a></li>
+<li class="chapter" data-level="4.8.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-3"><i class="fa fa-check"></i><b>4.8.3</b> Exercise 3</a></li>
+<li class="chapter" data-level="4.8.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-4"><i class="fa fa-check"></i><b>4.8.4</b> Exercise 4</a></li>
+</ul></li>
+<li class="chapter" data-level="4.9" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidying-melbourne-weather"><i class="fa fa-check"></i><b>4.9</b> Tidying Melbourne weather</a>
+<ul>
+<li class="chapter" data-level="4.9.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#sometime-easier-to-index-select"><i class="fa fa-check"></i><b>4.9.1</b> Sometime easier to index select</a></li>
+<li class="chapter" data-level="4.9.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#make-long-form"><i class="fa fa-check"></i><b>4.9.2</b> Make long form</a></li>
+<li class="chapter" data-level="4.9.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#use-spread-to-look-at-different-things"><i class="fa fa-check"></i><b>4.9.3</b> Use spread to look at different things</a></li>
+<li class="chapter" data-level="4.9.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#what-are-the-numbers"><i class="fa fa-check"></i><b>4.9.4</b> What are the numbers?</a></li>
+<li class="chapter" data-level="4.9.5" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#now-use-spread"><i class="fa fa-check"></i><b>4.9.5</b> Now use spread</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercises"><i class="fa fa-check"></i><b>4.10</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="wrangling-data.html"><a href="wrangling-data.html"><i class="fa fa-check"></i><b>5</b> Wrangling Data</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="wrangling-data.html"><a href="wrangling-data.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="wrangling-data.html"><a href="wrangling-data.html#side-note-package-system"><i class="fa fa-check"></i><b>5.2</b> Side-note: Package system</a></li>
+<li class="chapter" data-level="5.3" data-path="wrangling-data.html"><a href="wrangling-data.html#example-french-fries"><i class="fa fa-check"></i><b>5.3</b> Example: french fries</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="wrangling-data.html"><a href="wrangling-data.html#the-story-of-the-french-fries-data."><i class="fa fa-check"></i><b>5.3.1</b> The story of the french fries data….</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="wrangling-data.html"><a href="wrangling-data.html#filter-choose-observations"><i class="fa fa-check"></i><b>5.4</b> filter: choose observations</a></li>
+<li class="chapter" data-level="5.5" data-path="wrangling-data.html"><a href="wrangling-data.html#select"><i class="fa fa-check"></i><b>5.5</b> select</a></li>
+<li class="chapter" data-level="5.6" data-path="wrangling-data.html"><a href="wrangling-data.html#mutate"><i class="fa fa-check"></i><b>5.6</b> mutate</a></li>
+<li class="chapter" data-level="5.7" data-path="wrangling-data.html"><a href="wrangling-data.html#summarise-and-group_by"><i class="fa fa-check"></i><b>5.7</b> summarise and group_by</a></li>
+<li class="chapter" data-level="5.8" data-path="wrangling-data.html"><a href="wrangling-data.html#arrange"><i class="fa fa-check"></i><b>5.8</b> arrange</a></li>
+<li class="chapter" data-level="5.9" data-path="wrangling-data.html"><a href="wrangling-data.html#count-tally"><i class="fa fa-check"></i><b>5.9</b> count, tally</a></li>
+<li class="chapter" data-level="5.10" data-path="wrangling-data.html"><a href="wrangling-data.html#putting-it-together-to-problem-solve"><i class="fa fa-check"></i><b>5.10</b> Putting it together to problem solve</a>
+<ul>
+<li class="chapter" data-level="5.10.1" data-path="wrangling-data.html"><a href="wrangling-data.html#are-ratings-similar"><i class="fa fa-check"></i><b>5.10.1</b> Are ratings similar?</a></li>
+<li class="chapter" data-level="5.10.2" data-path="wrangling-data.html"><a href="wrangling-data.html#are-reps-like-each-other"><i class="fa fa-check"></i><b>5.10.2</b> Are reps like each other</a></li>
+<li class="chapter" data-level="5.10.3" data-path="wrangling-data.html"><a href="wrangling-data.html#replicates-by-rating-type"><i class="fa fa-check"></i><b>5.10.3</b> Replicates by rating type</a></li>
+</ul></li>
+<li class="chapter" data-level="5.11" data-path="wrangling-data.html"><a href="wrangling-data.html#exercise"><i class="fa fa-check"></i><b>5.11</b> Exercise</a></li>
+<li class="chapter" data-level="5.12" data-path="wrangling-data.html"><a href="wrangling-data.html#relational-data-and-joins"><i class="fa fa-check"></i><b>5.12</b> Relational data, and joins</a>
+<ul>
+<li class="chapter" data-level="5.12.1" data-path="wrangling-data.html"><a href="wrangling-data.html#keys"><i class="fa fa-check"></i><b>5.12.1</b> Keys</a></li>
+<li class="chapter" data-level="5.12.2" data-path="wrangling-data.html"><a href="wrangling-data.html#joins"><i class="fa fa-check"></i><b>5.12.2</b> Joins</a></li>
+<li class="chapter" data-level="5.12.3" data-path="wrangling-data.html"><a href="wrangling-data.html#airline-travel-ontime-data"><i class="fa fa-check"></i><b>5.12.3</b> Airline travel, ontime data</a></li>
+</ul></li>
+<li class="chapter" data-level="5.13" data-path="wrangling-data.html"><a href="wrangling-data.html#exercise-5"><i class="fa fa-check"></i><b>5.13</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="handling-missings.html"><a href="handling-missings.html"><i class="fa fa-check"></i><b>6</b> Handling Missings</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="handling-missings.html"><a href="handling-missings.html#overview-1"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="handling-missings.html"><a href="handling-missings.html#a-story-of-missing-flights"><i class="fa fa-check"></i><b>6.2</b> A story of missing flights</a></li>
+<li class="chapter" data-level="6.3" data-path="handling-missings.html"><a href="handling-missings.html#data-set-overview"><i class="fa fa-check"></i><b>6.3</b> Data set overview</a></li>
+<li class="chapter" data-level="6.4" data-path="handling-missings.html"><a href="handling-missings.html#missing-value-patterns"><i class="fa fa-check"></i><b>6.4</b> Missing value patterns</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="handling-missings.html"><a href="handling-missings.html#missingness-map"><i class="fa fa-check"></i><b>6.4.1</b> Missingness map</a></li>
+<li class="chapter" data-level="6.4.2" data-path="handling-missings.html"><a href="handling-missings.html#numerical-summaries"><i class="fa fa-check"></i><b>6.4.2</b> Numerical summaries</a></li>
+<li class="chapter" data-level="6.4.3" data-path="handling-missings.html"><a href="handling-missings.html#tend-to-get-ignored-by-most-software"><i class="fa fa-check"></i><b>6.4.3</b> Tend to get ignored by most software</a></li>
+<li class="chapter" data-level="6.4.4" data-path="handling-missings.html"><a href="handling-missings.html#add-them-to-plot"><i class="fa fa-check"></i><b>6.4.4</b> Add them to plot</a></li>
+<li class="chapter" data-level="6.4.5" data-path="handling-missings.html"><a href="handling-missings.html#understanding-missing-dependencies"><i class="fa fa-check"></i><b>6.4.5</b> Understanding missing dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="handling-missings.html"><a href="handling-missings.html#shadow-matrix"><i class="fa fa-check"></i><b>6.5</b> Shadow matrix</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="handling-missings.html"><a href="handling-missings.html#relationship-with-other-variables"><i class="fa fa-check"></i><b>6.5.1</b> Relationship with other variables</a></li>
+<li class="chapter" data-level="6.5.2" data-path="handling-missings.html"><a href="handling-missings.html#two-minute-challenge"><i class="fa fa-check"></i><b>6.5.2</b> Two minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="handling-missings.html"><a href="handling-missings.html#strategy"><i class="fa fa-check"></i><b>6.6</b> Strategy</a></li>
+<li class="chapter" data-level="6.7" data-path="handling-missings.html"><a href="handling-missings.html#common-ways-to-impute-values"><i class="fa fa-check"></i><b>6.7</b> Common ways to impute values</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="handling-missings.html"><a href="handling-missings.html#mean"><i class="fa fa-check"></i><b>6.7.1</b> Mean</a></li>
+<li class="chapter" data-level="6.7.2" data-path="handling-missings.html"><a href="handling-missings.html#by-year"><i class="fa fa-check"></i><b>6.7.2</b> by year</a></li>
+<li class="chapter" data-level="6.7.3" data-path="handling-missings.html"><a href="handling-missings.html#two-minute-challenge-1"><i class="fa fa-check"></i><b>6.7.3</b> Two minute challenge</a></li>
+<li class="chapter" data-level="6.7.4" data-path="handling-missings.html"><a href="handling-missings.html#nearest-neighbors-imputation"><i class="fa fa-check"></i><b>6.7.4</b> Nearest neighbors imputation</a></li>
+<li class="chapter" data-level="6.7.5" data-path="handling-missings.html"><a href="handling-missings.html#by-year-1"><i class="fa fa-check"></i><b>6.7.5</b> by year</a></li>
+<li class="chapter" data-level="6.7.6" data-path="handling-missings.html"><a href="handling-missings.html#two-minute-challenge-2"><i class="fa fa-check"></i><b>6.7.6</b> Two minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="handling-missings.html"><a href="handling-missings.html#exercise-6"><i class="fa fa-check"></i><b>6.8</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>7</b> Data Visualization</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="data-visualization.html"><a href="data-visualization.html#a-grammar-of-graphics"><i class="fa fa-check"></i><b>7.1</b> A grammar of graphics</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="data-visualization.html"><a href="data-visualization.html#what-is-a-data-plot"><i class="fa fa-check"></i><b>7.1.1</b> What is a data plot?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="data-visualization.html"><a href="data-visualization.html#why"><i class="fa fa-check"></i><b>7.1.2</b> Why?</a></li>
+<li class="chapter" data-level="7.1.3" data-path="data-visualization.html"><a href="data-visualization.html#elements-of-the-grammar"><i class="fa fa-check"></i><b>7.1.3</b> Elements of the grammar</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="data-visualization.html"><a href="data-visualization.html#example-tuberculosis-data"><i class="fa fa-check"></i><b>7.2</b> Example: Tuberculosis data</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="data-visualization.html"><a href="data-visualization.html#charts"><i class="fa fa-check"></i><b>7.2.1</b> 100% charts</a></li>
+<li class="chapter" data-level="7.2.2" data-path="data-visualization.html"><a href="data-visualization.html#bar-charts"><i class="fa fa-check"></i><b>7.2.2</b> Bar charts</a></li>
+<li class="chapter" data-level="7.2.3" data-path="data-visualization.html"><a href="data-visualization.html#side-by-side-barcharts"><i class="fa fa-check"></i><b>7.2.3</b> Side-by-side barcharts</a></li>
+<li class="chapter" data-level="7.2.4" data-path="data-visualization.html"><a href="data-visualization.html#separate-bar-charts"><i class="fa fa-check"></i><b>7.2.4</b> Separate bar charts</a></li>
+<li class="chapter" data-level="7.2.5" data-path="data-visualization.html"><a href="data-visualization.html#pie-charts"><i class="fa fa-check"></i><b>7.2.5</b> Pie charts?</a></li>
+<li class="chapter" data-level="7.2.6" data-path="data-visualization.html"><a href="data-visualization.html#rainbow-charts"><i class="fa fa-check"></i><b>7.2.6</b> Rainbow charts?</a></li>
+<li class="chapter" data-level="7.2.7" data-path="data-visualization.html"><a href="data-visualization.html#pie-charts-1"><i class="fa fa-check"></i><b>7.2.7</b> Pie charts</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="data-visualization.html"><a href="data-visualization.html#variable-types-and-mapping"><i class="fa fa-check"></i><b>7.3</b> Variable types and mapping</a></li>
+<li class="chapter" data-level="7.4" data-path="data-visualization.html"><a href="data-visualization.html#coordinate-systems"><i class="fa fa-check"></i><b>7.4</b> Coordinate systems</a></li>
+<li class="chapter" data-level="7.5" data-path="data-visualization.html"><a href="data-visualization.html#layering"><i class="fa fa-check"></i><b>7.5</b> Layering</a></li>
+<li class="chapter" data-level="7.6" data-path="data-visualization.html"><a href="data-visualization.html#colour-palettes"><i class="fa fa-check"></i><b>7.6</b> Colour palettes</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="data-visualization.html"><a href="data-visualization.html#choropleth-map"><i class="fa fa-check"></i><b>7.6.1</b> Choropleth map</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="data-visualization.html"><a href="data-visualization.html#colour-blindness"><i class="fa fa-check"></i><b>7.7</b> Colour blindness</a></li>
+<li class="chapter" data-level="7.8" data-path="data-visualization.html"><a href="data-visualization.html#pre-attentive"><i class="fa fa-check"></i><b>7.8</b> Pre-attentive</a></li>
+<li class="chapter" data-level="7.9" data-path="data-visualization.html"><a href="data-visualization.html#proximity"><i class="fa fa-check"></i><b>7.9</b> Proximity</a></li>
+<li class="chapter" data-level="7.10" data-path="data-visualization.html"><a href="data-visualization.html#hierarchy-of-mappings"><i class="fa fa-check"></i><b>7.10</b> Hierarchy of mappings</a></li>
+<li class="chapter" data-level="7.11" data-path="data-visualization.html"><a href="data-visualization.html#adding-interactivity-to-plots"><i class="fa fa-check"></i><b>7.11</b> Adding interactivity to plots</a></li>
+<li class="chapter" data-level="7.12" data-path="data-visualization.html"><a href="data-visualization.html#themes"><i class="fa fa-check"></i><b>7.12</b> Themes</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html"><i class="fa fa-check"></i><b>8</b> Text data and strings</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#why-1"><i class="fa fa-check"></i><b>8.1</b> Why?</a></li>
+<li class="chapter" data-level="8.2" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#process"><i class="fa fa-check"></i><b>8.2</b> Process</a></li>
+<li class="chapter" data-level="8.3" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#resource"><i class="fa fa-check"></i><b>8.3</b> Resource</a></li>
+<li class="chapter" data-level="8.4" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#getting-some-books-to-study"><i class="fa fa-check"></i><b>8.4</b> Getting some books to study</a></li>
+<li class="chapter" data-level="8.5" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#tokenize"><i class="fa fa-check"></i><b>8.5</b> Tokenize</a></li>
+<li class="chapter" data-level="8.6" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#your-turn-9"><i class="fa fa-check"></i><b>8.6</b> Your turn</a></li>
+<li class="chapter" data-level="8.7" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#compare-the-word-frequency"><i class="fa fa-check"></i><b>8.7</b> Compare the word frequency</a></li>
+<li class="chapter" data-level="8.8" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#book-comparison"><i class="fa fa-check"></i><b>8.8</b> Book comparison</a></li>
+<li class="chapter" data-level="8.9" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#exercise-7"><i class="fa fa-check"></i><b>8.9</b> Exercise</a></li>
+<li class="chapter" data-level="8.10" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#sentiment-analysis"><i class="fa fa-check"></i><b>8.10</b> Sentiment Analysis</a>
+<ul>
+<li class="chapter" data-level="8.10.1" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#lexicons"><i class="fa fa-check"></i><b>8.10.1</b> Lexicons</a></li>
+<li class="chapter" data-level="8.10.2" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#analysis"><i class="fa fa-check"></i><b>8.10.2</b> Analysis</a></li>
+<li class="chapter" data-level="8.10.3" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#comparing-lexicons"><i class="fa fa-check"></i><b>8.10.3</b> Comparing lexicons</a></li>
+<li class="chapter" data-level="8.10.4" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#example-simpsons"><i class="fa fa-check"></i><b>8.10.4</b> Example: Simpsons</a></li>
+<li class="chapter" data-level="8.10.5" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#example-afl-finals-tweets"><i class="fa fa-check"></i><b>8.10.5</b> Example: AFL Finals tweets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="dates-and-time.html"><a href="dates-and-time.html"><i class="fa fa-check"></i><b>9</b> Dates and time</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="dates-and-time.html"><a href="dates-and-time.html#overview-2"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
+<li class="chapter" data-level="9.2" data-path="dates-and-time.html"><a href="dates-and-time.html#working-with-dates"><i class="fa fa-check"></i><b>9.2</b> Working with dates</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="dates-and-time.html"><a href="dates-and-time.html#parsing-dates-with-time-zones"><i class="fa fa-check"></i><b>9.2.1</b> Parsing dates with time zones</a></li>
+<li class="chapter" data-level="9.2.2" data-path="dates-and-time.html"><a href="dates-and-time.html#parsing-date-with-times"><i class="fa fa-check"></i><b>9.2.2</b> Parsing date with times</a></li>
+<li class="chapter" data-level="9.2.3" data-path="dates-and-time.html"><a href="dates-and-time.html#extracting-temporal-elements"><i class="fa fa-check"></i><b>9.2.3</b> Extracting temporal elements</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="dates-and-time.html"><a href="dates-and-time.html#example-pedestrian-sensor"><i class="fa fa-check"></i><b>9.3</b> Example: pedestrian sensor</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="dates-and-time.html"><a href="dates-and-time.html#make-some-plots"><i class="fa fa-check"></i><b>9.3.1</b> Make some plots</a></li>
+<li class="chapter" data-level="9.3.2" data-path="dates-and-time.html"><a href="dates-and-time.html#what-might-be-wrong-with-these-interpretations"><i class="fa fa-check"></i><b>9.3.2</b> What might be wrong with these interpretations?</a></li>
+<li class="chapter" data-level="9.3.3" data-path="dates-and-time.html"><a href="dates-and-time.html#to-think-about"><i class="fa fa-check"></i><b>9.3.3</b> To think about</a></li>
+<li class="chapter" data-level="9.3.4" data-path="dates-and-time.html"><a href="dates-and-time.html#beyond-aggregation"><i class="fa fa-check"></i><b>9.3.4</b> Beyond aggregation</a></li>
+<li class="chapter" data-level="9.3.5" data-path="dates-and-time.html"><a href="dates-and-time.html#incorporating-time"><i class="fa fa-check"></i><b>9.3.5</b> Incorporating time</a></li>
+<li class="chapter" data-level="9.3.6" data-path="dates-and-time.html"><a href="dates-and-time.html#on-a-calendar"><i class="fa fa-check"></i><b>9.3.6</b> On a calendar</a></li>
+<li class="chapter" data-level="9.3.7" data-path="dates-and-time.html"><a href="dates-and-time.html#holidays"><i class="fa fa-check"></i><b>9.3.7</b> Holidays</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="dates-and-time.html"><a href="dates-and-time.html#exercise-8"><i class="fa fa-check"></i><b>9.4</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="spatial-data.html"><a href="spatial-data.html"><i class="fa fa-check"></i><b>10</b> Spatial data</a></li>
+<li class="chapter" data-level="11" data-path="networks.html"><a href="networks.html"><i class="fa fa-check"></i><b>11</b> Networks</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="networks.html"><a href="networks.html#example-madmen"><i class="fa fa-check"></i><b>11.1</b> Example: Madmen</a>
+<ul>
+<li class="chapter" data-level="11.1.1" data-path="networks.html"><a href="networks.html#generate-a-network-view"><i class="fa fa-check"></i><b>11.1.1</b> Generate a network view</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="networks.html"><a href="networks.html#example-american-college-football"><i class="fa fa-check"></i><b>11.2</b> Example: American college football</a></li>
+<li class="chapter" data-level="11.3" data-path="networks.html"><a href="networks.html#example-harry-potter-characters"><i class="fa fa-check"></i><b>11.3</b> Example: Harry Potter characters</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="variation-and-inference.html"><a href="variation-and-inference.html"><i class="fa fa-check"></i><b>12</b> Variation and inference</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="variation-and-inference.html"><a href="variation-and-inference.html#what-is-variation-and-uncertainty"><i class="fa fa-check"></i><b>12.1</b> What is variation and uncertainty?</a></li>
+<li class="chapter" data-level="12.2" data-path="variation-and-inference.html"><a href="variation-and-inference.html#ways-of-sampling-the-data"><i class="fa fa-check"></i><b>12.2</b> Ways of sampling the data</a></li>
+<li class="chapter" data-level="12.3" data-path="variation-and-inference.html"><a href="variation-and-inference.html#what-is-inference"><i class="fa fa-check"></i><b>12.3</b> What is inference?</a></li>
+<li class="chapter" data-level="12.4" data-path="variation-and-inference.html"><a href="variation-and-inference.html#collecting-data"><i class="fa fa-check"></i><b>12.4</b> Collecting data</a></li>
+<li class="chapter" data-level="12.5" data-path="variation-and-inference.html"><a href="variation-and-inference.html#randomization-tests"><i class="fa fa-check"></i><b>12.5</b> Randomization tests</a></li>
+<li class="chapter" data-level="12.6" data-path="variation-and-inference.html"><a href="variation-and-inference.html#visual-inference"><i class="fa fa-check"></i><b>12.6</b> Visual inference</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="statistical-distributions.html"><a href="statistical-distributions.html"><i class="fa fa-check"></i><b>13</b> Statistical distributions</a></li>
+<li class="chapter" data-level="14" data-path="randomization-methods.html"><a href="randomization-methods.html"><i class="fa fa-check"></i><b>14</b> Randomization methods</a></li>
+<li class="chapter" data-level="15" data-path="variation-and-inference-1.html"><a href="variation-and-inference-1.html"><i class="fa fa-check"></i><b>15</b> Variation and inference</a></li>
+<li class="chapter" data-level="16" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html"><i class="fa fa-check"></i><b>16</b> Model fitting and optimisation</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#overview-3"><i class="fa fa-check"></i><b>16.1</b> Overview</a></li>
+<li class="chapter" data-level="16.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#why-models"><i class="fa fa-check"></i><b>16.2</b> Why models?</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#example"><i class="fa fa-check"></i><b>16.2.1</b> Example</a></li>
+<li class="chapter" data-level="16.2.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-families"><i class="fa fa-check"></i><b>16.2.2</b> Model families</a></li>
+<li class="chapter" data-level="16.2.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-15"><i class="fa fa-check"></i><b>16.2.3</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#linear-models"><i class="fa fa-check"></i><b>16.3</b> Linear models</a>
+<ul>
+<li class="chapter" data-level="16.3.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#correlation-vs-linear-model"><i class="fa fa-check"></i><b>16.3.1</b> Correlation vs linear model</a></li>
+<li class="chapter" data-level="16.3.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#correlation"><i class="fa fa-check"></i><b>16.3.2</b> Correlation</a></li>
+<li class="chapter" data-level="16.3.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#simple-regression"><i class="fa fa-check"></i><b>16.3.3</b> Simple regression</a></li>
+<li class="chapter" data-level="16.3.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#multiple-regression-model"><i class="fa fa-check"></i><b>16.3.4</b> Multiple regression model</a></li>
+<li class="chapter" data-level="16.3.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#what-a-model-says"><i class="fa fa-check"></i><b>16.3.5</b> What a model says</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#lets-fit-a-model-to-co2"><i class="fa fa-check"></i><b>16.4</b> Let’s fit a model to CO2</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#try-a-linear-fit"><i class="fa fa-check"></i><b>16.4.1</b> Try a linear fit</a></li>
+<li class="chapter" data-level="16.4.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#predict-from-the-model"><i class="fa fa-check"></i><b>16.4.2</b> Predict from the model</a></li>
+<li class="chapter" data-level="16.4.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-the-model"><i class="fa fa-check"></i><b>16.4.3</b> Plot the model</a></li>
+<li class="chapter" data-level="16.4.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#examine-residuals"><i class="fa fa-check"></i><b>16.4.4</b> Examine residuals</a></li>
+<li class="chapter" data-level="16.4.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#assessment-of-fit"><i class="fa fa-check"></i><b>16.4.5</b> Assessment of fit</a></li>
+<li class="chapter" data-level="16.4.6" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-16"><i class="fa fa-check"></i><b>16.4.6</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-basics-in-r"><i class="fa fa-check"></i><b>16.5</b> Model basics in R</a></li>
+<li class="chapter" data-level="16.6" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#seasonality"><i class="fa fa-check"></i><b>16.6</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="16.6.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-17"><i class="fa fa-check"></i><b>16.6.1</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.7" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#predict-co2-at-another-location"><i class="fa fa-check"></i><b>16.7</b> Predict co2 at another location</a>
+<ul>
+<li class="chapter" data-level="16.7.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-18"><i class="fa fa-check"></i><b>16.7.1</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.8" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#using-optimisation-to-get-a-good-fit"><i class="fa fa-check"></i><b>16.8</b> Using optimisation to get a good fit</a>
+<ul>
+<li class="chapter" data-level="16.8.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#typical-distances"><i class="fa fa-check"></i><b>16.8.1</b> Typical distances</a></li>
+<li class="chapter" data-level="16.8.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-19"><i class="fa fa-check"></i><b>16.8.2</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.9" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#components-of-variation"><i class="fa fa-check"></i><b>16.9</b> Components of variation</a></li>
+<li class="chapter" data-level="16.10" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-goodness-of-fit-statistics"><i class="fa fa-check"></i><b>16.10</b> Model goodness of fit statistics</a>
+<ul>
+<li class="chapter" data-level="16.10.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-20"><i class="fa fa-check"></i><b>16.10.1</b> Your turn:</a></li>
+</ul></li>
+<li class="chapter" data-level="16.11" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#beyond-a-single-model"><i class="fa fa-check"></i><b>16.11</b> Beyond a single model</a></li>
+<li class="chapter" data-level="16.12" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#gapminder"><i class="fa fa-check"></i><b>16.12</b> Gapminder</a>
+<ul>
+<li class="chapter" data-level="16.12.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#r-package"><i class="fa fa-check"></i><b>16.12.1</b> R package</a></li>
+</ul></li>
+<li class="chapter" data-level="16.13" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#fit-linear-models"><i class="fa fa-check"></i><b>16.13</b> Fit linear models</a>
+<ul>
+<li class="chapter" data-level="16.13.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#mutate-year"><i class="fa fa-check"></i><b>16.13.1</b> Mutate year</a></li>
+</ul></li>
+<li class="chapter" data-level="16.14" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#australia"><i class="fa fa-check"></i><b>16.14</b> Australia</a></li>
+<li class="chapter" data-level="16.15" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#fit-all-countries"><i class="fa fa-check"></i><b>16.15</b> Fit all countries</a>
+<ul>
+<li class="chapter" data-level="16.15.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge"><i class="fa fa-check"></i><b>16.15.1</b> Five minute challenge</a></li>
+<li class="chapter" data-level="16.15.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-all-the-models"><i class="fa fa-check"></i><b>16.15.2</b> Plot all the models</a></li>
+<li class="chapter" data-level="16.15.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-all-the-model-coefficients"><i class="fa fa-check"></i><b>16.15.3</b> Plot all the model coefficients</a></li>
+</ul></li>
+<li class="chapter" data-level="16.16" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-diagnostics-by-country"><i class="fa fa-check"></i><b>16.16</b> Model diagnostics by country</a>
+<ul>
+<li class="chapter" data-level="16.16.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-the-r2-values-as-a-histogram."><i class="fa fa-check"></i><b>16.16.1</b> Plot the <span class="math inline">\(R^2\)</span> values as a histogram.</a></li>
+<li class="chapter" data-level="16.16.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#countries-with-worst-fit"><i class="fa fa-check"></i><b>16.16.2</b> Countries with worst fit</a></li>
+<li class="chapter" data-level="16.16.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge-1"><i class="fa fa-check"></i><b>16.16.3</b> Five minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="16.17" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#lab-exercise"><i class="fa fa-check"></i><b>16.17</b> Lab exercise</a></li>
+<li class="chapter" data-level="16.18" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#transformations"><i class="fa fa-check"></i><b>16.18</b> Transformations</a>
+<ul>
+<li class="chapter" data-level="16.18.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#power-transformation"><i class="fa fa-check"></i><b>16.18.1</b> Power transformation</a></li>
+<li class="chapter" data-level="16.18.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#transforming-categorical-variables"><i class="fa fa-check"></i><b>16.18.2</b> Transforming categorical variables</a></li>
+</ul></li>
+<li class="chapter" data-level="16.19" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#adding-interactions-to-the-model"><i class="fa fa-check"></i><b>16.19</b> Adding interactions to the model</a>
+<ul>
+<li class="chapter" data-level="16.19.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#interaction-between-quantitative-and-categorical-variables"><i class="fa fa-check"></i><b>16.19.1</b> Interaction between quantitative and categorical variables</a></li>
+<li class="chapter" data-level="16.19.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge-2"><i class="fa fa-check"></i><b>16.19.2</b> Five minute challenge</a></li>
+<li class="chapter" data-level="16.19.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#which-is-the-better-model"><i class="fa fa-check"></i><b>16.19.3</b> Which is the better model?</a></li>
+<li class="chapter" data-level="16.19.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#interaction-between-quantitative-variables"><i class="fa fa-check"></i><b>16.19.4</b> Interaction between quantitative variables</a></li>
+<li class="chapter" data-level="16.19.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge-3"><i class="fa fa-check"></i><b>16.19.5</b> Five minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="16.20" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-building"><i class="fa fa-check"></i><b>16.20</b> Model building</a>
+<ul>
+<li class="chapter" data-level="16.20.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#lab-exercise-1"><i class="fa fa-check"></i><b>16.20.1</b> Lab exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="generalied-linear-models.html"><a href="generalied-linear-models.html"><i class="fa fa-check"></i><b>17</b> Generalied linear models</a></li>
+<li class="chapter" data-level="18" data-path="hierarchical-models.html"><a href="hierarchical-models.html"><i class="fa fa-check"></i><b>18</b> Hierarchical models</a></li>
+<li class="chapter" data-level="19" data-path="ensembles-of-models.html"><a href="ensembles-of-models.html"><i class="fa fa-check"></i><b>19</b> Ensembles of models</a></li>
+<li class="chapter" data-level="20" data-path="boosted-models.html"><a href="boosted-models.html"><i class="fa fa-check"></i><b>20</b> Boosted models</a></li>
+<li class="chapter" data-level="21" data-path="bayesian-models.html"><a href="bayesian-models.html"><i class="fa fa-check"></i><b>21</b> Bayesian models</a></li>
+<li class="chapter" data-level="22" data-path="decision-making-with-data.html"><a href="decision-making-with-data.html"><i class="fa fa-check"></i><b>22</b> Decision making with data</a></li>
+<li class="chapter" data-level="23" data-path="us-flights.html"><a href="us-flights.html"><i class="fa fa-check"></i><b>23</b> US flights</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="us-flights.html"><a href="us-flights.html#flight-delays"><i class="fa fa-check"></i><b>23.1</b> Flight delays</a>
+<ul>
+<li class="chapter" data-level="23.1.1" data-path="us-flights.html"><a href="us-flights.html#cancellations"><i class="fa fa-check"></i><b>23.1.1</b> Cancellations?</a></li>
+<li class="chapter" data-level="23.1.2" data-path="us-flights.html"><a href="us-flights.html#fuel"><i class="fa fa-check"></i><b>23.1.2</b> Fuel</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="climate-change.html"><a href="climate-change.html"><i class="fa fa-check"></i><b>24</b> Climate change</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="climate-change.html"><a href="climate-change.html#carbon-dioxide"><i class="fa fa-check"></i><b>24.1</b> Carbon dioxide</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="climate-change.html"><a href="climate-change.html#about-the-data"><i class="fa fa-check"></i><b>24.1.1</b> About the data</a></li>
+<li class="chapter" data-level="24.1.2" data-path="climate-change.html"><a href="climate-change.html#temporal-trend"><i class="fa fa-check"></i><b>24.1.2</b> Temporal trend</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="accidents.html"><a href="accidents.html"><i class="fa fa-check"></i><b>25</b> Accidents</a>
+<ul>
+<li class="chapter" data-level="25.1" data-path="accidents.html"><a href="accidents.html#when-do-people-die-on-the-roads"><i class="fa fa-check"></i><b>25.1</b> When do people die on the roads?</a></li>
+<li class="chapter" data-level="25.2" data-path="accidents.html"><a href="accidents.html#what-contributes-to-fatal-accidents"><i class="fa fa-check"></i><b>25.2</b> What contributes to fatal accidents?</a></li>
+<li class="chapter" data-level="25.3" data-path="accidents.html"><a href="accidents.html#who-is-involved-in-fatal-accidents"><i class="fa fa-check"></i><b>25.3</b> Who is involved in fatal accidents?</a></li>
+<li class="chapter" data-level="25.4" data-path="accidents.html"><a href="accidents.html#are-roads-getting-safer"><i class="fa fa-check"></i><b>25.4</b> Are roads getting safer?</a></li>
+<li class="chapter" data-level="25.5" data-path="accidents.html"><a href="accidents.html#your-turn-21"><i class="fa fa-check"></i><b>25.5</b> Your Turn</a></li>
+<li class="chapter" data-level="25.6" data-path="accidents.html"><a href="accidents.html#solutions"><i class="fa fa-check"></i><b>25.6</b> Solutions</a></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="monitoring-polls.html"><a href="monitoring-polls.html"><i class="fa fa-check"></i><b>26</b> Monitoring polls</a></li>
+<li class="chapter" data-level="27" data-path="vandalism.html"><a href="vandalism.html"><i class="fa fa-check"></i><b>27</b> Vandalism</a></li>
+<li class="chapter" data-level="28" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html"><i class="fa fa-check"></i><b>28</b> PISA: Programme for International Student Assessment</a>
+<ul>
+<li class="chapter" data-level="28.1" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#data-access"><i class="fa fa-check"></i><b>28.1</b> Data access</a></li>
+<li class="chapter" data-level="28.2" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#data-pre-processing"><i class="fa fa-check"></i><b>28.2</b> Data pre-processing</a></li>
+<li class="chapter" data-level="28.3" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#examining-the-gender-gap-across-countries"><i class="fa fa-check"></i><b>28.3</b> Examining the gender gap across countries</a>
+<ul>
+<li class="chapter" data-level="28.3.1" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#clean-up-country-codes"><i class="fa fa-check"></i><b>28.3.1</b> Clean up country codes</a></li>
+<li class="chapter" data-level="28.3.2" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#compute-weighted-means-by-country-and-gender"><i class="fa fa-check"></i><b>28.3.2</b> Compute weighted means by country and gender</a></li>
+<li class="chapter" data-level="28.3.3" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#examine-the-math-gap-by-country"><i class="fa fa-check"></i><b>28.3.3</b> Examine the math gap by country</a></li>
+<li class="chapter" data-level="28.3.4" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#what-we-learn"><i class="fa fa-check"></i><b>28.3.4</b> What we learn</a></li>
+</ul></li>
+<li class="chapter" data-level="28.4" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#your-turn-22"><i class="fa fa-check"></i><b>28.4</b> Your turn</a></li>
+<li class="chapter" data-level="28.5" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#mapping-the-scores"><i class="fa fa-check"></i><b>28.5</b> Mapping the scores</a></li>
+<li class="chapter" data-level="28.6" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#your-turn-23"><i class="fa fa-check"></i><b>28.6</b> Your turn</a></li>
+<li class="chapter" data-level="28.7" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#change-in-scores-over-time"><i class="fa fa-check"></i><b>28.7</b> Change in scores over time</a></li>
+</ul></li>
+<li class="chapter" data-level="29" data-path="wages.html"><a href="wages.html"><i class="fa fa-check"></i><b>29</b> Wages</a>
+<ul>
+<li class="chapter" data-level="29.1" data-path="wages.html"><a href="wages.html#new-wages-data"><i class="fa fa-check"></i><b>29.1</b> New wages data</a></li>
+</ul></li>
+<li class="chapter" data-level="30" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html"><i class="fa fa-check"></i><b>30</b> Pedestrian counting sensor data</a>
+<ul>
+<li class="chapter" data-level="30.1" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#overview-4"><i class="fa fa-check"></i><b>30.1</b> Overview</a></li>
+<li class="chapter" data-level="30.2" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#different-temporal-patterns"><i class="fa fa-check"></i><b>30.2</b> Different temporal patterns</a></li>
+<li class="chapter" data-level="30.3" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#does-the-weather-make-a-difference-to-the-number-of-people-walking-out"><i class="fa fa-check"></i><b>30.3</b> Does the weather make a difference to the number of people walking out?</a></li>
+<li class="chapter" data-level="30.4" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#if-setting-up-a-coffee-business"><i class="fa fa-check"></i><b>30.4</b> If setting up a coffee business</a></li>
+<li class="chapter" data-level="30.5" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#your-turn-24"><i class="fa fa-check"></i><b>30.5</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="31" data-path="government-surveys.html"><a href="government-surveys.html"><i class="fa fa-check"></i><b>31</b> Government surveys</a></li>
+<li class="chapter" data-level="32" data-path="reproducible-documents.html"><a href="reproducible-documents.html"><i class="fa fa-check"></i><b>32</b> Reproducible documents</a></li>
+<li class="chapter" data-level="33" data-path="collaborative-projects.html"><a href="collaborative-projects.html"><i class="fa fa-check"></i><b>33</b> Collaborative projects</a></li>
+<li class="chapter" data-level="34" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>34</b> References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/heike/data-technologies" target="blank">Published with Github.</a></li>
+<li><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Science and Statistical Thinking: With Wild-Caught Data and R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-visualization" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Data Visualization<a href="data-visualization.html#data-visualization" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This chapter should have</p>
+<ul>
+<li>explanation of the grammar of graphics and how this fits in with tidy data and statistical thinking</li>
+<li>what you can learn about a data set by looking at it in different ways</li>
+<li>cognitive principles</li>
+<li>visual inference</li>
+<li>adding interactivity</li>
+</ul>
+<div id="a-grammar-of-graphics" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> A grammar of graphics<a href="data-visualization.html#a-grammar-of-graphics" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="what-is-a-data-plot" class="section level3 hasAnchor" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> What is a data plot?<a href="data-visualization.html#what-is-a-data-plot" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>data</li>
+<li><strong>aesthetics: mapping of variables to graphical elements</strong></li>
+<li>geom: type of plot structure to use</li>
+<li>transformations: log scale, …</li>
+<li>layers: multiple geoms, multiple data sets, annotation</li>
+<li>facets: show subsets in different plots</li>
+<li>themes: modifying style</li>
+</ul>
+</div>
+<div id="why" class="section level3 hasAnchor" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Why?<a href="data-visualization.html#why" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>With the grammar, a data plot becomes a statistic. It is a functional mapping from variable to graphical element. Then we can do statistics on data plots.</p>
+<p>With a grammar, we don’t have individual animals in the zoo, we have the genetic code that says how one plot is related to another plot.</p>
+</div>
+<div id="elements-of-the-grammar" class="section level3 hasAnchor" number="7.1.3">
+<h3><span class="header-section-number">7.1.3</span> Elements of the grammar<a href="data-visualization.html#elements-of-the-grammar" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<pre><code>ggplot(data = &lt;DATA&gt;) + 
+  &lt;GEOM_FUNCTION&gt;(
+     mapping = aes(&lt;MAPPINGS&gt;),
+     stat = &lt;STAT&gt;, 
+     position = &lt;POSITION&gt;
+  ) +
+  &lt;COORDINATE_FUNCTION&gt; +
+  &lt;FACET_FUNCTION&gt;</code></pre>
+<p>The 7 key elements of the grammar are:</p>
+<ul>
+<li>DATA</li>
+<li>GEOM_FUNCTION</li>
+<li>MAPPINGS</li>
+<li>STAT</li>
+<li>POSITION</li>
+<li>COORDINATE_FUNCTION</li>
+<li>FACET_FUNCTION</li>
+</ul>
+</div>
+</div>
+<div id="example-tuberculosis-data" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Example: Tuberculosis data<a href="data-visualization.html#example-tuberculosis-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Data on tuberculosis incidence can be found at the <a href="http://www.who.int/tb/country/data/download/en/">World Health Organisation</a>. The case notifications table has been downloaded. We will look at the incidence in Australia. The steps to organising the data are:</p>
+<ol style="list-style-type: decimal">
+<li>Select the variables, country name and iso3 code, year and the incidence columns as measured by a sputum test. The incidence columns also encode age and gender.</li>
+<li>Gather the data into long form, so that gender and age can be put in separate columns.</li>
+<li>Filter out records for Australia, between years 1997-2012. We also remove values for under 15 because the coding of these age groups is contradictory.</li>
+</ol>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="data-visualization.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb99-2"><a href="data-visualization.html#cb99-2" aria-hidden="true" tabindex="-1"></a>tb <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/TB_notifications_2018-03-18.csv&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb99-3"><a href="data-visualization.html#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, iso3, year, new_sp_m04<span class="sc">:</span>new_sp_fu) <span class="sc">%&gt;%</span></span>
+<span id="cb99-4"><a href="data-visualization.html#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(stuff, count, new_sp_m04<span class="sc">:</span>new_sp_fu) <span class="sc">%&gt;%</span></span>
+<span id="cb99-5"><a href="data-visualization.html#cb99-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(stuff, <span class="fu">c</span>(<span class="st">&quot;stuff1&quot;</span>, <span class="st">&quot;stuff2&quot;</span>, <span class="st">&quot;genderage&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb99-6"><a href="data-visualization.html#cb99-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>stuff1, <span class="sc">-</span>stuff2) <span class="sc">%&gt;%</span></span>
+<span id="cb99-7"><a href="data-visualization.html#cb99-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender=</span><span class="fu">substr</span>(genderage, <span class="dv">1</span>, <span class="dv">1</span>), </span>
+<span id="cb99-8"><a href="data-visualization.html#cb99-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">age=</span><span class="fu">substr</span>(genderage, <span class="dv">2</span>, <span class="fu">length</span>(genderage))) <span class="sc">%&gt;%</span></span>
+<span id="cb99-9"><a href="data-visualization.html#cb99-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>genderage)</span>
+<span id="cb99-10"><a href="data-visualization.html#cb99-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-11"><a href="data-visualization.html#cb99-11" aria-hidden="true" tabindex="-1"></a>tb_au <span class="ot">&lt;-</span> tb <span class="sc">%&gt;%</span> </span>
+<span id="cb99-12"><a href="data-visualization.html#cb99-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;Australia&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb99-13"><a href="data-visualization.html#cb99-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(age <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;04&quot;</span>, <span class="st">&quot;014&quot;</span>, <span class="st">&quot;514&quot;</span>, <span class="st">&quot;u&quot;</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb99-14"><a href="data-visualization.html#cb99-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;</span> <span class="dv">1996</span>, year <span class="sc">&lt;</span> <span class="dv">2013</span>)</span></code></pre></div>
+<p>We want to look at this data with lots of plots in different ways, with different mappings, to learn different things.</p>
+<div id="charts" class="section level3 hasAnchor" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> 100% charts<a href="data-visualization.html#charts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="data-visualization.html#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_au, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> count, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb100-2"><a href="data-visualization.html#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>) <span class="sc">+</span></span>
+<span id="cb100-3"><a href="data-visualization.html#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span> age) <span class="sc">+</span></span>
+<span id="cb100-4"><a href="data-visualization.html#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Dark2&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-68-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>100% charts, is what excel names these beasts. What do we learn?</p>
+<div id="code-structure" class="section level4 hasAnchor" number="7.2.1.1">
+<h4><span class="header-section-number">7.2.1.1</span> Code structure<a href="data-visualization.html#code-structure" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Basic plot function is <code>ggplot</code></li>
+<li>First argument provided is the name of the data, <code>tb_au</code></li>
+<li>Variable mapping: year is mapped to x, count is mapped to y, gender is mapped to colour, and age is used to subset the data and make separate plots</li>
+<li>The bar geom is used, <code>geom_bar</code></li>
+<li>We have already counted how many TB incidences are in each combination of categories, so <code>stat = "identity"</code> says no need to compute the count</li>
+<li>We are mostly interested in proportions between gender, over years, separately by age. The <code>position = "fill"</code> option in <code>geom_bar</code> sets the heights of the bars to be all at 100%. It ignores counts, and emphasizes the proportion of males and females.</li>
+</ul>
+</div>
+<div id="what-do-we-learn" class="section level4 hasAnchor" number="7.2.1.2">
+<h4><span class="header-section-number">7.2.1.2</span> What do we learn?<a href="data-visualization.html#what-do-we-learn" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Focus is on <strong>proportion</strong> in each category.</li>
+<li>Across (almost) all ages, and years, the proportion of males having TB is higher than females</li>
+<li>These proportions tend to be higher in the older age groups, for all years.</li>
+</ul>
+</div>
+</div>
+<div id="bar-charts" class="section level3 hasAnchor" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> Bar charts<a href="data-visualization.html#bar-charts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="data-visualization.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_au, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> count, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb101-2"><a href="data-visualization.html#cb101-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb101-3"><a href="data-visualization.html#cb101-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span> age) <span class="sc">+</span></span>
+<span id="cb101-4"><a href="data-visualization.html#cb101-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Dark2&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-69-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div id="what-is-different-in-the-code-description" class="section level4 hasAnchor" number="7.2.2.1">
+<h4><span class="header-section-number">7.2.2.1</span> What is different in the code description?<a href="data-visualization.html#what-is-different-in-the-code-description" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><code>, position = "fill"</code> was removed</p>
+</div>
+<div id="what-do-we-learn-1" class="section level4 hasAnchor" number="7.2.2.2">
+<h4><span class="header-section-number">7.2.2.2</span> What do we learn?<a href="data-visualization.html#what-do-we-learn-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Focus is on <strong>counts</strong> in each category.</li>
+<li>Different across ages, and years, counts tend to be lower in middle age (45-64)</li>
+<li>1999 saw a bit of an outbreak, in most age groups, with numbers doubling or tripling other years.</li>
+<li>Incidence has been increasing among younger age groups in recent years.</li>
+</ul>
+</div>
+</div>
+<div id="side-by-side-barcharts" class="section level3 hasAnchor" number="7.2.3">
+<h3><span class="header-section-number">7.2.3</span> Side-by-side barcharts<a href="data-visualization.html#side-by-side-barcharts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="data-visualization.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_au, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> count, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb102-2"><a href="data-visualization.html#cb102-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">position=</span><span class="st">&quot;dodge&quot;</span>) <span class="sc">+</span></span>
+<span id="cb102-3"><a href="data-visualization.html#cb102-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span> age) <span class="sc">+</span></span>
+<span id="cb102-4"><a href="data-visualization.html#cb102-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Dark2&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-70-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div id="what-is-different-in-the-code-description-1" class="section level4 hasAnchor" number="7.2.3.1">
+<h4><span class="header-section-number">7.2.3.1</span> What is different in the code description?<a href="data-visualization.html#what-is-different-in-the-code-description-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><code>, position="dodge"</code> is used in <code>geom_bar</code></p>
+</div>
+<div id="what-do-we-learn-2" class="section level4 hasAnchor" number="7.2.3.2">
+<h4><span class="header-section-number">7.2.3.2</span> What do we learn?<a href="data-visualization.html#what-do-we-learn-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Focus is on counts by gender, predominantly male incidence.</li>
+<li>Incidence among males relative to females is from middle ag on. There is similar incidence between males and females in younger age groups.</li>
+</ul>
+</div>
+</div>
+<div id="separate-bar-charts" class="section level3 hasAnchor" number="7.2.4">
+<h3><span class="header-section-number">7.2.4</span> Separate bar charts<a href="data-visualization.html#separate-bar-charts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="data-visualization.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_au, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> count, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb103-2"><a href="data-visualization.html#cb103-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb103-3"><a href="data-visualization.html#cb103-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(gender <span class="sc">~</span> age) <span class="sc">+</span></span>
+<span id="cb103-4"><a href="data-visualization.html#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Dark2&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-71-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div id="what-is-different-in-the-code-description-2" class="section level4 hasAnchor" number="7.2.4.1">
+<h4><span class="header-section-number">7.2.4.1</span> What is different in the code description?<a href="data-visualization.html#what-is-different-in-the-code-description-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><code>facet_grid(gender ~ age) +</code> faceted by gender as well as age, note <code>facet_grid</code> vs <code>facet_wrap</code></p>
+</div>
+<div id="what-do-we-learn-3" class="section level4 hasAnchor" number="7.2.4.2">
+<h4><span class="header-section-number">7.2.4.2</span> What do we learn?<a href="data-visualization.html#what-do-we-learn-3" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Its easier to focus separately on males and females.</li>
+<li>The 1999 outbreak mostly affected males.</li>
+<li>The growing incidence in the 25-34 age group is still affecting females but seems to be have stablised for males.</li>
+</ul>
+</div>
+</div>
+<div id="pie-charts" class="section level3 hasAnchor" number="7.2.5">
+<h3><span class="header-section-number">7.2.5</span> Pie charts?<a href="data-visualization.html#pie-charts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="data-visualization.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_au, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> count, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb104-2"><a href="data-visualization.html#cb104-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb104-3"><a href="data-visualization.html#cb104-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(gender <span class="sc">~</span> age) <span class="sc">+</span></span>
+<span id="cb104-4"><a href="data-visualization.html#cb104-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Dark2&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb104-5"><a href="data-visualization.html#cb104-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>() <span class="sc">+</span></span>
+<span id="cb104-6"><a href="data-visualization.html#cb104-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-72-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Nope! That’s a rose chart. Bar charts in polar coordinates produce rose charts.</p>
+<div id="what-is-different-in-the-code-description-3" class="section level4 hasAnchor" number="7.2.5.1">
+<h4><span class="header-section-number">7.2.5.1</span> What is different in the code description?<a href="data-visualization.html#what-is-different-in-the-code-description-3" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><code>coord_polar() +</code> plot is made in polar coordinates, rather than the default Cartesian coordinates</p>
+</div>
+<div id="what-do-we-learn-4" class="section level4 hasAnchor" number="7.2.5.2">
+<h4><span class="header-section-number">7.2.5.2</span> What do we learn?<a href="data-visualization.html#what-do-we-learn-4" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Emphasizes the middle years as low incidence.</li>
+</ul>
+</div>
+</div>
+<div id="rainbow-charts" class="section level3 hasAnchor" number="7.2.6">
+<h3><span class="header-section-number">7.2.6</span> Rainbow charts?<a href="data-visualization.html#rainbow-charts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="data-visualization.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_au, <span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> count, <span class="at">fill =</span> <span class="fu">factor</span>(year))) <span class="sc">+</span></span>
+<span id="cb105-2"><a href="data-visualization.html#cb105-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">position=</span><span class="st">&quot;fill&quot;</span>) <span class="sc">+</span></span>
+<span id="cb105-3"><a href="data-visualization.html#cb105-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(gender <span class="sc">~</span> age) </span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-73-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>A single stacked bar, in each facet. Year is mapped to colour.</p>
+<div id="what-is-the-code-doing" class="section level4 hasAnchor" number="7.2.6.1">
+<h4><span class="header-section-number">7.2.6.1</span> What is the code doing?<a href="data-visualization.html#what-is-the-code-doing" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Notice how the mappings are different. A single number is mapped to x, that makes a single stacked bar chart.</li>
+<li>year is now mapped to colour (that’s what gives us the rainbow charts!)</li>
+</ul>
+</div>
+<div id="what-do-we-learn-5" class="section level4 hasAnchor" number="7.2.6.2">
+<h4><span class="header-section-number">7.2.6.2</span> What do we learn?<a href="data-visualization.html#what-do-we-learn-5" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Pretty chart but not easy to interpret.</li>
+</ul>
+</div>
+</div>
+<div id="pie-charts-1" class="section level3 hasAnchor" number="7.2.7">
+<h3><span class="header-section-number">7.2.7</span> Pie charts<a href="data-visualization.html#pie-charts-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="data-visualization.html#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_au, <span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> count, <span class="at">fill =</span> <span class="fu">factor</span>(year))) <span class="sc">+</span></span>
+<span id="cb106-2"><a href="data-visualization.html#cb106-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">position=</span><span class="st">&quot;fill&quot;</span>) <span class="sc">+</span></span>
+<span id="cb106-3"><a href="data-visualization.html#cb106-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(gender <span class="sc">~</span> age) <span class="sc">+</span></span>
+<span id="cb106-4"><a href="data-visualization.html#cb106-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="at">theta=</span><span class="st">&quot;y&quot;</span>) <span class="sc">+</span></span>
+<span id="cb106-5"><a href="data-visualization.html#cb106-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-74-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div id="what-is-different-in-the-code-description-4" class="section level4 hasAnchor" number="7.2.7.1">
+<h4><span class="header-section-number">7.2.7.1</span> What is different in the code description?<a href="data-visualization.html#what-is-different-in-the-code-description-4" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><code>coord_polar(theta="y")</code> is using the y variable to do the angles for the polar coordinates to give a pie chart.</p>
+</div>
+<div id="what-do-we-learn-6" class="section level4 hasAnchor" number="7.2.7.2">
+<h4><span class="header-section-number">7.2.7.2</span> What do we learn?<a href="data-visualization.html#what-do-we-learn-6" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Pretty chart but not easy to interpret, or make comparisons across age groups.</li>
+</ul>
+</div>
+<div id="your-turn-8" class="section level4 hasAnchor" number="7.2.7.3">
+<h4><span class="header-section-number">7.2.7.3</span> Your turn<a href="data-visualization.html#your-turn-8" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Focus on a different country and work your way through the plots where we learned the most about the Australia data.</p>
+<ol style="list-style-type: decimal">
+<li>Is the incidence similar for this country?</li>
+<li>Are rates increasing? Or decreasing?</li>
+<li>Do some age groups experience higher rates?</li>
+<li>Is it more prevalent among males?</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="variable-types-and-mapping" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Variable types and mapping<a href="data-visualization.html#variable-types-and-mapping" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<table>
+<colgroup>
+<col width="29%" />
+<col width="46%" />
+<col width="24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Type of variable</th>
+<th align="left">How to map</th>
+<th align="left">Common errors</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Categorical, qualitative</td>
+<td align="left">Category + count/proportion displayed, often as an area plot or with a small number of categories mapped to colour or symbol</td>
+<td align="left">Not including 0 on the count/proportion axis. Not ordering categories.</td>
+</tr>
+<tr class="even">
+<td align="left">Quantitative</td>
+<td align="left">Position along an axis</td>
+<td align="left">Displaying as a bar, especially when showing mean values. Mapping to colour.</td>
+</tr>
+<tr class="odd">
+<td align="left">Date/Time</td>
+<td align="left">Time-ordered axis, different temporal resolutions to study long term trend, or seasonal patterns. Lines typically connect measurements to indicate temporal dependence</td>
+<td align="left">Time order corrupted</td>
+</tr>
+<tr class="even">
+<td align="left">Space</td>
+<td align="left">Conventional projections of the sphere, map aspect ratio</td>
+<td align="left">Wrong aspect ratio</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="coordinate-systems" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Coordinate systems<a href="data-visualization.html#coordinate-systems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><em>Cartesian, polar:</em> most plots are made in Cartesian coordinates. Just a few are in polar coordinates, primarily the pie chart. Polar coordinates use radius and angle to describe position in 2D space. Occasionally measurements like wind (direction and speed) make sense to be plotted in polar coordinates.</li>
+<li><em>fixed, equal:</em> When variables are made on scales that should be comparable, it may be important to reflect this in the axes limits and page space that the plot takes. (This is different from <code>theme(aspect.ratio=1)</code> which sets the physical size of the plot to be the same, or in some ratio.)</li>
+<li><em>map:</em> Maps come in conventional formats, most often with a specific aspect ratio of vertical to horizontal axes, that depends on latitude.</li>
+<li><em>flip:</em> Useful for generating a plot with a categorical variable on the x axis and then flipping it sideways to look at.</li>
+</ul>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="data-visualization.html#cb107-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x=</span><span class="fu">runif</span>(<span class="dv">100</span>), <span class="at">y=</span><span class="fu">runif</span>(<span class="dv">100</span>)<span class="sc">*</span><span class="dv">10</span>)</span>
+<span id="cb107-2"><a href="data-visualization.html#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">coord_fixed</span>()</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-75-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="data-visualization.html#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>()</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-75-2.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="data-visualization.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">coord_fixed</span>(<span class="at">ratio=</span><span class="fl">0.2</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-75-3.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="data-visualization.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">aspect.ratio=</span><span class="dv">1</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-75-4.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="layering" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> Layering<a href="data-visualization.html#layering" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><em>Statistical summaries:</em> It is common to layer plots, particularly by adding statistical summaries, like a model fit, or means and standard deviations. The purpose is to show the <strong>trend</strong> in relation to the <strong>variation</strong>.</li>
+<li><em>Maps:</em> Commonly maps provide the framework for data collected spatially. One layer for the map, and another for the data.</li>
+</ul>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="data-visualization.html#cb111-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x=</span><span class="fu">runif</span>(<span class="dv">100</span>), <span class="at">y1=</span><span class="dv">4</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>), </span>
+<span id="cb111-2"><a href="data-visualization.html#cb111-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">y2=</span> <span class="sc">-</span>x <span class="sc">+</span> <span class="dv">10</span><span class="sc">*</span>(x<span class="fl">-0.5</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>))</span>
+<span id="cb111-3"><a href="data-visualization.html#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y1)) <span class="sc">+</span> <span class="fu">geom_point</span>() </span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-76-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="data-visualization.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y1)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb112-2"><a href="data-visualization.html#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">&quot;lm&quot;</span>, <span class="at">se=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-76-2.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="data-visualization.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y1)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb113-2"><a href="data-visualization.html#cb113-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">&quot;lm&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-76-3.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="data-visualization.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y2)) <span class="sc">+</span> <span class="fu">geom_point</span>() </span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-76-4.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="data-visualization.html#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y2)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb115-2"><a href="data-visualization.html#cb115-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">&quot;lm&quot;</span>, <span class="at">se=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-76-5.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="data-visualization.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y2)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb116-2"><a href="data-visualization.html#cb116-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-76-6.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="colour-palettes" class="section level2 hasAnchor" number="7.6">
+<h2><span class="header-section-number">7.6</span> Colour palettes<a href="data-visualization.html#colour-palettes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>Qualitative: categorical variables</li>
+<li>Sequential: low to high numeric values</li>
+<li>Diverging: negative to positive values</li>
+</ul>
+<p><img src="book_files/figure-html/unnamed-chunk-77-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<div id="choropleth-map" class="section level3 hasAnchor" number="7.6.1">
+<h3><span class="header-section-number">7.6.1</span> Choropleth map<a href="data-visualization.html#choropleth-map" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="data-visualization.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the tb data</span></span>
+<span id="cb117-2"><a href="data-visualization.html#cb117-2" aria-hidden="true" tabindex="-1"></a>tb <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/TB_notifications_2018-03-18.csv&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb117-3"><a href="data-visualization.html#cb117-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, year, new_sp_m04<span class="sc">:</span>new_sp_fu) <span class="sc">%&gt;%</span></span>
+<span id="cb117-4"><a href="data-visualization.html#cb117-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(stuff, count, new_sp_m04<span class="sc">:</span>new_sp_fu) <span class="sc">%&gt;%</span></span>
+<span id="cb117-5"><a href="data-visualization.html#cb117-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(stuff, <span class="fu">c</span>(<span class="st">&quot;stuff1&quot;</span>, <span class="st">&quot;stuff2&quot;</span>, <span class="st">&quot;genderage&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb117-6"><a href="data-visualization.html#cb117-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>stuff1, <span class="sc">-</span>stuff2) <span class="sc">%&gt;%</span></span>
+<span id="cb117-7"><a href="data-visualization.html#cb117-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender=</span><span class="fu">substr</span>(genderage, <span class="dv">1</span>, <span class="dv">1</span>), </span>
+<span id="cb117-8"><a href="data-visualization.html#cb117-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">age=</span><span class="fu">substr</span>(genderage, <span class="dv">2</span>, <span class="fu">length</span>(genderage))) <span class="sc">%&gt;%</span></span>
+<span id="cb117-9"><a href="data-visualization.html#cb117-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>genderage)</span>
+<span id="cb117-10"><a href="data-visualization.html#cb117-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute relative difference between 2012 and 2002</span></span>
+<span id="cb117-11"><a href="data-visualization.html#cb117-11" aria-hidden="true" tabindex="-1"></a>tb_inc <span class="ot">&lt;-</span> tb <span class="sc">%&gt;%</span> </span>
+<span id="cb117-12"><a href="data-visualization.html#cb117-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2002</span>, <span class="dv">2012</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb117-13"><a href="data-visualization.html#cb117-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country, year) <span class="sc">%&gt;%</span></span>
+<span id="cb117-14"><a href="data-visualization.html#cb117-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">sum</span>(count, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb117-15"><a href="data-visualization.html#cb117-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(year, count) <span class="sc">%&gt;%</span></span>
+<span id="cb117-16"><a href="data-visualization.html#cb117-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">reldif =</span> <span class="fu">ifelse</span>(<span class="st">`</span><span class="at">2002</span><span class="st">`</span> <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, (<span class="st">`</span><span class="at">2012</span><span class="st">`</span><span class="sc">-</span><span class="st">`</span><span class="at">2002</span><span class="st">`</span>)<span class="sc">/</span>(<span class="st">`</span><span class="at">2002</span><span class="st">`</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb117-17"><a href="data-visualization.html#cb117-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb117-18"><a href="data-visualization.html#cb117-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-19"><a href="data-visualization.html#cb117-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Join with a world map  </span></span>
+<span id="cb117-20"><a href="data-visualization.html#cb117-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maps)</span>
+<span id="cb117-21"><a href="data-visualization.html#cb117-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
+<span id="cb117-22"><a href="data-visualization.html#cb117-22" aria-hidden="true" tabindex="-1"></a>world_map <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="st">&quot;world&quot;</span>)</span>
+<span id="cb117-23"><a href="data-visualization.html#cb117-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Names of countries need to be the same in both data tables</span></span>
+<span id="cb117-24"><a href="data-visualization.html#cb117-24" aria-hidden="true" tabindex="-1"></a>tb_inc <span class="ot">&lt;-</span> tb_inc <span class="sc">%&gt;%</span> </span>
+<span id="cb117-25"><a href="data-visualization.html#cb117-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">country=</span><span class="fu">recode</span>(country, </span>
+<span id="cb117-26"><a href="data-visualization.html#cb117-26" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&quot;United States of America&quot;</span><span class="ot">=</span><span class="st">&quot;USA&quot;</span>, </span>
+<span id="cb117-27"><a href="data-visualization.html#cb117-27" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&quot;United Kingdom of Great Britain and Northern Ireland&quot;</span><span class="ot">=</span><span class="st">&quot;UK&quot;</span>,</span>
+<span id="cb117-28"><a href="data-visualization.html#cb117-28" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&quot;Russian Federation&quot;</span><span class="ot">=</span><span class="st">&quot;Russia&quot;</span>))</span>
+<span id="cb117-29"><a href="data-visualization.html#cb117-29" aria-hidden="true" tabindex="-1"></a>tb_map <span class="ot">&lt;-</span> <span class="fu">left_join</span>(world_map, tb_inc, <span class="at">by=</span><span class="fu">c</span>(<span class="st">&quot;region&quot;</span><span class="ot">=</span><span class="st">&quot;country&quot;</span>))</span></code></pre></div>
+<div id="sequential" class="section level4 hasAnchor" number="7.6.1.1">
+<h4><span class="header-section-number">7.6.1.1</span> Sequential<a href="data-visualization.html#sequential" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Default</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="data-visualization.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_map) <span class="sc">+</span> </span>
+<span id="cb118-2"><a href="data-visualization.html#cb118-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="fu">aes</span>(<span class="at">x=</span>long, <span class="at">y=</span>lat, <span class="at">group=</span>group, <span class="at">fill=</span>reldif)) <span class="sc">+</span></span>
+<span id="cb118-3"><a href="data-visualization.html#cb118-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_map</span>() </span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-79-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Modified rainbow</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="data-visualization.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb119-2"><a href="data-visualization.html#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_map) <span class="sc">+</span> </span>
+<span id="cb119-3"><a href="data-visualization.html#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="fu">aes</span>(<span class="at">x=</span>long, <span class="at">y=</span>lat, <span class="at">group=</span>group, <span class="at">fill=</span>reldif)) <span class="sc">+</span></span>
+<span id="cb119-4"><a href="data-visualization.html#cb119-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_map</span>() <span class="sc">+</span></span>
+<span id="cb119-5"><a href="data-visualization.html#cb119-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis</span>(<span class="at">na.value =</span> <span class="st">&quot;white&quot;</span>)  </span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-80-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="diverging" class="section level4 hasAnchor" number="7.6.1.2">
+<h4><span class="header-section-number">7.6.1.2</span> Diverging<a href="data-visualization.html#diverging" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="data-visualization.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tb_map) <span class="sc">+</span> </span>
+<span id="cb120-2"><a href="data-visualization.html#cb120-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="fu">aes</span>(<span class="at">x=</span>long, <span class="at">y=</span>lat, <span class="at">group=</span>group, <span class="at">fill=</span>reldif)) <span class="sc">+</span></span>
+<span id="cb120-3"><a href="data-visualization.html#cb120-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_map</span>() <span class="sc">+</span></span>
+<span id="cb120-4"><a href="data-visualization.html#cb120-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_distiller</span>(<span class="at">palette=</span><span class="st">&quot;PRGn&quot;</span>, <span class="at">na.value =</span> <span class="st">&quot;white&quot;</span>, </span>
+<span id="cb120-5"><a href="data-visualization.html#cb120-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">7</span>, <span class="dv">7</span>))  </span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-81-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="colour-blindness" class="section level2 hasAnchor" number="7.7">
+<h2><span class="header-section-number">7.7</span> Colour blindness<a href="data-visualization.html#colour-blindness" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>About 10% of men have some form of colorblindness; less than 0.2% of women are affected. The most common type of color deficiency causes difficulty distinguishing between red and green.</li>
+<li>There are several colour blind tested palettes: RColorbrewer has an associated web site <a href="http://colorbrewer2.org">colorbrewer.org</a> where the palettes are labelled, and the <code>colorblind</code> package has palettes which are safe for various types of color deficiency.
+<!-- Colorbrewer's colorblind friendly sets are actually pretty awful --></li>
+<li>You can test your color choices for different forms of colorblindness using the <code>dichromat</code> package. Below is the same plot usng the default two colour scheme of ggplot, and what it looks like to a person with red/green colorblindness. As there are many mutations which can lead to different severities of color deficiency, simulations are not 100% accurate.</li>
+<li>A foolproof way to ensure your color palettes are distinguishable is to print them in black and white. If all colors can be distinguished, then your palette is safe to use for all types of colorblindness.</li>
+</ul>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="data-visualization.html#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb121-2"><a href="data-visualization.html#cb121-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">runif</span>(<span class="dv">100</span>), <span class="at">y=</span><span class="fu">runif</span>(<span class="dv">100</span>), <span class="at">cl=</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">50</span>), <span class="fu">rep</span>(<span class="st">&quot;B&quot;</span>, <span class="dv">50</span>))))</span>
+<span id="cb121-3"><a href="data-visualization.html#cb121-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>df, <span class="fu">aes</span>(x, y, <span class="at">colour=</span>cl)) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb121-4"><a href="data-visualization.html#cb121-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="at">aspect.ratio=</span><span class="dv">1</span>)</span>
+<span id="cb121-5"><a href="data-visualization.html#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dichromat)</span>
+<span id="cb121-6"><a href="data-visualization.html#cb121-6" aria-hidden="true" tabindex="-1"></a>clrs <span class="ot">&lt;-</span> <span class="fu">hue_pal</span>()(<span class="dv">3</span>)</span>
+<span id="cb121-7"><a href="data-visualization.html#cb121-7" aria-hidden="true" tabindex="-1"></a>p </span>
+<span id="cb121-8"><a href="data-visualization.html#cb121-8" aria-hidden="true" tabindex="-1"></a>clrs <span class="ot">&lt;-</span> <span class="fu">dichromat</span>(<span class="fu">hue_pal</span>()(<span class="dv">3</span>))</span>
+<span id="cb121-9"><a href="data-visualization.html#cb121-9" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">scale_colour_manual</span>(<span class="st">&quot;&quot;</span>, <span class="at">values=</span>clrs) </span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-82-1.png" width="768" style="display: block; margin: auto;" /><img src="book_files/figure-html/unnamed-chunk-82-2.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pre-attentive" class="section level2 hasAnchor" number="7.8">
+<h2><span class="header-section-number">7.8</span> Pre-attentive<a href="data-visualization.html#pre-attentive" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Some visual features are “read” without significant cognitive effort and attention.
+Can you find the odd one out?</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="data-visualization.html#cb122-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">runif</span>(<span class="dv">100</span>), <span class="at">y=</span><span class="fu">runif</span>(<span class="dv">100</span>), <span class="at">cl=</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">1</span>), <span class="fu">rep</span>(<span class="st">&quot;B&quot;</span>, <span class="dv">99</span>))))</span>
+<span id="cb122-2"><a href="data-visualization.html#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>df, <span class="fu">aes</span>(x, y, <span class="at">shape=</span>cl)) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb122-3"><a href="data-visualization.html#cb122-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb122-4"><a href="data-visualization.html#cb122-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>)) <span class="sc">+</span> </span>
+<span id="cb122-5"><a href="data-visualization.html#cb122-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">&quot;None&quot;</span>, <span class="at">aspect.ratio=</span><span class="dv">1</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-83-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Is it easier now?</p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="data-visualization.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>df, <span class="fu">aes</span>(x, y, <span class="at">colour=</span>cl)) <span class="sc">+</span> </span>
+<span id="cb123-2"><a href="data-visualization.html#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb123-3"><a href="data-visualization.html#cb123-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb123-4"><a href="data-visualization.html#cb123-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">&quot;None&quot;</span>, <span class="at">aspect.ratio=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb123-5"><a href="data-visualization.html#cb123-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Dark2&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-84-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="proximity" class="section level2 hasAnchor" number="7.9">
+<h2><span class="header-section-number">7.9</span> Proximity<a href="data-visualization.html#proximity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>Basic rule: place the groups that you want to compare close to each other</li>
+</ul>
+<p>Here are two different arrangements of the tb data. To answer the question “Is the incidence similar for males and females in 2012 across age groups?” the first arrangement is better. It puts males and females right beside each other, so the relative heights of the bars can be seen quickly. The answer to the question would be “No, the numbers were similar in youth, but males are more affected with increasing age.”</p>
+<p>The second arrangement puts the focus on age groups, and is better to answer the question “Is the incidence similar for age groups in 2012, across gender?” To which the answer would be “No, among females, the incidence is higher at early ages. For males, the incidence is much more uniform across age groups.”</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="data-visualization.html#cb124-1" aria-hidden="true" tabindex="-1"></a>tb_au <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2012</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb124-2"><a href="data-visualization.html#cb124-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> count, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb124-3"><a href="data-visualization.html#cb124-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">position=</span><span class="st">&quot;dodge&quot;</span>) <span class="sc">+</span></span>
+<span id="cb124-4"><a href="data-visualization.html#cb124-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>( <span class="sc">~</span> age) <span class="sc">+</span></span>
+<span id="cb124-5"><a href="data-visualization.html#cb124-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Dark2&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-86-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="data-visualization.html#cb125-1" aria-hidden="true" tabindex="-1"></a>tb_au <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2012</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb125-2"><a href="data-visualization.html#cb125-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> count, <span class="at">fill =</span> age)) <span class="sc">+</span></span>
+<span id="cb125-3"><a href="data-visualization.html#cb125-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">position=</span><span class="st">&quot;dodge&quot;</span>) <span class="sc">+</span></span>
+<span id="cb125-4"><a href="data-visualization.html#cb125-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>( <span class="sc">~</span> gender) <span class="sc">+</span></span>
+<span id="cb125-5"><a href="data-visualization.html#cb125-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Dark2&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-87-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hierarchy-of-mappings" class="section level2 hasAnchor" number="7.10">
+<h2><span class="header-section-number">7.10</span> Hierarchy of mappings<a href="data-visualization.html#hierarchy-of-mappings" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Position - common scale (BEST): axis system</li>
+<li>Position - nonaligned scale: boxes in a side-by-side boxplot</li>
+<li>Length, direction, angle: pie charts, regression lines, wind maps</li>
+<li>Area: bubble charts</li>
+<li>Volume, curvature: 3D plots</li>
+<li>Shading, color (WORST): maps, points coloured by numeric variable</li>
+</ol>
+<p><a href="http://visiphilia.org/2016/08/03/CM-hierarchy">My crowd-sourcing expt</a></p>
+<p>Nice explanation by <a href="http://paldhous.github.io/ucb/2016/dataviz/week2.html">Peter Aldous</a></p>
+<p><a href="https://www.forbes.com/sites/naomirobbins/#2b1e20082a6a">General plotting advice and a book from Naomi Robbins</a></p>
+</div>
+<div id="adding-interactivity-to-plots" class="section level2 hasAnchor" number="7.11">
+<h2><span class="header-section-number">7.11</span> Adding interactivity to plots<a href="data-visualization.html#adding-interactivity-to-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Interaction on a plot can help de-clutter it, by making labels only show on mouse over. Occasionally it can be useful to zoom into parts of the plot. Often it is useful to change the aspect ratio.</p>
+<p>The <code>plotly</code> package makes it easy to add interaction to ggplots.</p>
+<p>The data</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="data-visualization.html#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb126-2"><a href="data-visualization.html#cb126-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(tb_au, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> count, </span>
+<span id="cb126-3"><a href="data-visualization.html#cb126-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">fill =</span> gender, <span class="at">label =</span> count)) <span class="sc">+</span></span>
+<span id="cb126-4"><a href="data-visualization.html#cb126-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">position =</span> <span class="st">&quot;fill&quot;</span>) <span class="sc">+</span></span>
+<span id="cb126-5"><a href="data-visualization.html#cb126-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span> age) <span class="sc">+</span></span>
+<span id="cb126-6"><a href="data-visualization.html#cb126-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Proportion&quot;</span>) <span class="sc">+</span></span>
+<span id="cb126-7"><a href="data-visualization.html#cb126-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Dark2&quot;</span>)</span>
+<span id="cb126-8"><a href="data-visualization.html#cb126-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p)</span></code></pre></div>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-85e82ebea5123f982c50" style="width:768px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-85e82ebea5123f982c50">{"x":{"data":[{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0.444444444444444,0.366666666666667,0.565217391304348,0.516129032258065,0.522727272727273,0.5,0.608695652173913,0.75,0.64,0.647058823529412,0.535714285714286,0.63013698630137,0.491803278688525,0.538461538461538,0.59375,0.490566037735849],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.555555555555556,0.633333333333333,0.434782608695652,0.483870967741935,0.477272727272727,0.5,0.391304347826087,0.25,0.36,0.352941176470588,0.464285714285714,0.36986301369863,0.508196721311475,0.461538461538462,0.40625,0.509433962264151],"text":["year: 1997<br />count: 0.55555556<br />gender: f<br />count: 10","year: 1998<br />count: 0.63333333<br />gender: f<br />count: 19","year: 1999<br />count: 0.43478261<br />gender: f<br />count: 10","year: 2000<br />count: 0.48387097<br />gender: f<br />count: 15","year: 2001<br />count: 0.47727273<br />gender: f<br />count: 21","year: 2002<br />count: 0.50000000<br />gender: f<br />count: 15","year: 2003<br />count: 0.39130435<br />gender: f<br />count:  9","year: 2004<br />count: 0.25000000<br />gender: f<br />count:  6","year: 2005<br />count: 0.36000000<br />gender: f<br />count: 18","year: 2006<br />count: 0.35294118<br />gender: f<br />count: 18","year: 2007<br />count: 0.46428571<br />gender: f<br />count: 26","year: 2008<br />count: 0.36986301<br />gender: f<br />count: 27","year: 2009<br />count: 0.50819672<br />gender: f<br />count: 31","year: 2010<br />count: 0.46153846<br />gender: f<br />count: 36","year: 2011<br />count: 0.40625000<br />gender: f<br />count: 26","year: 2012<br />count: 0.50943396<br />gender: f<br />count: 27"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(27,158,119,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"f","legendgroup":"f","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0.615384615384615,0.478260869565217,0.714285714285714,0.648148148148148,0.425531914893617,0.48780487804878,0.434782608695652,0.484848484848485,0.509433962264151,0.564516129032258,0.471428571428571,0.507692307692308,0.578125,0.434210526315789,0.523809523809524,0.454545454545455],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.384615384615385,0.521739130434783,0.285714285714286,0.351851851851852,0.574468085106383,0.51219512195122,0.565217391304348,0.515151515151515,0.490566037735849,0.435483870967742,0.528571428571429,0.492307692307692,0.421875,0.565789473684211,0.476190476190476,0.545454545454545],"text":["year: 1997<br />count: 0.38461538<br />gender: f<br />count: 15","year: 1998<br />count: 0.52173913<br />gender: f<br />count: 24","year: 1999<br />count: 0.28571429<br />gender: f<br />count: 16","year: 2000<br />count: 0.35185185<br />gender: f<br />count: 19","year: 2001<br />count: 0.57446809<br />gender: f<br />count: 27","year: 2002<br />count: 0.51219512<br />gender: f<br />count: 21","year: 2003<br />count: 0.56521739<br />gender: f<br />count: 13","year: 2004<br />count: 0.51515152<br />gender: f<br />count: 17","year: 2005<br />count: 0.49056604<br />gender: f<br />count: 26","year: 2006<br />count: 0.43548387<br />gender: f<br />count: 27","year: 2007<br />count: 0.52857143<br />gender: f<br />count: 37","year: 2008<br />count: 0.49230769<br />gender: f<br />count: 32","year: 2009<br />count: 0.42187500<br />gender: f<br />count: 27","year: 2010<br />count: 0.56578947<br />gender: f<br />count: 43","year: 2011<br />count: 0.47619048<br />gender: f<br />count: 40","year: 2012<br />count: 0.54545455<br />gender: f<br />count: 48"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(27,158,119,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"f","legendgroup":"f","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0.666666666666667,0.545454545454545,0.75,0.675675675675676,0.529411764705882,0.634146341463415,0.4,0.772727272727273,0.676470588235294,0.621621621621622,0.5,0.588235294117647,0.533333333333333,0.647058823529412,0.530612244897959,0.53125],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.333333333333333,0.454545454545455,0.25,0.324324324324324,0.470588235294118,0.365853658536585,0.6,0.227272727272727,0.323529411764706,0.378378378378378,0.5,0.411764705882353,0.466666666666667,0.352941176470588,0.469387755102041,0.46875],"text":["year: 1997<br />count: 0.33333333<br />gender: f<br />count:  9","year: 1998<br />count: 0.45454545<br />gender: f<br />count: 15","year: 1999<br />count: 0.25000000<br />gender: f<br />count: 18","year: 2000<br />count: 0.32432432<br />gender: f<br />count: 12","year: 2001<br />count: 0.47058824<br />gender: f<br />count: 16","year: 2002<br />count: 0.36585366<br />gender: f<br />count: 15","year: 2003<br />count: 0.60000000<br />gender: f<br />count:  3","year: 2004<br />count: 0.22727273<br />gender: f<br />count:  5","year: 2005<br />count: 0.32352941<br />gender: f<br />count: 11","year: 2006<br />count: 0.37837838<br />gender: f<br />count: 14","year: 2007<br />count: 0.50000000<br />gender: f<br />count: 20","year: 2008<br />count: 0.41176471<br />gender: f<br />count: 14","year: 2009<br />count: 0.46666667<br />gender: f<br />count: 14","year: 2010<br />count: 0.35294118<br />gender: f<br />count: 12","year: 2011<br />count: 0.46938776<br />gender: f<br />count: 23","year: 2012<br />count: 0.46875000<br />gender: f<br />count: 15"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(27,158,119,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"f","legendgroup":"f","showlegend":false,"xaxis":"x3","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0.722222222222222,0.619047619047619,0.896551724137931,0.615384615384615,0.72,0.76,0.6875,0.681818181818182,0.523809523809524,0.75,0.555555555555556,0.818181818181818,0.666666666666667,0.925925925925926,0.730769230769231,0.694444444444444],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.277777777777778,0.380952380952381,0.103448275862069,0.384615384615385,0.28,0.24,0.3125,0.318181818181818,0.476190476190476,0.25,0.444444444444444,0.181818181818182,0.333333333333333,0.0740740740740741,0.269230769230769,0.305555555555556],"text":["year: 1997<br />count: 0.27777778<br />gender: f<br />count:  5","year: 1998<br />count: 0.38095238<br />gender: f<br />count:  8","year: 1999<br />count: 0.10344828<br />gender: f<br />count:  6","year: 2000<br />count: 0.38461538<br />gender: f<br />count: 15","year: 2001<br />count: 0.28000000<br />gender: f<br />count:  7","year: 2002<br />count: 0.24000000<br />gender: f<br />count:  6","year: 2003<br />count: 0.31250000<br />gender: f<br />count:  5","year: 2004<br />count: 0.31818182<br />gender: f<br />count:  7","year: 2005<br />count: 0.47619048<br />gender: f<br />count: 10","year: 2006<br />count: 0.25000000<br />gender: f<br />count:  7","year: 2007<br />count: 0.44444444<br />gender: f<br />count: 12","year: 2008<br />count: 0.18181818<br />gender: f<br />count:  6","year: 2009<br />count: 0.33333333<br />gender: f<br />count: 12","year: 2010<br />count: 0.07407407<br />gender: f<br />count:  2","year: 2011<br />count: 0.26923077<br />gender: f<br />count:  7","year: 2012<br />count: 0.30555556<br />gender: f<br />count: 11"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(27,158,119,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"f","legendgroup":"f","showlegend":false,"xaxis":"x4","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0.62962962962963,0.882352941176471,0.948717948717949,0.791666666666667,0.619047619047619,0.764705882352941,0.555555555555556,0.785714285714286,0.666666666666667,0.64,0.666666666666667,0.676470588235294,0.521739130434783,0.642857142857143,0.631578947368421,0.64],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.37037037037037,0.117647058823529,0.0512820512820513,0.208333333333333,0.380952380952381,0.235294117647059,0.444444444444444,0.214285714285714,0.333333333333333,0.36,0.333333333333333,0.323529411764706,0.478260869565217,0.357142857142857,0.368421052631579,0.36],"text":["year: 1997<br />count: 0.37037037<br />gender: f<br />count: 10","year: 1998<br />count: 0.11764706<br />gender: f<br />count:  2","year: 1999<br />count: 0.05128205<br />gender: f<br />count:  2","year: 2000<br />count: 0.20833333<br />gender: f<br />count:  5","year: 2001<br />count: 0.38095238<br />gender: f<br />count:  8","year: 2002<br />count: 0.23529412<br />gender: f<br />count:  4","year: 2003<br />count: 0.44444444<br />gender: f<br />count:  4","year: 2004<br />count: 0.21428571<br />gender: f<br />count:  3","year: 2005<br />count: 0.33333333<br />gender: f<br />count:  6","year: 2006<br />count: 0.36000000<br />gender: f<br />count:  9","year: 2007<br />count: 0.33333333<br />gender: f<br />count:  7","year: 2008<br />count: 0.32352941<br />gender: f<br />count: 11","year: 2009<br />count: 0.47826087<br />gender: f<br />count: 11","year: 2010<br />count: 0.35714286<br />gender: f<br />count:  5","year: 2011<br />count: 0.36842105<br />gender: f<br />count:  7","year: 2012<br />count: 0.36000000<br />gender: f<br />count:  9"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(27,158,119,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"f","legendgroup":"f","showlegend":false,"xaxis":"x5","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0.7,0.563636363636364,0.653333333333333,0.777777777777778,0.636363636363636,0.596491228070175,0.810810810810811,0.627450980392157,0.681818181818182,0.671875,0.616666666666667,0.807692307692308,0.739130434782609,0.692307692307692,0.685185185185185,0.711538461538462],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.3,0.436363636363636,0.346666666666667,0.222222222222222,0.363636363636364,0.403508771929825,0.189189189189189,0.372549019607843,0.318181818181818,0.328125,0.383333333333333,0.192307692307692,0.260869565217391,0.307692307692308,0.314814814814815,0.288461538461538],"text":["year: 1997<br />count: 0.30000000<br />gender: f<br />count: 12","year: 1998<br />count: 0.43636364<br />gender: f<br />count: 24","year: 1999<br />count: 0.34666667<br />gender: f<br />count: 26","year: 2000<br />count: 0.22222222<br />gender: f<br />count: 14","year: 2001<br />count: 0.36363636<br />gender: f<br />count: 20","year: 2002<br />count: 0.40350877<br />gender: f<br />count: 23","year: 2003<br />count: 0.18918919<br />gender: f<br />count:  7","year: 2004<br />count: 0.37254902<br />gender: f<br />count: 19","year: 2005<br />count: 0.31818182<br />gender: f<br />count: 14","year: 2006<br />count: 0.32812500<br />gender: f<br />count: 21","year: 2007<br />count: 0.38333333<br />gender: f<br />count: 23","year: 2008<br />count: 0.19230769<br />gender: f<br />count: 10","year: 2009<br />count: 0.26086957<br />gender: f<br />count: 12","year: 2010<br />count: 0.30769231<br />gender: f<br />count: 12","year: 2011<br />count: 0.31481481<br />gender: f<br />count: 17","year: 2012<br />count: 0.28846154<br />gender: f<br />count: 15"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(27,158,119,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"f","legendgroup":"f","showlegend":false,"xaxis":"x6","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.444444444444444,0.366666666666667,0.565217391304348,0.516129032258065,0.522727272727273,0.5,0.608695652173913,0.75,0.64,0.647058823529412,0.535714285714286,0.63013698630137,0.491803278688525,0.538461538461538,0.59375,0.490566037735849],"text":["year: 1997<br />count: 0.44444444<br />gender: m<br />count:  8","year: 1998<br />count: 0.36666667<br />gender: m<br />count: 11","year: 1999<br />count: 0.56521739<br />gender: m<br />count: 13","year: 2000<br />count: 0.51612903<br />gender: m<br />count: 16","year: 2001<br />count: 0.52272727<br />gender: m<br />count: 23","year: 2002<br />count: 0.50000000<br />gender: m<br />count: 15","year: 2003<br />count: 0.60869565<br />gender: m<br />count: 14","year: 2004<br />count: 0.75000000<br />gender: m<br />count: 18","year: 2005<br />count: 0.64000000<br />gender: m<br />count: 32","year: 2006<br />count: 0.64705882<br />gender: m<br />count: 33","year: 2007<br />count: 0.53571429<br />gender: m<br />count: 30","year: 2008<br />count: 0.63013699<br />gender: m<br />count: 46","year: 2009<br />count: 0.49180328<br />gender: m<br />count: 30","year: 2010<br />count: 0.53846154<br />gender: m<br />count: 42","year: 2011<br />count: 0.59375000<br />gender: m<br />count: 38","year: 2012<br />count: 0.49056604<br />gender: m<br />count: 26"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(217,95,2,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"m","legendgroup":"m","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.615384615384615,0.478260869565217,0.714285714285714,0.648148148148148,0.425531914893617,0.48780487804878,0.434782608695652,0.484848484848485,0.509433962264151,0.564516129032258,0.471428571428571,0.507692307692308,0.578125,0.434210526315789,0.523809523809524,0.454545454545455],"text":["year: 1997<br />count: 0.61538462<br />gender: m<br />count: 24","year: 1998<br />count: 0.47826087<br />gender: m<br />count: 22","year: 1999<br />count: 0.71428571<br />gender: m<br />count: 40","year: 2000<br />count: 0.64814815<br />gender: m<br />count: 35","year: 2001<br />count: 0.42553191<br />gender: m<br />count: 20","year: 2002<br />count: 0.48780488<br />gender: m<br />count: 20","year: 2003<br />count: 0.43478261<br />gender: m<br />count: 10","year: 2004<br />count: 0.48484848<br />gender: m<br />count: 16","year: 2005<br />count: 0.50943396<br />gender: m<br />count: 27","year: 2006<br />count: 0.56451613<br />gender: m<br />count: 35","year: 2007<br />count: 0.47142857<br />gender: m<br />count: 33","year: 2008<br />count: 0.50769231<br />gender: m<br />count: 33","year: 2009<br />count: 0.57812500<br />gender: m<br />count: 37","year: 2010<br />count: 0.43421053<br />gender: m<br />count: 33","year: 2011<br />count: 0.52380952<br />gender: m<br />count: 44","year: 2012<br />count: 0.45454545<br />gender: m<br />count: 40"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(217,95,2,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"m","legendgroup":"m","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.666666666666667,0.545454545454545,0.75,0.675675675675676,0.529411764705882,0.634146341463415,0.4,0.772727272727273,0.676470588235294,0.621621621621622,0.5,0.588235294117647,0.533333333333333,0.647058823529412,0.530612244897959,0.53125],"text":["year: 1997<br />count: 0.66666667<br />gender: m<br />count: 18","year: 1998<br />count: 0.54545455<br />gender: m<br />count: 18","year: 1999<br />count: 0.75000000<br />gender: m<br />count: 54","year: 2000<br />count: 0.67567568<br />gender: m<br />count: 25","year: 2001<br />count: 0.52941176<br />gender: m<br />count: 18","year: 2002<br />count: 0.63414634<br />gender: m<br />count: 26","year: 2003<br />count: 0.40000000<br />gender: m<br />count:  2","year: 2004<br />count: 0.77272727<br />gender: m<br />count: 17","year: 2005<br />count: 0.67647059<br />gender: m<br />count: 23","year: 2006<br />count: 0.62162162<br />gender: m<br />count: 23","year: 2007<br />count: 0.50000000<br />gender: m<br />count: 20","year: 2008<br />count: 0.58823529<br />gender: m<br />count: 20","year: 2009<br />count: 0.53333333<br />gender: m<br />count: 16","year: 2010<br />count: 0.64705882<br />gender: m<br />count: 22","year: 2011<br />count: 0.53061224<br />gender: m<br />count: 26","year: 2012<br />count: 0.53125000<br />gender: m<br />count: 17"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(217,95,2,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"m","legendgroup":"m","showlegend":false,"xaxis":"x3","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.722222222222222,0.619047619047619,0.896551724137931,0.615384615384615,0.72,0.76,0.6875,0.681818181818182,0.523809523809524,0.75,0.555555555555556,0.818181818181818,0.666666666666667,0.925925925925926,0.730769230769231,0.694444444444444],"text":["year: 1997<br />count: 0.72222222<br />gender: m<br />count: 13","year: 1998<br />count: 0.61904762<br />gender: m<br />count: 13","year: 1999<br />count: 0.89655172<br />gender: m<br />count: 52","year: 2000<br />count: 0.61538462<br />gender: m<br />count: 24","year: 2001<br />count: 0.72000000<br />gender: m<br />count: 18","year: 2002<br />count: 0.76000000<br />gender: m<br />count: 19","year: 2003<br />count: 0.68750000<br />gender: m<br />count: 11","year: 2004<br />count: 0.68181818<br />gender: m<br />count: 15","year: 2005<br />count: 0.52380952<br />gender: m<br />count: 11","year: 2006<br />count: 0.75000000<br />gender: m<br />count: 21","year: 2007<br />count: 0.55555556<br />gender: m<br />count: 15","year: 2008<br />count: 0.81818182<br />gender: m<br />count: 27","year: 2009<br />count: 0.66666667<br />gender: m<br />count: 24","year: 2010<br />count: 0.92592593<br />gender: m<br />count: 25","year: 2011<br />count: 0.73076923<br />gender: m<br />count: 19","year: 2012<br />count: 0.69444444<br />gender: m<br />count: 25"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(217,95,2,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"m","legendgroup":"m","showlegend":false,"xaxis":"x4","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.62962962962963,0.882352941176471,0.948717948717949,0.791666666666667,0.619047619047619,0.764705882352941,0.555555555555556,0.785714285714286,0.666666666666667,0.64,0.666666666666667,0.676470588235294,0.521739130434783,0.642857142857143,0.631578947368421,0.64],"text":["year: 1997<br />count: 0.62962963<br />gender: m<br />count: 17","year: 1998<br />count: 0.88235294<br />gender: m<br />count: 15","year: 1999<br />count: 0.94871795<br />gender: m<br />count: 37","year: 2000<br />count: 0.79166667<br />gender: m<br />count: 19","year: 2001<br />count: 0.61904762<br />gender: m<br />count: 13","year: 2002<br />count: 0.76470588<br />gender: m<br />count: 13","year: 2003<br />count: 0.55555556<br />gender: m<br />count:  5","year: 2004<br />count: 0.78571429<br />gender: m<br />count: 11","year: 2005<br />count: 0.66666667<br />gender: m<br />count: 12","year: 2006<br />count: 0.64000000<br />gender: m<br />count: 16","year: 2007<br />count: 0.66666667<br />gender: m<br />count: 14","year: 2008<br />count: 0.67647059<br />gender: m<br />count: 23","year: 2009<br />count: 0.52173913<br />gender: m<br />count: 12","year: 2010<br />count: 0.64285714<br />gender: m<br />count:  9","year: 2011<br />count: 0.63157895<br />gender: m<br />count: 12","year: 2012<br />count: 0.64000000<br />gender: m<br />count: 16"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(217,95,2,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"m","legendgroup":"m","showlegend":false,"xaxis":"x5","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091,0.900000000000091],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012],"y":[0.7,0.563636363636364,0.653333333333333,0.777777777777778,0.636363636363636,0.596491228070175,0.810810810810811,0.627450980392157,0.681818181818182,0.671875,0.616666666666667,0.807692307692308,0.739130434782609,0.692307692307692,0.685185185185185,0.711538461538462],"text":["year: 1997<br />count: 0.70000000<br />gender: m<br />count: 28","year: 1998<br />count: 0.56363636<br />gender: m<br />count: 31","year: 1999<br />count: 0.65333333<br />gender: m<br />count: 49","year: 2000<br />count: 0.77777778<br />gender: m<br />count: 49","year: 2001<br />count: 0.63636364<br />gender: m<br />count: 35","year: 2002<br />count: 0.59649123<br />gender: m<br />count: 34","year: 2003<br />count: 0.81081081<br />gender: m<br />count: 30","year: 2004<br />count: 0.62745098<br />gender: m<br />count: 32","year: 2005<br />count: 0.68181818<br />gender: m<br />count: 30","year: 2006<br />count: 0.67187500<br />gender: m<br />count: 43","year: 2007<br />count: 0.61666667<br />gender: m<br />count: 37","year: 2008<br />count: 0.80769231<br />gender: m<br />count: 42","year: 2009<br />count: 0.73913043<br />gender: m<br />count: 34","year: 2010<br />count: 0.69230769<br />gender: m<br />count: 27","year: 2011<br />count: 0.68518519<br />gender: m<br />count: 37","year: 2012<br />count: 0.71153846<br />gender: m<br />count: 37"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(217,95,2,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"m","legendgroup":"m","showlegend":false,"xaxis":"x6","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":42.3013698630137,"r":18.9954337899543,"b":44.5662100456621,"l":48.9497716894977},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[5.55111512312578e-17,0.157153729071537],"automargin":true,"type":"linear","autorange":false,"range":[1995.755,2013.245],"tickmode":"array","ticktext":["2000","2005","2010"],"tickvals":[2000,2005,2010],"categoryorder":"array","categoryarray":["2000","2005","2010"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"annotations":[{"text":"year","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.9178082191781},{"text":"Proportion","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-33.6073059360731},{"text":"1524","x":0.0785768645357687,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"2534","x":0.25,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"3544","x":0.416666666666667,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"4554","x":0.583333333333333,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"5564","x":0.75,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"65","x":0.921423135464231,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.05,1.05],"tickmode":"array","ticktext":["0.00","0.25","0.50","0.75","1.00"],"tickvals":[0,0.25,0.5,0.75,1],"categoryorder":"array","categoryarray":["0.00","0.25","0.50","0.75","1.00"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":5.55111512312578e-17,"x1":0.157153729071537,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":5.55111512312578e-17,"x1":0.157153729071537,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.176179604261796,"x1":0.323820395738204,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.176179604261796,"x1":0.323820395738204,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.342846270928463,"x1":0.490487062404871,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.342846270928463,"x1":0.490487062404871,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.509512937595129,"x1":0.657153729071537,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.509512937595129,"x1":0.657153729071537,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.676179604261796,"x1":0.823820395738204,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.676179604261796,"x1":0.823820395738204,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.842846270928463,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.842846270928463,"x1":1,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[1995.755,2013.245],"tickmode":"array","ticktext":["2000","2005","2010"],"tickvals":[2000,2005,2010],"categoryorder":"array","categoryarray":["2000","2005","2010"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.176179604261796,0.323820395738204],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"xaxis3":{"type":"linear","autorange":false,"range":[1995.755,2013.245],"tickmode":"array","ticktext":["2000","2005","2010"],"tickvals":[2000,2005,2010],"categoryorder":"array","categoryarray":["2000","2005","2010"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.342846270928463,0.490487062404871],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"xaxis4":{"type":"linear","autorange":false,"range":[1995.755,2013.245],"tickmode":"array","ticktext":["2000","2005","2010"],"tickvals":[2000,2005,2010],"categoryorder":"array","categoryarray":["2000","2005","2010"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.509512937595129,0.657153729071537],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"xaxis5":{"type":"linear","autorange":false,"range":[1995.755,2013.245],"tickmode":"array","ticktext":["2000","2005","2010"],"tickvals":[2000,2005,2010],"categoryorder":"array","categoryarray":["2000","2005","2010"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.676179604261796,0.823820395738204],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"xaxis6":{"type":"linear","autorange":false,"range":[1995.755,2013.245],"tickmode":"array","ticktext":["2000","2005","2010"],"tickvals":[2000,2005,2010],"categoryorder":"array","categoryarray":["2000","2005","2010"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.842846270928463,1],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"title":{"text":"gender","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"105c864f34227":{"x":{},"y":{},"fill":{},"label":{},"type":"bar"}},"cur_data":"105c864f34227","visdat":{"105c864f34227":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="themes" class="section level2 hasAnchor" number="7.12">
+<h2><span class="header-section-number">7.12</span> Themes<a href="data-visualization.html#themes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <code>ggthemes</code> package has many different styles for the plots. Other packages such as <code>xkcd</code>, <code>skittles</code>, <code>wes anderson</code>, <code>beyonce</code>, <code>ochre</code>, ….</p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="data-visualization.html#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xkcd)</span>
+<span id="cb127-2"><a href="data-visualization.html#cb127-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> </span>
+<span id="cb127-3"><a href="data-visualization.html#cb127-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb127-4"><a href="data-visualization.html#cb127-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_xkcd</span>() <span class="sc">+</span></span>
+<span id="cb127-5"><a href="data-visualization.html#cb127-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xkcdaxis</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb127-6"><a href="data-visualization.html#cb127-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x=</span><span class="fl">0.5</span>, <span class="at">y=</span><span class="fl">0.5</span>, <span class="at">label=</span><span class="st">&quot;Help, I&#39;m lost in here!&quot;</span>, <span class="at">family=</span><span class="st">&quot;xkcd&quot;</span>, <span class="at">size=</span><span class="dv">5</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-92-1.png" width="768" style="display: block; margin: auto;" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="handling-missings.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="text-data-and-strings.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/heike/data-technologies/edit/master/04a-data-visualization.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": false
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

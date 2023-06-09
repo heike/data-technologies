@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Tidying Common Data Formats | Data Science and Statistical Thinking: With Wild-Caught Data and R</title>
+  <meta name="description" content="Chapter 4 Tidying Common Data Formats | Data Science and Statistical Thinking: With Wild-Caught Data and R" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Tidying Common Data Formats | Data Science and Statistical Thinking: With Wild-Caught Data and R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Tidying Common Data Formats | Data Science and Statistical Thinking: With Wild-Caught Data and R" />
+  
+  
+  
+
+<meta name="author" content="Heike Hofmann, Dianne Cook, Susan Vanderplas and Earo Wang" />
+
+
+<meta name="date" content="2023-06-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="accessing-data.html"/>
+<link rel="next" href="wrangling-data.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.27/datatables.js"></script>
+<link href="libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/plotly-binding-4.10.1.9000/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Science and Statistical Thinking</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preamble</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#what-is-exploratory-data-analysis"><i class="fa fa-check"></i><b>2.1</b> What is exploratory data analysis?</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#what-is-wild-data"><i class="fa fa-check"></i><b>2.2</b> What is <strong>wild</strong> data?</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#what-is-computational-statistical-thinking"><i class="fa fa-check"></i><b>2.3</b> What is computational statistical thinking?</a></li>
+<li class="chapter" data-level="2.4" data-path="intro.html"><a href="intro.html#workflow"><i class="fa fa-check"></i><b>2.4</b> Workflow</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="accessing-data.html"><a href="accessing-data.html"><i class="fa fa-check"></i><b>3</b> Accessing Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="accessing-data.html"><a href="accessing-data.html#flat-files"><i class="fa fa-check"></i><b>3.1</b> Flat files</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="accessing-data.html"><a href="accessing-data.html#example-tuberculosis"><i class="fa fa-check"></i><b>3.1.1</b> Example: tuberculosis</a></li>
+<li class="chapter" data-level="3.1.2" data-path="accessing-data.html"><a href="accessing-data.html#your-turn-atmospheric-carbon-dioxide"><i class="fa fa-check"></i><b>3.1.2</b> Your turn: atmospheric carbon dioxide</a></li>
+<li class="chapter" data-level="3.1.3" data-path="accessing-data.html"><a href="accessing-data.html#example-standardised-test-scores-for-reading-science-and-math"><i class="fa fa-check"></i><b>3.1.3</b> Example: standardised test scores for reading, science and math</a></li>
+<li class="chapter" data-level="3.1.4" data-path="accessing-data.html"><a href="accessing-data.html#your-turn-land-surface-weather-station-data"><i class="fa fa-check"></i><b>3.1.4</b> Your turn: land surface weather station data</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="accessing-data.html"><a href="accessing-data.html#proprietary-formats"><i class="fa fa-check"></i><b>3.2</b> Proprietary formats</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="accessing-data.html"><a href="accessing-data.html#example-australia-air-traffic-data"><i class="fa fa-check"></i><b>3.2.1</b> Example: Australia air traffic data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="accessing-data.html"><a href="accessing-data.html#your-turn-munging-spreadsheets"><i class="fa fa-check"></i><b>3.2.2</b> Your turn: Munging spreadsheets</a></li>
+<li class="chapter" data-level="3.2.3" data-path="accessing-data.html"><a href="accessing-data.html#example-spss-binary"><i class="fa fa-check"></i><b>3.2.3</b> Example: SPSS binary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="accessing-data.html"><a href="accessing-data.html#reading-multiple-files-from-a-website"><i class="fa fa-check"></i><b>3.3</b> Reading multiple files from a website</a></li>
+<li class="chapter" data-level="3.4" data-path="accessing-data.html"><a href="accessing-data.html#json"><i class="fa fa-check"></i><b>3.4</b> JSON</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="accessing-data.html"><a href="accessing-data.html#example-crossrates"><i class="fa fa-check"></i><b>3.4.1</b> Example: Crossrates</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="accessing-data.html"><a href="accessing-data.html#shapefiles"><i class="fa fa-check"></i><b>3.5</b> Shapefiles</a></li>
+<li class="chapter" data-level="3.6" data-path="accessing-data.html"><a href="accessing-data.html#apis"><i class="fa fa-check"></i><b>3.6</b> APIs</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="accessing-data.html"><a href="accessing-data.html#melbourne-pedestrian-traffic-rwalkr"><i class="fa fa-check"></i><b>3.6.1</b> Melbourne pedestrian traffic: <code>rwalkr</code></a></li>
+<li class="chapter" data-level="3.6.2" data-path="accessing-data.html"><a href="accessing-data.html#australian-weather-bomrang"><i class="fa fa-check"></i><b>3.6.2</b> Australian weather: <code>bomrang</code></a></li>
+<li class="chapter" data-level="3.6.3" data-path="accessing-data.html"><a href="accessing-data.html#atlas-of-living-austraila-ala4r"><i class="fa fa-check"></i><b>3.6.3</b> Atlas of Living Austraila: <code>ala4R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="accessing-data.html"><a href="accessing-data.html#images-as-data"><i class="fa fa-check"></i><b>3.7</b> Images as data</a></li>
+<li class="chapter" data-level="3.8" data-path="accessing-data.html"><a href="accessing-data.html#databases"><i class="fa fa-check"></i><b>3.8</b> Databases</a></li>
+<li class="chapter" data-level="3.9" data-path="accessing-data.html"><a href="accessing-data.html#working-with-text"><i class="fa fa-check"></i><b>3.9</b> Working with text</a></li>
+<li class="chapter" data-level="3.10" data-path="accessing-data.html"><a href="accessing-data.html#scraping-data"><i class="fa fa-check"></i><b>3.10</b> Scraping Data</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="accessing-data.html"><a href="accessing-data.html#examples"><i class="fa fa-check"></i><b>3.10.1</b> Examples</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html"><i class="fa fa-check"></i><b>4</b> Tidying Common Data Formats</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#terminology"><i class="fa fa-check"></i><b>4.1</b> Terminology</a></li>
+<li class="chapter" data-level="4.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidy-tabular-form"><i class="fa fa-check"></i><b>4.2</b> Tidy tabular form</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#wide-format"><i class="fa fa-check"></i><b>4.2.1</b> Wide format</a></li>
+<li class="chapter" data-level="4.2.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#long-format"><i class="fa fa-check"></i><b>4.2.2</b> Long format</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#raw-data-examples"><i class="fa fa-check"></i><b>4.3</b> Raw data examples</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#gene-expression-experiment"><i class="fa fa-check"></i><b>4.3.1</b> Gene expression experiment</a></li>
+<li class="chapter" data-level="4.3.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#melbourne-weather"><i class="fa fa-check"></i><b>4.3.2</b> Melbourne weather</a></li>
+<li class="chapter" data-level="4.3.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tb-incidence"><i class="fa fa-check"></i><b>4.3.3</b> TB incidence</a></li>
+<li class="chapter" data-level="4.3.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#french-fries"><i class="fa fa-check"></i><b>4.3.4</b> French fries</a></li>
+<li class="chapter" data-level="4.3.5" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#contingency-table"><i class="fa fa-check"></i><b>4.3.5</b> Contingency table</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#abs-datapack"><i class="fa fa-check"></i><b>4.4</b> ABS Datapack</a></li>
+<li class="chapter" data-level="4.5" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#messy-vs-tidy"><i class="fa fa-check"></i><b>4.5</b> Messy vs tidy</a></li>
+<li class="chapter" data-level="4.6" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidy-verbs"><i class="fa fa-check"></i><b>4.6</b> Tidy verbs</a></li>
+<li class="chapter" data-level="4.7" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidying-genes-data"><i class="fa fa-check"></i><b>4.7</b> Tidying genes data</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#separate-columns"><i class="fa fa-check"></i><b>4.7.1</b> Separate columns</a></li>
+<li class="chapter" data-level="4.7.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#now-spread-to-examine-different-aspects"><i class="fa fa-check"></i><b>4.7.2</b> Now spread to examine different aspects</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#try-this-yourself"><i class="fa fa-check"></i><b>4.8</b> Try this yourself</a>
+<ul>
+<li class="chapter" data-level="4.8.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-1"><i class="fa fa-check"></i><b>4.8.1</b> Exercise 1</a></li>
+<li class="chapter" data-level="4.8.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-2"><i class="fa fa-check"></i><b>4.8.2</b> Exercise 2</a></li>
+<li class="chapter" data-level="4.8.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-3"><i class="fa fa-check"></i><b>4.8.3</b> Exercise 3</a></li>
+<li class="chapter" data-level="4.8.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-4"><i class="fa fa-check"></i><b>4.8.4</b> Exercise 4</a></li>
+</ul></li>
+<li class="chapter" data-level="4.9" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidying-melbourne-weather"><i class="fa fa-check"></i><b>4.9</b> Tidying Melbourne weather</a>
+<ul>
+<li class="chapter" data-level="4.9.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#sometime-easier-to-index-select"><i class="fa fa-check"></i><b>4.9.1</b> Sometime easier to index select</a></li>
+<li class="chapter" data-level="4.9.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#make-long-form"><i class="fa fa-check"></i><b>4.9.2</b> Make long form</a></li>
+<li class="chapter" data-level="4.9.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#use-spread-to-look-at-different-things"><i class="fa fa-check"></i><b>4.9.3</b> Use spread to look at different things</a></li>
+<li class="chapter" data-level="4.9.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#what-are-the-numbers"><i class="fa fa-check"></i><b>4.9.4</b> What are the numbers?</a></li>
+<li class="chapter" data-level="4.9.5" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#now-use-spread"><i class="fa fa-check"></i><b>4.9.5</b> Now use spread</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercises"><i class="fa fa-check"></i><b>4.10</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="wrangling-data.html"><a href="wrangling-data.html"><i class="fa fa-check"></i><b>5</b> Wrangling Data</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="wrangling-data.html"><a href="wrangling-data.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="wrangling-data.html"><a href="wrangling-data.html#side-note-package-system"><i class="fa fa-check"></i><b>5.2</b> Side-note: Package system</a></li>
+<li class="chapter" data-level="5.3" data-path="wrangling-data.html"><a href="wrangling-data.html#example-french-fries"><i class="fa fa-check"></i><b>5.3</b> Example: french fries</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="wrangling-data.html"><a href="wrangling-data.html#the-story-of-the-french-fries-data."><i class="fa fa-check"></i><b>5.3.1</b> The story of the french fries data….</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="wrangling-data.html"><a href="wrangling-data.html#filter-choose-observations"><i class="fa fa-check"></i><b>5.4</b> filter: choose observations</a></li>
+<li class="chapter" data-level="5.5" data-path="wrangling-data.html"><a href="wrangling-data.html#select"><i class="fa fa-check"></i><b>5.5</b> select</a></li>
+<li class="chapter" data-level="5.6" data-path="wrangling-data.html"><a href="wrangling-data.html#mutate"><i class="fa fa-check"></i><b>5.6</b> mutate</a></li>
+<li class="chapter" data-level="5.7" data-path="wrangling-data.html"><a href="wrangling-data.html#summarise-and-group_by"><i class="fa fa-check"></i><b>5.7</b> summarise and group_by</a></li>
+<li class="chapter" data-level="5.8" data-path="wrangling-data.html"><a href="wrangling-data.html#arrange"><i class="fa fa-check"></i><b>5.8</b> arrange</a></li>
+<li class="chapter" data-level="5.9" data-path="wrangling-data.html"><a href="wrangling-data.html#count-tally"><i class="fa fa-check"></i><b>5.9</b> count, tally</a></li>
+<li class="chapter" data-level="5.10" data-path="wrangling-data.html"><a href="wrangling-data.html#putting-it-together-to-problem-solve"><i class="fa fa-check"></i><b>5.10</b> Putting it together to problem solve</a>
+<ul>
+<li class="chapter" data-level="5.10.1" data-path="wrangling-data.html"><a href="wrangling-data.html#are-ratings-similar"><i class="fa fa-check"></i><b>5.10.1</b> Are ratings similar?</a></li>
+<li class="chapter" data-level="5.10.2" data-path="wrangling-data.html"><a href="wrangling-data.html#are-reps-like-each-other"><i class="fa fa-check"></i><b>5.10.2</b> Are reps like each other</a></li>
+<li class="chapter" data-level="5.10.3" data-path="wrangling-data.html"><a href="wrangling-data.html#replicates-by-rating-type"><i class="fa fa-check"></i><b>5.10.3</b> Replicates by rating type</a></li>
+</ul></li>
+<li class="chapter" data-level="5.11" data-path="wrangling-data.html"><a href="wrangling-data.html#exercise"><i class="fa fa-check"></i><b>5.11</b> Exercise</a></li>
+<li class="chapter" data-level="5.12" data-path="wrangling-data.html"><a href="wrangling-data.html#relational-data-and-joins"><i class="fa fa-check"></i><b>5.12</b> Relational data, and joins</a>
+<ul>
+<li class="chapter" data-level="5.12.1" data-path="wrangling-data.html"><a href="wrangling-data.html#keys"><i class="fa fa-check"></i><b>5.12.1</b> Keys</a></li>
+<li class="chapter" data-level="5.12.2" data-path="wrangling-data.html"><a href="wrangling-data.html#joins"><i class="fa fa-check"></i><b>5.12.2</b> Joins</a></li>
+<li class="chapter" data-level="5.12.3" data-path="wrangling-data.html"><a href="wrangling-data.html#airline-travel-ontime-data"><i class="fa fa-check"></i><b>5.12.3</b> Airline travel, ontime data</a></li>
+</ul></li>
+<li class="chapter" data-level="5.13" data-path="wrangling-data.html"><a href="wrangling-data.html#exercise-5"><i class="fa fa-check"></i><b>5.13</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="handling-missings.html"><a href="handling-missings.html"><i class="fa fa-check"></i><b>6</b> Handling Missings</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="handling-missings.html"><a href="handling-missings.html#overview-1"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="handling-missings.html"><a href="handling-missings.html#a-story-of-missing-flights"><i class="fa fa-check"></i><b>6.2</b> A story of missing flights</a></li>
+<li class="chapter" data-level="6.3" data-path="handling-missings.html"><a href="handling-missings.html#data-set-overview"><i class="fa fa-check"></i><b>6.3</b> Data set overview</a></li>
+<li class="chapter" data-level="6.4" data-path="handling-missings.html"><a href="handling-missings.html#missing-value-patterns"><i class="fa fa-check"></i><b>6.4</b> Missing value patterns</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="handling-missings.html"><a href="handling-missings.html#missingness-map"><i class="fa fa-check"></i><b>6.4.1</b> Missingness map</a></li>
+<li class="chapter" data-level="6.4.2" data-path="handling-missings.html"><a href="handling-missings.html#numerical-summaries"><i class="fa fa-check"></i><b>6.4.2</b> Numerical summaries</a></li>
+<li class="chapter" data-level="6.4.3" data-path="handling-missings.html"><a href="handling-missings.html#tend-to-get-ignored-by-most-software"><i class="fa fa-check"></i><b>6.4.3</b> Tend to get ignored by most software</a></li>
+<li class="chapter" data-level="6.4.4" data-path="handling-missings.html"><a href="handling-missings.html#add-them-to-plot"><i class="fa fa-check"></i><b>6.4.4</b> Add them to plot</a></li>
+<li class="chapter" data-level="6.4.5" data-path="handling-missings.html"><a href="handling-missings.html#understanding-missing-dependencies"><i class="fa fa-check"></i><b>6.4.5</b> Understanding missing dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="handling-missings.html"><a href="handling-missings.html#shadow-matrix"><i class="fa fa-check"></i><b>6.5</b> Shadow matrix</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="handling-missings.html"><a href="handling-missings.html#relationship-with-other-variables"><i class="fa fa-check"></i><b>6.5.1</b> Relationship with other variables</a></li>
+<li class="chapter" data-level="6.5.2" data-path="handling-missings.html"><a href="handling-missings.html#two-minute-challenge"><i class="fa fa-check"></i><b>6.5.2</b> Two minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="handling-missings.html"><a href="handling-missings.html#strategy"><i class="fa fa-check"></i><b>6.6</b> Strategy</a></li>
+<li class="chapter" data-level="6.7" data-path="handling-missings.html"><a href="handling-missings.html#common-ways-to-impute-values"><i class="fa fa-check"></i><b>6.7</b> Common ways to impute values</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="handling-missings.html"><a href="handling-missings.html#mean"><i class="fa fa-check"></i><b>6.7.1</b> Mean</a></li>
+<li class="chapter" data-level="6.7.2" data-path="handling-missings.html"><a href="handling-missings.html#by-year"><i class="fa fa-check"></i><b>6.7.2</b> by year</a></li>
+<li class="chapter" data-level="6.7.3" data-path="handling-missings.html"><a href="handling-missings.html#two-minute-challenge-1"><i class="fa fa-check"></i><b>6.7.3</b> Two minute challenge</a></li>
+<li class="chapter" data-level="6.7.4" data-path="handling-missings.html"><a href="handling-missings.html#nearest-neighbors-imputation"><i class="fa fa-check"></i><b>6.7.4</b> Nearest neighbors imputation</a></li>
+<li class="chapter" data-level="6.7.5" data-path="handling-missings.html"><a href="handling-missings.html#by-year-1"><i class="fa fa-check"></i><b>6.7.5</b> by year</a></li>
+<li class="chapter" data-level="6.7.6" data-path="handling-missings.html"><a href="handling-missings.html#two-minute-challenge-2"><i class="fa fa-check"></i><b>6.7.6</b> Two minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="handling-missings.html"><a href="handling-missings.html#exercise-6"><i class="fa fa-check"></i><b>6.8</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>7</b> Data Visualization</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="data-visualization.html"><a href="data-visualization.html#a-grammar-of-graphics"><i class="fa fa-check"></i><b>7.1</b> A grammar of graphics</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="data-visualization.html"><a href="data-visualization.html#what-is-a-data-plot"><i class="fa fa-check"></i><b>7.1.1</b> What is a data plot?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="data-visualization.html"><a href="data-visualization.html#why"><i class="fa fa-check"></i><b>7.1.2</b> Why?</a></li>
+<li class="chapter" data-level="7.1.3" data-path="data-visualization.html"><a href="data-visualization.html#elements-of-the-grammar"><i class="fa fa-check"></i><b>7.1.3</b> Elements of the grammar</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="data-visualization.html"><a href="data-visualization.html#example-tuberculosis-data"><i class="fa fa-check"></i><b>7.2</b> Example: Tuberculosis data</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="data-visualization.html"><a href="data-visualization.html#charts"><i class="fa fa-check"></i><b>7.2.1</b> 100% charts</a></li>
+<li class="chapter" data-level="7.2.2" data-path="data-visualization.html"><a href="data-visualization.html#bar-charts"><i class="fa fa-check"></i><b>7.2.2</b> Bar charts</a></li>
+<li class="chapter" data-level="7.2.3" data-path="data-visualization.html"><a href="data-visualization.html#side-by-side-barcharts"><i class="fa fa-check"></i><b>7.2.3</b> Side-by-side barcharts</a></li>
+<li class="chapter" data-level="7.2.4" data-path="data-visualization.html"><a href="data-visualization.html#separate-bar-charts"><i class="fa fa-check"></i><b>7.2.4</b> Separate bar charts</a></li>
+<li class="chapter" data-level="7.2.5" data-path="data-visualization.html"><a href="data-visualization.html#pie-charts"><i class="fa fa-check"></i><b>7.2.5</b> Pie charts?</a></li>
+<li class="chapter" data-level="7.2.6" data-path="data-visualization.html"><a href="data-visualization.html#rainbow-charts"><i class="fa fa-check"></i><b>7.2.6</b> Rainbow charts?</a></li>
+<li class="chapter" data-level="7.2.7" data-path="data-visualization.html"><a href="data-visualization.html#pie-charts-1"><i class="fa fa-check"></i><b>7.2.7</b> Pie charts</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="data-visualization.html"><a href="data-visualization.html#variable-types-and-mapping"><i class="fa fa-check"></i><b>7.3</b> Variable types and mapping</a></li>
+<li class="chapter" data-level="7.4" data-path="data-visualization.html"><a href="data-visualization.html#coordinate-systems"><i class="fa fa-check"></i><b>7.4</b> Coordinate systems</a></li>
+<li class="chapter" data-level="7.5" data-path="data-visualization.html"><a href="data-visualization.html#layering"><i class="fa fa-check"></i><b>7.5</b> Layering</a></li>
+<li class="chapter" data-level="7.6" data-path="data-visualization.html"><a href="data-visualization.html#colour-palettes"><i class="fa fa-check"></i><b>7.6</b> Colour palettes</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="data-visualization.html"><a href="data-visualization.html#choropleth-map"><i class="fa fa-check"></i><b>7.6.1</b> Choropleth map</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="data-visualization.html"><a href="data-visualization.html#colour-blindness"><i class="fa fa-check"></i><b>7.7</b> Colour blindness</a></li>
+<li class="chapter" data-level="7.8" data-path="data-visualization.html"><a href="data-visualization.html#pre-attentive"><i class="fa fa-check"></i><b>7.8</b> Pre-attentive</a></li>
+<li class="chapter" data-level="7.9" data-path="data-visualization.html"><a href="data-visualization.html#proximity"><i class="fa fa-check"></i><b>7.9</b> Proximity</a></li>
+<li class="chapter" data-level="7.10" data-path="data-visualization.html"><a href="data-visualization.html#hierarchy-of-mappings"><i class="fa fa-check"></i><b>7.10</b> Hierarchy of mappings</a></li>
+<li class="chapter" data-level="7.11" data-path="data-visualization.html"><a href="data-visualization.html#adding-interactivity-to-plots"><i class="fa fa-check"></i><b>7.11</b> Adding interactivity to plots</a></li>
+<li class="chapter" data-level="7.12" data-path="data-visualization.html"><a href="data-visualization.html#themes"><i class="fa fa-check"></i><b>7.12</b> Themes</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html"><i class="fa fa-check"></i><b>8</b> Text data and strings</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#why-1"><i class="fa fa-check"></i><b>8.1</b> Why?</a></li>
+<li class="chapter" data-level="8.2" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#process"><i class="fa fa-check"></i><b>8.2</b> Process</a></li>
+<li class="chapter" data-level="8.3" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#resource"><i class="fa fa-check"></i><b>8.3</b> Resource</a></li>
+<li class="chapter" data-level="8.4" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#getting-some-books-to-study"><i class="fa fa-check"></i><b>8.4</b> Getting some books to study</a></li>
+<li class="chapter" data-level="8.5" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#tokenize"><i class="fa fa-check"></i><b>8.5</b> Tokenize</a></li>
+<li class="chapter" data-level="8.6" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#your-turn-9"><i class="fa fa-check"></i><b>8.6</b> Your turn</a></li>
+<li class="chapter" data-level="8.7" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#compare-the-word-frequency"><i class="fa fa-check"></i><b>8.7</b> Compare the word frequency</a></li>
+<li class="chapter" data-level="8.8" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#book-comparison"><i class="fa fa-check"></i><b>8.8</b> Book comparison</a></li>
+<li class="chapter" data-level="8.9" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#exercise-7"><i class="fa fa-check"></i><b>8.9</b> Exercise</a></li>
+<li class="chapter" data-level="8.10" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#sentiment-analysis"><i class="fa fa-check"></i><b>8.10</b> Sentiment Analysis</a>
+<ul>
+<li class="chapter" data-level="8.10.1" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#lexicons"><i class="fa fa-check"></i><b>8.10.1</b> Lexicons</a></li>
+<li class="chapter" data-level="8.10.2" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#analysis"><i class="fa fa-check"></i><b>8.10.2</b> Analysis</a></li>
+<li class="chapter" data-level="8.10.3" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#comparing-lexicons"><i class="fa fa-check"></i><b>8.10.3</b> Comparing lexicons</a></li>
+<li class="chapter" data-level="8.10.4" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#example-simpsons"><i class="fa fa-check"></i><b>8.10.4</b> Example: Simpsons</a></li>
+<li class="chapter" data-level="8.10.5" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#example-afl-finals-tweets"><i class="fa fa-check"></i><b>8.10.5</b> Example: AFL Finals tweets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="dates-and-time.html"><a href="dates-and-time.html"><i class="fa fa-check"></i><b>9</b> Dates and time</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="dates-and-time.html"><a href="dates-and-time.html#overview-2"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
+<li class="chapter" data-level="9.2" data-path="dates-and-time.html"><a href="dates-and-time.html#working-with-dates"><i class="fa fa-check"></i><b>9.2</b> Working with dates</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="dates-and-time.html"><a href="dates-and-time.html#parsing-dates-with-time-zones"><i class="fa fa-check"></i><b>9.2.1</b> Parsing dates with time zones</a></li>
+<li class="chapter" data-level="9.2.2" data-path="dates-and-time.html"><a href="dates-and-time.html#parsing-date-with-times"><i class="fa fa-check"></i><b>9.2.2</b> Parsing date with times</a></li>
+<li class="chapter" data-level="9.2.3" data-path="dates-and-time.html"><a href="dates-and-time.html#extracting-temporal-elements"><i class="fa fa-check"></i><b>9.2.3</b> Extracting temporal elements</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="dates-and-time.html"><a href="dates-and-time.html#example-pedestrian-sensor"><i class="fa fa-check"></i><b>9.3</b> Example: pedestrian sensor</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="dates-and-time.html"><a href="dates-and-time.html#make-some-plots"><i class="fa fa-check"></i><b>9.3.1</b> Make some plots</a></li>
+<li class="chapter" data-level="9.3.2" data-path="dates-and-time.html"><a href="dates-and-time.html#what-might-be-wrong-with-these-interpretations"><i class="fa fa-check"></i><b>9.3.2</b> What might be wrong with these interpretations?</a></li>
+<li class="chapter" data-level="9.3.3" data-path="dates-and-time.html"><a href="dates-and-time.html#to-think-about"><i class="fa fa-check"></i><b>9.3.3</b> To think about</a></li>
+<li class="chapter" data-level="9.3.4" data-path="dates-and-time.html"><a href="dates-and-time.html#beyond-aggregation"><i class="fa fa-check"></i><b>9.3.4</b> Beyond aggregation</a></li>
+<li class="chapter" data-level="9.3.5" data-path="dates-and-time.html"><a href="dates-and-time.html#incorporating-time"><i class="fa fa-check"></i><b>9.3.5</b> Incorporating time</a></li>
+<li class="chapter" data-level="9.3.6" data-path="dates-and-time.html"><a href="dates-and-time.html#on-a-calendar"><i class="fa fa-check"></i><b>9.3.6</b> On a calendar</a></li>
+<li class="chapter" data-level="9.3.7" data-path="dates-and-time.html"><a href="dates-and-time.html#holidays"><i class="fa fa-check"></i><b>9.3.7</b> Holidays</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="dates-and-time.html"><a href="dates-and-time.html#exercise-8"><i class="fa fa-check"></i><b>9.4</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="spatial-data.html"><a href="spatial-data.html"><i class="fa fa-check"></i><b>10</b> Spatial data</a></li>
+<li class="chapter" data-level="11" data-path="networks.html"><a href="networks.html"><i class="fa fa-check"></i><b>11</b> Networks</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="networks.html"><a href="networks.html#example-madmen"><i class="fa fa-check"></i><b>11.1</b> Example: Madmen</a>
+<ul>
+<li class="chapter" data-level="11.1.1" data-path="networks.html"><a href="networks.html#generate-a-network-view"><i class="fa fa-check"></i><b>11.1.1</b> Generate a network view</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="networks.html"><a href="networks.html#example-american-college-football"><i class="fa fa-check"></i><b>11.2</b> Example: American college football</a></li>
+<li class="chapter" data-level="11.3" data-path="networks.html"><a href="networks.html#example-harry-potter-characters"><i class="fa fa-check"></i><b>11.3</b> Example: Harry Potter characters</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="variation-and-inference.html"><a href="variation-and-inference.html"><i class="fa fa-check"></i><b>12</b> Variation and inference</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="variation-and-inference.html"><a href="variation-and-inference.html#what-is-variation-and-uncertainty"><i class="fa fa-check"></i><b>12.1</b> What is variation and uncertainty?</a></li>
+<li class="chapter" data-level="12.2" data-path="variation-and-inference.html"><a href="variation-and-inference.html#ways-of-sampling-the-data"><i class="fa fa-check"></i><b>12.2</b> Ways of sampling the data</a></li>
+<li class="chapter" data-level="12.3" data-path="variation-and-inference.html"><a href="variation-and-inference.html#what-is-inference"><i class="fa fa-check"></i><b>12.3</b> What is inference?</a></li>
+<li class="chapter" data-level="12.4" data-path="variation-and-inference.html"><a href="variation-and-inference.html#collecting-data"><i class="fa fa-check"></i><b>12.4</b> Collecting data</a></li>
+<li class="chapter" data-level="12.5" data-path="variation-and-inference.html"><a href="variation-and-inference.html#randomization-tests"><i class="fa fa-check"></i><b>12.5</b> Randomization tests</a></li>
+<li class="chapter" data-level="12.6" data-path="variation-and-inference.html"><a href="variation-and-inference.html#visual-inference"><i class="fa fa-check"></i><b>12.6</b> Visual inference</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="statistical-distributions.html"><a href="statistical-distributions.html"><i class="fa fa-check"></i><b>13</b> Statistical distributions</a></li>
+<li class="chapter" data-level="14" data-path="randomization-methods.html"><a href="randomization-methods.html"><i class="fa fa-check"></i><b>14</b> Randomization methods</a></li>
+<li class="chapter" data-level="15" data-path="variation-and-inference-1.html"><a href="variation-and-inference-1.html"><i class="fa fa-check"></i><b>15</b> Variation and inference</a></li>
+<li class="chapter" data-level="16" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html"><i class="fa fa-check"></i><b>16</b> Model fitting and optimisation</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#overview-3"><i class="fa fa-check"></i><b>16.1</b> Overview</a></li>
+<li class="chapter" data-level="16.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#why-models"><i class="fa fa-check"></i><b>16.2</b> Why models?</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#example"><i class="fa fa-check"></i><b>16.2.1</b> Example</a></li>
+<li class="chapter" data-level="16.2.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-families"><i class="fa fa-check"></i><b>16.2.2</b> Model families</a></li>
+<li class="chapter" data-level="16.2.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-15"><i class="fa fa-check"></i><b>16.2.3</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#linear-models"><i class="fa fa-check"></i><b>16.3</b> Linear models</a>
+<ul>
+<li class="chapter" data-level="16.3.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#correlation-vs-linear-model"><i class="fa fa-check"></i><b>16.3.1</b> Correlation vs linear model</a></li>
+<li class="chapter" data-level="16.3.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#correlation"><i class="fa fa-check"></i><b>16.3.2</b> Correlation</a></li>
+<li class="chapter" data-level="16.3.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#simple-regression"><i class="fa fa-check"></i><b>16.3.3</b> Simple regression</a></li>
+<li class="chapter" data-level="16.3.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#multiple-regression-model"><i class="fa fa-check"></i><b>16.3.4</b> Multiple regression model</a></li>
+<li class="chapter" data-level="16.3.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#what-a-model-says"><i class="fa fa-check"></i><b>16.3.5</b> What a model says</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#lets-fit-a-model-to-co2"><i class="fa fa-check"></i><b>16.4</b> Let’s fit a model to CO2</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#try-a-linear-fit"><i class="fa fa-check"></i><b>16.4.1</b> Try a linear fit</a></li>
+<li class="chapter" data-level="16.4.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#predict-from-the-model"><i class="fa fa-check"></i><b>16.4.2</b> Predict from the model</a></li>
+<li class="chapter" data-level="16.4.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-the-model"><i class="fa fa-check"></i><b>16.4.3</b> Plot the model</a></li>
+<li class="chapter" data-level="16.4.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#examine-residuals"><i class="fa fa-check"></i><b>16.4.4</b> Examine residuals</a></li>
+<li class="chapter" data-level="16.4.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#assessment-of-fit"><i class="fa fa-check"></i><b>16.4.5</b> Assessment of fit</a></li>
+<li class="chapter" data-level="16.4.6" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-16"><i class="fa fa-check"></i><b>16.4.6</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-basics-in-r"><i class="fa fa-check"></i><b>16.5</b> Model basics in R</a></li>
+<li class="chapter" data-level="16.6" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#seasonality"><i class="fa fa-check"></i><b>16.6</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="16.6.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-17"><i class="fa fa-check"></i><b>16.6.1</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.7" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#predict-co2-at-another-location"><i class="fa fa-check"></i><b>16.7</b> Predict co2 at another location</a>
+<ul>
+<li class="chapter" data-level="16.7.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-18"><i class="fa fa-check"></i><b>16.7.1</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.8" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#using-optimisation-to-get-a-good-fit"><i class="fa fa-check"></i><b>16.8</b> Using optimisation to get a good fit</a>
+<ul>
+<li class="chapter" data-level="16.8.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#typical-distances"><i class="fa fa-check"></i><b>16.8.1</b> Typical distances</a></li>
+<li class="chapter" data-level="16.8.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-19"><i class="fa fa-check"></i><b>16.8.2</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.9" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#components-of-variation"><i class="fa fa-check"></i><b>16.9</b> Components of variation</a></li>
+<li class="chapter" data-level="16.10" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-goodness-of-fit-statistics"><i class="fa fa-check"></i><b>16.10</b> Model goodness of fit statistics</a>
+<ul>
+<li class="chapter" data-level="16.10.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-20"><i class="fa fa-check"></i><b>16.10.1</b> Your turn:</a></li>
+</ul></li>
+<li class="chapter" data-level="16.11" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#beyond-a-single-model"><i class="fa fa-check"></i><b>16.11</b> Beyond a single model</a></li>
+<li class="chapter" data-level="16.12" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#gapminder"><i class="fa fa-check"></i><b>16.12</b> Gapminder</a>
+<ul>
+<li class="chapter" data-level="16.12.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#r-package"><i class="fa fa-check"></i><b>16.12.1</b> R package</a></li>
+</ul></li>
+<li class="chapter" data-level="16.13" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#fit-linear-models"><i class="fa fa-check"></i><b>16.13</b> Fit linear models</a>
+<ul>
+<li class="chapter" data-level="16.13.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#mutate-year"><i class="fa fa-check"></i><b>16.13.1</b> Mutate year</a></li>
+</ul></li>
+<li class="chapter" data-level="16.14" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#australia"><i class="fa fa-check"></i><b>16.14</b> Australia</a></li>
+<li class="chapter" data-level="16.15" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#fit-all-countries"><i class="fa fa-check"></i><b>16.15</b> Fit all countries</a>
+<ul>
+<li class="chapter" data-level="16.15.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge"><i class="fa fa-check"></i><b>16.15.1</b> Five minute challenge</a></li>
+<li class="chapter" data-level="16.15.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-all-the-models"><i class="fa fa-check"></i><b>16.15.2</b> Plot all the models</a></li>
+<li class="chapter" data-level="16.15.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-all-the-model-coefficients"><i class="fa fa-check"></i><b>16.15.3</b> Plot all the model coefficients</a></li>
+</ul></li>
+<li class="chapter" data-level="16.16" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-diagnostics-by-country"><i class="fa fa-check"></i><b>16.16</b> Model diagnostics by country</a>
+<ul>
+<li class="chapter" data-level="16.16.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-the-r2-values-as-a-histogram."><i class="fa fa-check"></i><b>16.16.1</b> Plot the <span class="math inline">\(R^2\)</span> values as a histogram.</a></li>
+<li class="chapter" data-level="16.16.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#countries-with-worst-fit"><i class="fa fa-check"></i><b>16.16.2</b> Countries with worst fit</a></li>
+<li class="chapter" data-level="16.16.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge-1"><i class="fa fa-check"></i><b>16.16.3</b> Five minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="16.17" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#lab-exercise"><i class="fa fa-check"></i><b>16.17</b> Lab exercise</a></li>
+<li class="chapter" data-level="16.18" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#transformations"><i class="fa fa-check"></i><b>16.18</b> Transformations</a>
+<ul>
+<li class="chapter" data-level="16.18.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#power-transformation"><i class="fa fa-check"></i><b>16.18.1</b> Power transformation</a></li>
+<li class="chapter" data-level="16.18.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#transforming-categorical-variables"><i class="fa fa-check"></i><b>16.18.2</b> Transforming categorical variables</a></li>
+</ul></li>
+<li class="chapter" data-level="16.19" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#adding-interactions-to-the-model"><i class="fa fa-check"></i><b>16.19</b> Adding interactions to the model</a>
+<ul>
+<li class="chapter" data-level="16.19.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#interaction-between-quantitative-and-categorical-variables"><i class="fa fa-check"></i><b>16.19.1</b> Interaction between quantitative and categorical variables</a></li>
+<li class="chapter" data-level="16.19.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge-2"><i class="fa fa-check"></i><b>16.19.2</b> Five minute challenge</a></li>
+<li class="chapter" data-level="16.19.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#which-is-the-better-model"><i class="fa fa-check"></i><b>16.19.3</b> Which is the better model?</a></li>
+<li class="chapter" data-level="16.19.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#interaction-between-quantitative-variables"><i class="fa fa-check"></i><b>16.19.4</b> Interaction between quantitative variables</a></li>
+<li class="chapter" data-level="16.19.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge-3"><i class="fa fa-check"></i><b>16.19.5</b> Five minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="16.20" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-building"><i class="fa fa-check"></i><b>16.20</b> Model building</a>
+<ul>
+<li class="chapter" data-level="16.20.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#lab-exercise-1"><i class="fa fa-check"></i><b>16.20.1</b> Lab exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="generalied-linear-models.html"><a href="generalied-linear-models.html"><i class="fa fa-check"></i><b>17</b> Generalied linear models</a></li>
+<li class="chapter" data-level="18" data-path="hierarchical-models.html"><a href="hierarchical-models.html"><i class="fa fa-check"></i><b>18</b> Hierarchical models</a></li>
+<li class="chapter" data-level="19" data-path="ensembles-of-models.html"><a href="ensembles-of-models.html"><i class="fa fa-check"></i><b>19</b> Ensembles of models</a></li>
+<li class="chapter" data-level="20" data-path="boosted-models.html"><a href="boosted-models.html"><i class="fa fa-check"></i><b>20</b> Boosted models</a></li>
+<li class="chapter" data-level="21" data-path="bayesian-models.html"><a href="bayesian-models.html"><i class="fa fa-check"></i><b>21</b> Bayesian models</a></li>
+<li class="chapter" data-level="22" data-path="decision-making-with-data.html"><a href="decision-making-with-data.html"><i class="fa fa-check"></i><b>22</b> Decision making with data</a></li>
+<li class="chapter" data-level="23" data-path="us-flights.html"><a href="us-flights.html"><i class="fa fa-check"></i><b>23</b> US flights</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="us-flights.html"><a href="us-flights.html#flight-delays"><i class="fa fa-check"></i><b>23.1</b> Flight delays</a>
+<ul>
+<li class="chapter" data-level="23.1.1" data-path="us-flights.html"><a href="us-flights.html#cancellations"><i class="fa fa-check"></i><b>23.1.1</b> Cancellations?</a></li>
+<li class="chapter" data-level="23.1.2" data-path="us-flights.html"><a href="us-flights.html#fuel"><i class="fa fa-check"></i><b>23.1.2</b> Fuel</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="climate-change.html"><a href="climate-change.html"><i class="fa fa-check"></i><b>24</b> Climate change</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="climate-change.html"><a href="climate-change.html#carbon-dioxide"><i class="fa fa-check"></i><b>24.1</b> Carbon dioxide</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="climate-change.html"><a href="climate-change.html#about-the-data"><i class="fa fa-check"></i><b>24.1.1</b> About the data</a></li>
+<li class="chapter" data-level="24.1.2" data-path="climate-change.html"><a href="climate-change.html#temporal-trend"><i class="fa fa-check"></i><b>24.1.2</b> Temporal trend</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="accidents.html"><a href="accidents.html"><i class="fa fa-check"></i><b>25</b> Accidents</a>
+<ul>
+<li class="chapter" data-level="25.1" data-path="accidents.html"><a href="accidents.html#when-do-people-die-on-the-roads"><i class="fa fa-check"></i><b>25.1</b> When do people die on the roads?</a></li>
+<li class="chapter" data-level="25.2" data-path="accidents.html"><a href="accidents.html#what-contributes-to-fatal-accidents"><i class="fa fa-check"></i><b>25.2</b> What contributes to fatal accidents?</a></li>
+<li class="chapter" data-level="25.3" data-path="accidents.html"><a href="accidents.html#who-is-involved-in-fatal-accidents"><i class="fa fa-check"></i><b>25.3</b> Who is involved in fatal accidents?</a></li>
+<li class="chapter" data-level="25.4" data-path="accidents.html"><a href="accidents.html#are-roads-getting-safer"><i class="fa fa-check"></i><b>25.4</b> Are roads getting safer?</a></li>
+<li class="chapter" data-level="25.5" data-path="accidents.html"><a href="accidents.html#your-turn-21"><i class="fa fa-check"></i><b>25.5</b> Your Turn</a></li>
+<li class="chapter" data-level="25.6" data-path="accidents.html"><a href="accidents.html#solutions"><i class="fa fa-check"></i><b>25.6</b> Solutions</a></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="monitoring-polls.html"><a href="monitoring-polls.html"><i class="fa fa-check"></i><b>26</b> Monitoring polls</a></li>
+<li class="chapter" data-level="27" data-path="vandalism.html"><a href="vandalism.html"><i class="fa fa-check"></i><b>27</b> Vandalism</a></li>
+<li class="chapter" data-level="28" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html"><i class="fa fa-check"></i><b>28</b> PISA: Programme for International Student Assessment</a>
+<ul>
+<li class="chapter" data-level="28.1" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#data-access"><i class="fa fa-check"></i><b>28.1</b> Data access</a></li>
+<li class="chapter" data-level="28.2" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#data-pre-processing"><i class="fa fa-check"></i><b>28.2</b> Data pre-processing</a></li>
+<li class="chapter" data-level="28.3" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#examining-the-gender-gap-across-countries"><i class="fa fa-check"></i><b>28.3</b> Examining the gender gap across countries</a>
+<ul>
+<li class="chapter" data-level="28.3.1" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#clean-up-country-codes"><i class="fa fa-check"></i><b>28.3.1</b> Clean up country codes</a></li>
+<li class="chapter" data-level="28.3.2" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#compute-weighted-means-by-country-and-gender"><i class="fa fa-check"></i><b>28.3.2</b> Compute weighted means by country and gender</a></li>
+<li class="chapter" data-level="28.3.3" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#examine-the-math-gap-by-country"><i class="fa fa-check"></i><b>28.3.3</b> Examine the math gap by country</a></li>
+<li class="chapter" data-level="28.3.4" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#what-we-learn"><i class="fa fa-check"></i><b>28.3.4</b> What we learn</a></li>
+</ul></li>
+<li class="chapter" data-level="28.4" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#your-turn-22"><i class="fa fa-check"></i><b>28.4</b> Your turn</a></li>
+<li class="chapter" data-level="28.5" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#mapping-the-scores"><i class="fa fa-check"></i><b>28.5</b> Mapping the scores</a></li>
+<li class="chapter" data-level="28.6" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#your-turn-23"><i class="fa fa-check"></i><b>28.6</b> Your turn</a></li>
+<li class="chapter" data-level="28.7" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#change-in-scores-over-time"><i class="fa fa-check"></i><b>28.7</b> Change in scores over time</a></li>
+</ul></li>
+<li class="chapter" data-level="29" data-path="wages.html"><a href="wages.html"><i class="fa fa-check"></i><b>29</b> Wages</a>
+<ul>
+<li class="chapter" data-level="29.1" data-path="wages.html"><a href="wages.html#new-wages-data"><i class="fa fa-check"></i><b>29.1</b> New wages data</a></li>
+</ul></li>
+<li class="chapter" data-level="30" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html"><i class="fa fa-check"></i><b>30</b> Pedestrian counting sensor data</a>
+<ul>
+<li class="chapter" data-level="30.1" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#overview-4"><i class="fa fa-check"></i><b>30.1</b> Overview</a></li>
+<li class="chapter" data-level="30.2" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#different-temporal-patterns"><i class="fa fa-check"></i><b>30.2</b> Different temporal patterns</a></li>
+<li class="chapter" data-level="30.3" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#does-the-weather-make-a-difference-to-the-number-of-people-walking-out"><i class="fa fa-check"></i><b>30.3</b> Does the weather make a difference to the number of people walking out?</a></li>
+<li class="chapter" data-level="30.4" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#if-setting-up-a-coffee-business"><i class="fa fa-check"></i><b>30.4</b> If setting up a coffee business</a></li>
+<li class="chapter" data-level="30.5" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#your-turn-24"><i class="fa fa-check"></i><b>30.5</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="31" data-path="government-surveys.html"><a href="government-surveys.html"><i class="fa fa-check"></i><b>31</b> Government surveys</a></li>
+<li class="chapter" data-level="32" data-path="reproducible-documents.html"><a href="reproducible-documents.html"><i class="fa fa-check"></i><b>32</b> Reproducible documents</a></li>
+<li class="chapter" data-level="33" data-path="collaborative-projects.html"><a href="collaborative-projects.html"><i class="fa fa-check"></i><b>33</b> Collaborative projects</a></li>
+<li class="chapter" data-level="34" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>34</b> References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/heike/data-technologies" target="blank">Published with Github.</a></li>
+<li><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Science and Statistical Thinking: With Wild-Caught Data and R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="tidying-common-data-formats" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Tidying Common Data Formats<a href="tidying-common-data-formats.html#tidying-common-data-formats" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="terminology" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Terminology<a href="tidying-common-data-formats.html#terminology" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>A <strong>variable</strong> is a quantity, quality, or property that you can measure. For the grad programs, these would be all the column headers.</li>
+<li>An <strong>observation</strong> is a set of measurements made under similar conditions (you usually make all of the measurements in an observation at the same time and on the same object). An observation will contain several values, each associated with a different variable. I’ll sometimes refer to an observation as a data point. For the grad programs, this is institution, and program, uniquley define the observation.</li>
+<li>A value is the state of a variable when you measure it. The value of a variable typically changes from observation to observation.</li>
+</ul>
+</div>
+<div id="tidy-tabular-form" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Tidy tabular form<a href="tidying-common-data-formats.html#tidy-tabular-form" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Tabular data</strong> is a set of values, each associated with a variable and an observation. Tabular data is <strong>tidy</strong> if each value is placed in its own <code>cell</code>, each variable in its own column, and each observation in its own row.</p>
+<div id="wide-format" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Wide format<a href="tidying-common-data-formats.html#wide-format" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The grad programs data in tabular form. It also is in <strong>wide</strong> tidy form, because there are multiple columns containing different variables.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="tidying-common-data-formats.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emo)</span>
+<span id="cb23-2"><a href="tidying-common-data-formats.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb23-3"><a href="tidying-common-data-formats.html#cb23-3" aria-hidden="true" tabindex="-1"></a>grad <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/graduate-programs.csv&quot;</span>)</span>
+<span id="cb23-4"><a href="tidying-common-data-formats.html#cb23-4" aria-hidden="true" tabindex="-1"></a>grad <span class="sc">%&gt;%</span> <span class="fu">top_n</span>(<span class="dv">10</span>)</span>
+<span id="cb23-5"><a href="tidying-common-data-formats.html#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 10 × 16</span></span>
+<span id="cb23-6"><a href="tidying-common-data-formats.html#cb23-6" aria-hidden="true" tabindex="-1"></a>   subject    Inst                AvNumPubs AvNumCits PctFacGrants PctCompletion</span>
+<span id="cb23-7"><a href="tidying-common-data-formats.html#cb23-7" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>      <span class="er">&lt;</span>chr<span class="sc">&gt;</span>                   <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>        <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>         <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb23-8"><a href="tidying-common-data-formats.html#cb23-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> economics  BOSTON UNIVERSITY        <span class="fl">0.49</span>      <span class="fl">2.66</span>         <span class="fl">36.9</span>          <span class="fl">34.2</span></span>
+<span id="cb23-9"><a href="tidying-common-data-formats.html#cb23-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> economics  UNIVERSITY OF CALI…      <span class="fl">0.79</span>      <span class="fl">2.68</span>         <span class="fl">71.4</span>          <span class="fl">42.6</span></span>
+<span id="cb23-10"><a href="tidying-common-data-formats.html#cb23-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> economics  UNIVERSITY OF CHIC…      <span class="fl">0.61</span>      <span class="fl">3.44</span>         <span class="fl">54.8</span>          <span class="fl">62.5</span></span>
+<span id="cb23-11"><a href="tidying-common-data-formats.html#cb23-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> economics  UNIVERSITY OF MARY…      <span class="fl">0.61</span>      <span class="fl">1.81</span>         <span class="fl">50.4</span>          <span class="fl">37.9</span></span>
+<span id="cb23-12"><a href="tidying-common-data-formats.html#cb23-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> psychology NORTHERN ILLINOIS …      <span class="fl">0.92</span>      <span class="fl">1.32</span>         <span class="fl">45.8</span>          <span class="fl">32.1</span></span>
+<span id="cb23-13"><a href="tidying-common-data-formats.html#cb23-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> psychology UNIVERSITY OF CALI…      <span class="fl">1.42</span>      <span class="fl">4.45</span>         <span class="dv">72</span>            <span class="fl">48.9</span></span>
+<span id="cb23-14"><a href="tidying-common-data-formats.html#cb23-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> psychology UNIVERSITY OF CONN…      <span class="fl">1.15</span>      <span class="fl">3.47</span>         <span class="fl">69.5</span>          <span class="fl">46.8</span></span>
+<span id="cb23-15"><a href="tidying-common-data-formats.html#cb23-15" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> psychology UNIVERSITY OF FLOR…      <span class="fl">1.05</span>      <span class="fl">1.72</span>         <span class="fl">65.6</span>          <span class="fl">34.2</span></span>
+<span id="cb23-16"><a href="tidying-common-data-formats.html#cb23-16" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> psychology UNIVERSITY OF ILLI…      <span class="fl">1.39</span>      <span class="fl">3.3</span>          <span class="fl">57.2</span>          <span class="fl">28.1</span></span>
+<span id="cb23-17"><a href="tidying-common-data-formats.html#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> psychology UNIVERSITY OF MINN…      <span class="fl">2.02</span>      <span class="fl">2.89</span>         <span class="fl">69.9</span>          <span class="dv">39</span>  </span>
+<span id="cb23-18"><a href="tidying-common-data-formats.html#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 10 more variables: MedianTimetoDegree &lt;dbl&gt;, PctMinorityFac &lt;dbl&gt;,</span></span>
+<span id="cb23-19"><a href="tidying-common-data-formats.html#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   PctFemaleFac &lt;dbl&gt;, PctFemaleStud &lt;dbl&gt;, PctIntlStud &lt;dbl&gt;,</span></span>
+<span id="cb23-20"><a href="tidying-common-data-formats.html#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   AvNumPhDs &lt;dbl&gt;, AvGREs &lt;dbl&gt;, TotFac &lt;dbl&gt;, PctAsstProf &lt;dbl&gt;,</span></span>
+<span id="cb23-21"><a href="tidying-common-data-formats.html#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   NumStud &lt;dbl&gt;</span></span></code></pre></div>
+<p>What’s good about the format?</p>
+<ul>
+<li>Rows contain information about each department of an institution</li>
+<li>Columns contain types of information, like average number of publications, average number of citations, % completion,</li>
+</ul>
+<p>It makes it easy to make summaries:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="tidying-common-data-formats.html#cb24-1" aria-hidden="true" tabindex="-1"></a>grad <span class="sc">%&gt;%</span> <span class="fu">count</span>(subject)</span>
+<span id="cb24-2"><a href="tidying-common-data-formats.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 4 × 2</span></span>
+<span id="cb24-3"><a href="tidying-common-data-formats.html#cb24-3" aria-hidden="true" tabindex="-1"></a>  subject        n</span>
+<span id="cb24-4"><a href="tidying-common-data-formats.html#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>      <span class="er">&lt;</span>int<span class="sc">&gt;</span></span>
+<span id="cb24-5"><a href="tidying-common-data-formats.html#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> astronomy     <span class="dv">32</span></span>
+<span id="cb24-6"><a href="tidying-common-data-formats.html#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> economics    <span class="dv">117</span></span>
+<span id="cb24-7"><a href="tidying-common-data-formats.html#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> entomology    <span class="dv">27</span></span>
+<span id="cb24-8"><a href="tidying-common-data-formats.html#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> psychology   <span class="dv">236</span></span>
+<span id="cb24-9"><a href="tidying-common-data-formats.html#cb24-9" aria-hidden="true" tabindex="-1"></a>grad <span class="sc">%&gt;%</span> <span class="fu">filter</span>(subject <span class="sc">==</span> <span class="st">&quot;economics&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-10"><a href="tidying-common-data-formats.html#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">m=</span><span class="fu">mean</span>(NumStud), <span class="at">s=</span><span class="fu">sd</span>(NumStud))</span>
+<span id="cb24-11"><a href="tidying-common-data-formats.html#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 1 × 2</span></span>
+<span id="cb24-12"><a href="tidying-common-data-formats.html#cb24-12" aria-hidden="true" tabindex="-1"></a>      m     s</span>
+<span id="cb24-13"><a href="tidying-common-data-formats.html#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb24-14"><a href="tidying-common-data-formats.html#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span>  <span class="fl">60.7</span>  <span class="fl">39.4</span></span>
+<span id="cb24-15"><a href="tidying-common-data-formats.html#cb24-15" aria-hidden="true" tabindex="-1"></a>grad <span class="sc">%&gt;%</span> <span class="fu">filter</span>(subject <span class="sc">==</span> <span class="st">&quot;economics&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-16"><a href="tidying-common-data-formats.html#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>NumStud, <span class="at">y=</span>MedianTimetoDegree)) <span class="sc">+</span></span>
+<span id="cb24-17"><a href="tidying-common-data-formats.html#cb24-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">aspect.ratio=</span><span class="dv">1</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/gradsummary-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="long-format" class="section level3 hasAnchor" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Long format<a href="tidying-common-data-formats.html#long-format" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>It can also be useful - for the process of data analysis - to arrange data into <strong>long</strong> tidy form, where each value is uniquely identified.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="tidying-common-data-formats.html#cb25-1" aria-hidden="true" tabindex="-1"></a>grad <span class="sc">%&gt;%</span> <span class="fu">gather</span>(variable, value, <span class="sc">-</span>subject, <span class="sc">-</span>Inst)</span>
+<span id="cb25-2"><a href="tidying-common-data-formats.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 5,768 × 4</span></span>
+<span id="cb25-3"><a href="tidying-common-data-formats.html#cb25-3" aria-hidden="true" tabindex="-1"></a>   subject   Inst                                     variable  value</span>
+<span id="cb25-4"><a href="tidying-common-data-formats.html#cb25-4" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>chr<span class="sc">&gt;</span>                                    <span class="er">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb25-5"><a href="tidying-common-data-formats.html#cb25-5" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> economics ARIZONA STATE UNIVERSITY                 AvNumPubs  <span class="fl">0.9</span> </span>
+<span id="cb25-6"><a href="tidying-common-data-formats.html#cb25-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> economics AUBURN UNIVERSITY                        AvNumPubs  <span class="fl">0.79</span></span>
+<span id="cb25-7"><a href="tidying-common-data-formats.html#cb25-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> economics BOSTON COLLEGE                           AvNumPubs  <span class="fl">0.51</span></span>
+<span id="cb25-8"><a href="tidying-common-data-formats.html#cb25-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> economics BOSTON UNIVERSITY                        AvNumPubs  <span class="fl">0.49</span></span>
+<span id="cb25-9"><a href="tidying-common-data-formats.html#cb25-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> economics BRANDEIS UNIVERSITY                      AvNumPubs  <span class="fl">0.3</span> </span>
+<span id="cb25-10"><a href="tidying-common-data-formats.html#cb25-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> economics BROWN UNIVERSITY                         AvNumPubs  <span class="fl">0.84</span></span>
+<span id="cb25-11"><a href="tidying-common-data-formats.html#cb25-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> economics CALIFORNIA INSTITUTE OF TECHNOLOGY       AvNumPubs  <span class="fl">0.99</span></span>
+<span id="cb25-12"><a href="tidying-common-data-formats.html#cb25-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> economics CARNEGIE MELLON UNIVERSITY               AvNumPubs  <span class="fl">0.43</span></span>
+<span id="cb25-13"><a href="tidying-common-data-formats.html#cb25-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> economics CITY UNIVERSITY OF NEW YORK GRAD. CENTER AvNumPubs  <span class="fl">0.35</span></span>
+<span id="cb25-14"><a href="tidying-common-data-formats.html#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> economics CLAREMONT GRADUATE UNIVERSITY            AvNumPubs  <span class="fl">0.47</span></span>
+<span id="cb25-15"><a href="tidying-common-data-formats.html#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 5,758 more rows</span></span></code></pre></div>
+</div>
+</div>
+<div id="raw-data-examples" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Raw data examples<a href="tidying-common-data-formats.html#raw-data-examples" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For each of these data examples, <strong>let’s try together to identify the variables and the observations</strong> - some are HARD!</p>
+<div id="gene-expression-experiment" class="section level3 hasAnchor" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Gene expression experiment<a href="tidying-common-data-formats.html#gene-expression-experiment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>🤔</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="tidying-common-data-formats.html#cb26-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/genes.csv&quot;</span>)</span>
+<span id="cb26-2"><a href="tidying-common-data-formats.html#cb26-2" aria-hidden="true" tabindex="-1"></a>genes </span>
+<span id="cb26-3"><a href="tidying-common-data-formats.html#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 3 × 12</span></span>
+<span id="cb26-4"><a href="tidying-common-data-formats.html#cb26-4" aria-hidden="true" tabindex="-1"></a>  id     <span class="st">`</span><span class="at">WI-6.R1</span><span class="st">`</span> <span class="st">`</span><span class="at">WI-6.R2</span><span class="st">`</span> <span class="st">`</span><span class="at">WI-6.R4</span><span class="st">`</span> <span class="st">`</span><span class="at">WM-6.R1</span><span class="st">`</span> <span class="st">`</span><span class="at">WM-6.R2</span><span class="st">`</span> <span class="st">`</span><span class="at">WI-12.R1</span><span class="st">`</span> <span class="st">`</span><span class="at">WI-12.R2</span><span class="st">`</span></span>
+<span id="cb26-5"><a href="tidying-common-data-formats.html#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>      <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>      <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>      <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb26-6"><a href="tidying-common-data-formats.html#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> Gene <span class="dv">1</span>      <span class="fl">2.18</span>     <span class="fl">2.20</span>       <span class="fl">4.20</span>     <span class="fl">2.63</span>       <span class="fl">5.06</span>       <span class="fl">4.54</span>       <span class="fl">5.53</span></span>
+<span id="cb26-7"><a href="tidying-common-data-formats.html#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> Gene <span class="dv">2</span>      <span class="fl">1.46</span>     <span class="fl">0.585</span>      <span class="fl">1.86</span>     <span class="fl">0.515</span>      <span class="fl">2.88</span>       <span class="fl">1.36</span>       <span class="fl">2.96</span></span>
+<span id="cb26-8"><a href="tidying-common-data-formats.html#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> Gene <span class="dv">3</span>      <span class="fl">2.03</span>     <span class="fl">0.870</span>      <span class="fl">3.28</span>     <span class="fl">0.533</span>      <span class="fl">4.63</span>       <span class="fl">2.18</span>       <span class="fl">5.56</span></span>
+<span id="cb26-9"><a href="tidying-common-data-formats.html#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 4 more variables: `WI-12.R4` &lt;dbl&gt;, `WM-12.R1` &lt;dbl&gt;, `WM-12.R2` &lt;dbl&gt;,</span></span>
+<span id="cb26-10"><a href="tidying-common-data-formats.html#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   `WM-12.R4` &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div id="melbourne-weather" class="section level3 hasAnchor" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> Melbourne weather<a href="tidying-common-data-formats.html#melbourne-weather" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>What are the variables? Observations?</p>
+<p>😱</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="tidying-common-data-formats.html#cb27-1" aria-hidden="true" tabindex="-1"></a>melbtemp <span class="ot">&lt;-</span> <span class="fu">read_fwf</span>(<span class="st">&quot;data/ASN00086282.dly&quot;</span>, </span>
+<span id="cb27-2"><a href="tidying-common-data-formats.html#cb27-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">col_positions=</span><span class="fu">fwf_widths</span>(<span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">4</span>, </span>
+<span id="cb27-3"><a href="tidying-common-data-formats.html#cb27-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">31</span>))))</span>
+<span id="cb27-4"><a href="tidying-common-data-formats.html#cb27-4" aria-hidden="true" tabindex="-1"></a>melbtemp <span class="sc">%&gt;%</span> <span class="fu">select</span>(X1, X2, X3, X4, X5, X9, </span>
+<span id="cb27-5"><a href="tidying-common-data-formats.html#cb27-5" aria-hidden="true" tabindex="-1"></a>          X13, X17, X21, X25, X29, X33)</span>
+<span id="cb27-6"><a href="tidying-common-data-formats.html#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 2,267 × 12</span></span>
+<span id="cb27-7"><a href="tidying-common-data-formats.html#cb27-7" aria-hidden="true" tabindex="-1"></a>   X1             X2 X3    X4       X5    X9   X13   X17   X21   X25   X29   X33</span>
+<span id="cb27-8"><a href="tidying-common-data-formats.html#cb27-8" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb27-9"><a href="tidying-common-data-formats.html#cb27-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> ASN00086282  <span class="dv">1970</span> <span class="dv">07</span>    TMAX    <span class="dv">141</span>   <span class="dv">124</span>   <span class="dv">113</span>   <span class="dv">123</span>   <span class="dv">148</span>   <span class="dv">149</span>   <span class="dv">139</span>   <span class="dv">153</span></span>
+<span id="cb27-10"><a href="tidying-common-data-formats.html#cb27-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> ASN00086282  <span class="dv">1970</span> <span class="dv">07</span>    TMIN     <span class="dv">80</span>    <span class="dv">63</span>    <span class="dv">36</span>    <span class="dv">57</span>    <span class="dv">69</span>    <span class="dv">47</span>    <span class="dv">84</span>    <span class="dv">78</span></span>
+<span id="cb27-11"><a href="tidying-common-data-formats.html#cb27-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> ASN00086282  <span class="dv">1970</span> <span class="dv">07</span>    PRCP      <span class="dv">3</span>    <span class="dv">30</span>     <span class="dv">0</span>     <span class="dv">0</span>    <span class="dv">36</span>     <span class="dv">3</span>     <span class="dv">0</span>     <span class="dv">0</span></span>
+<span id="cb27-12"><a href="tidying-common-data-formats.html#cb27-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> ASN00086282  <span class="dv">1970</span> <span class="dv">08</span>    TMAX    <span class="dv">145</span>   <span class="dv">128</span>   <span class="dv">150</span>   <span class="dv">122</span>   <span class="dv">109</span>   <span class="dv">112</span>   <span class="dv">116</span>   <span class="dv">142</span></span>
+<span id="cb27-13"><a href="tidying-common-data-formats.html#cb27-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> ASN00086282  <span class="dv">1970</span> <span class="dv">08</span>    TMIN     <span class="dv">50</span>    <span class="dv">61</span>    <span class="dv">75</span>    <span class="dv">67</span>    <span class="dv">41</span>    <span class="dv">51</span>    <span class="dv">48</span>    <span class="sc">-</span><span class="dv">7</span></span>
+<span id="cb27-14"><a href="tidying-common-data-formats.html#cb27-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> ASN00086282  <span class="dv">1970</span> <span class="dv">08</span>    PRCP      <span class="dv">0</span>    <span class="dv">66</span>     <span class="dv">0</span>    <span class="dv">53</span>    <span class="dv">13</span>     <span class="dv">3</span>     <span class="dv">8</span>     <span class="dv">0</span></span>
+<span id="cb27-15"><a href="tidying-common-data-formats.html#cb27-15" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> ASN00086282  <span class="dv">1970</span> <span class="dv">09</span>    TMAX    <span class="dv">168</span>   <span class="dv">168</span>   <span class="dv">162</span>   <span class="dv">162</span>   <span class="dv">162</span>   <span class="dv">150</span>   <span class="dv">184</span>   <span class="dv">179</span></span>
+<span id="cb27-16"><a href="tidying-common-data-formats.html#cb27-16" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> ASN00086282  <span class="dv">1970</span> <span class="dv">09</span>    TMIN     <span class="dv">19</span>    <span class="dv">29</span>    <span class="dv">62</span>    <span class="dv">81</span>    <span class="dv">81</span>    <span class="dv">55</span>    <span class="dv">73</span>    <span class="dv">97</span></span>
+<span id="cb27-17"><a href="tidying-common-data-formats.html#cb27-17" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> ASN00086282  <span class="dv">1970</span> <span class="dv">09</span>    PRCP      <span class="dv">0</span>     <span class="dv">0</span>     <span class="dv">0</span>     <span class="dv">0</span>     <span class="dv">3</span>     <span class="dv">5</span>     <span class="dv">0</span>    <span class="dv">38</span></span>
+<span id="cb27-18"><a href="tidying-common-data-formats.html#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> ASN00086282  <span class="dv">1970</span> <span class="dv">10</span>    TMAX    <span class="dv">189</span>   <span class="dv">194</span>   <span class="dv">204</span>   <span class="dv">267</span>   <span class="dv">256</span>   <span class="dv">228</span>   <span class="dv">237</span>   <span class="dv">144</span></span>
+<span id="cb27-19"><a href="tidying-common-data-formats.html#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 2,257 more rows</span></span></code></pre></div>
+</div>
+<div id="tb-incidence" class="section level3 hasAnchor" number="4.3.3">
+<h3><span class="header-section-number">4.3.3</span> TB incidence<a href="tidying-common-data-formats.html#tb-incidence" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This is current tuberculosis data taken from <a href="http://www.who.int/tb/country/data/download/en/">WHO</a>, the case notifications table.</p>
+<p>🤧</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="tidying-common-data-formats.html#cb28-1" aria-hidden="true" tabindex="-1"></a>tb <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/TB_notifications_2018-03-18.csv&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="tidying-common-data-formats.html#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, year, <span class="fu">starts_with</span>(<span class="st">&quot;new_sp_&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="tidying-common-data-formats.html#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year<span class="sc">&gt;</span><span class="dv">1996</span>, year<span class="sc">&lt;</span><span class="dv">2012</span>)</span>
+<span id="cb28-4"><a href="tidying-common-data-formats.html#cb28-4" aria-hidden="true" tabindex="-1"></a>tb <span class="sc">%&gt;%</span> <span class="fu">top_n</span>(<span class="dv">20</span>)</span>
+<span id="cb28-5"><a href="tidying-common-data-formats.html#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 26 × 22</span></span>
+<span id="cb28-6"><a href="tidying-common-data-formats.html#cb28-6" aria-hidden="true" tabindex="-1"></a>   country     year new_sp_m04 new_sp_m514 new_sp_m014 new_sp_m1524 new_sp_m2534</span>
+<span id="cb28-7"><a href="tidying-common-data-formats.html#cb28-7" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>      <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>      <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>        <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>        <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb28-8"><a href="tidying-common-data-formats.html#cb28-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> Argentina   <span class="dv">2008</span>         <span class="dv">11</span>          <span class="dv">58</span>          <span class="dv">69</span>          <span class="dv">633</span>          <span class="dv">611</span></span>
+<span id="cb28-9"><a href="tidying-common-data-formats.html#cb28-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> Argentina   <span class="dv">2009</span>          <span class="dv">8</span>          <span class="dv">36</span>          <span class="dv">44</span>          <span class="dv">546</span>          <span class="dv">483</span></span>
+<span id="cb28-10"><a href="tidying-common-data-formats.html#cb28-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> Argentina   <span class="dv">2011</span>         <span class="dv">50</span>          <span class="dv">93</span>         <span class="dv">143</span>          <span class="dv">664</span>          <span class="dv">657</span></span>
+<span id="cb28-11"><a href="tidying-common-data-formats.html#cb28-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> Bosnia an…  <span class="dv">2006</span>          <span class="dv">0</span>           <span class="dv">0</span>           <span class="dv">0</span>           <span class="dv">40</span>           <span class="dv">58</span></span>
+<span id="cb28-12"><a href="tidying-common-data-formats.html#cb28-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> Brazil      <span class="dv">2010</span>        <span class="dv">130</span>         <span class="dv">168</span>         <span class="dv">298</span>         <span class="dv">4405</span>         <span class="dv">6381</span></span>
+<span id="cb28-13"><a href="tidying-common-data-formats.html#cb28-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> Central A…  <span class="dv">2010</span>         <span class="dv">23</span>          <span class="dv">55</span>          <span class="dv">78</span>          <span class="dv">379</span>          <span class="dv">633</span></span>
+<span id="cb28-14"><a href="tidying-common-data-formats.html#cb28-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> Central A…  <span class="dv">2011</span>         <span class="dv">14</span>          <span class="dv">56</span>          <span class="dv">70</span>          <span class="dv">362</span>          <span class="dv">576</span></span>
+<span id="cb28-15"><a href="tidying-common-data-formats.html#cb28-15" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> Egypt       <span class="dv">2008</span>          <span class="dv">0</span>          <span class="dv">13</span>          <span class="dv">13</span>          <span class="dv">581</span>          <span class="dv">640</span></span>
+<span id="cb28-16"><a href="tidying-common-data-formats.html#cb28-16" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> Greece      <span class="dv">2007</span>          <span class="dv">0</span>           <span class="dv">1</span>           <span class="dv">1</span>           <span class="dv">21</span>           <span class="dv">22</span></span>
+<span id="cb28-17"><a href="tidying-common-data-formats.html#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> Italy       <span class="dv">2005</span>          <span class="dv">7</span>           <span class="dv">1</span>           <span class="dv">8</span>           <span class="dv">93</span>          <span class="dv">191</span></span>
+<span id="cb28-18"><a href="tidying-common-data-formats.html#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 16 more rows</span></span>
+<span id="cb28-19"><a href="tidying-common-data-formats.html#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 15 more variables: new_sp_m3544 &lt;dbl&gt;, new_sp_m4554 &lt;dbl&gt;,</span></span>
+<span id="cb28-20"><a href="tidying-common-data-formats.html#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   new_sp_m5564 &lt;dbl&gt;, new_sp_m65 &lt;dbl&gt;, new_sp_mu &lt;dbl&gt;, new_sp_f04 &lt;dbl&gt;,</span></span>
+<span id="cb28-21"><a href="tidying-common-data-formats.html#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   new_sp_f514 &lt;dbl&gt;, new_sp_f014 &lt;dbl&gt;, new_sp_f1524 &lt;dbl&gt;,</span></span>
+<span id="cb28-22"><a href="tidying-common-data-formats.html#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   new_sp_f2534 &lt;dbl&gt;, new_sp_f3544 &lt;dbl&gt;, new_sp_f4554 &lt;dbl&gt;,</span></span>
+<span id="cb28-23"><a href="tidying-common-data-formats.html#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="co">#   new_sp_f5564 &lt;dbl&gt;, new_sp_f65 &lt;dbl&gt;, new_sp_fu &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div id="french-fries" class="section level3 hasAnchor" number="4.3.4">
+<h3><span class="header-section-number">4.3.4</span> French fries<a href="tidying-common-data-formats.html#french-fries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>10 week sensory experiment, 12 individuals assessed taste of french fries on several scales (how potato-y, buttery, grassy, rancid, paint-y do they taste?), fried in one of 3 different oils, replicated twice. First few rows:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="tidying-common-data-formats.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/french_fries.rda&quot;</span>)</span>
+<span id="cb29-2"><a href="tidying-common-data-formats.html#cb29-2" aria-hidden="true" tabindex="-1"></a>french_fries <span class="sc">%&gt;%</span> <span class="fu">top_n</span>(<span class="dv">10</span>)</span>
+<span id="cb29-3"><a href="tidying-common-data-formats.html#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 12 × 9</span></span>
+<span id="cb29-4"><a href="tidying-common-data-formats.html#cb29-4" aria-hidden="true" tabindex="-1"></a>   time  treatment subject   rep potato buttery grassy rancid painty</span>
+<span id="cb29-5"><a href="tidying-common-data-formats.html#cb29-5" aria-hidden="true" tabindex="-1"></a> <span class="sc">*</span> <span class="er">&lt;</span>fct<span class="sc">&gt;</span> <span class="er">&lt;</span>fct<span class="sc">&gt;</span>     <span class="er">&lt;</span>fct<span class="sc">&gt;</span>   <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>  <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>   <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>  <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>  <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>  <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb29-6"><a href="tidying-common-data-formats.html#cb29-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> <span class="dv">6</span>     <span class="dv">2</span>         <span class="dv">19</span>          <span class="dv">2</span>   <span class="fl">11.1</span>     <span class="fl">1.5</span>    <span class="dv">0</span>     <span class="fl">11.5</span>   <span class="fl">12.2</span></span>
+<span id="cb29-7"><a href="tidying-common-data-formats.html#cb29-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> <span class="dv">8</span>     <span class="dv">1</span>         <span class="dv">63</span>          <span class="dv">2</span>    <span class="fl">3.8</span>     <span class="dv">0</span>      <span class="dv">0</span>     <span class="fl">10.5</span>   <span class="fl">12.9</span></span>
+<span id="cb29-8"><a href="tidying-common-data-formats.html#cb29-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> <span class="dv">8</span>     <span class="dv">1</span>         <span class="dv">86</span>          <span class="dv">2</span>    <span class="fl">1.4</span>     <span class="dv">0</span>      <span class="dv">0</span>      <span class="dv">8</span>     <span class="fl">11.6</span></span>
+<span id="cb29-9"><a href="tidying-common-data-formats.html#cb29-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> <span class="dv">9</span>     <span class="dv">1</span>         <span class="dv">63</span>          <span class="dv">1</span>    <span class="fl">1.7</span>     <span class="dv">0</span>      <span class="dv">0</span>     <span class="fl">13.3</span>   <span class="fl">12.8</span></span>
+<span id="cb29-10"><a href="tidying-common-data-formats.html#cb29-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> <span class="dv">9</span>     <span class="dv">2</span>         <span class="dv">19</span>          <span class="dv">2</span>    <span class="fl">6.2</span>     <span class="dv">0</span>      <span class="dv">0</span>      <span class="fl">7.9</span>   <span class="fl">12.6</span></span>
+<span id="cb29-11"><a href="tidying-common-data-formats.html#cb29-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> <span class="dv">9</span>     <span class="dv">2</span>         <span class="dv">63</span>          <span class="dv">1</span>    <span class="fl">1.8</span>     <span class="dv">0</span>      <span class="dv">0</span>     <span class="fl">13.7</span>   <span class="fl">12.3</span></span>
+<span id="cb29-12"><a href="tidying-common-data-formats.html#cb29-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> <span class="dv">10</span>    <span class="dv">1</span>         <span class="dv">31</span>          <span class="dv">1</span>    <span class="fl">9.5</span>     <span class="dv">0</span>      <span class="dv">0</span>     <span class="fl">10.7</span>   <span class="fl">12.6</span></span>
+<span id="cb29-13"><a href="tidying-common-data-formats.html#cb29-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> <span class="dv">10</span>    <span class="dv">1</span>         <span class="dv">86</span>          <span class="dv">1</span>    <span class="fl">0.7</span>     <span class="dv">0</span>      <span class="dv">0</span>     <span class="fl">11.6</span>   <span class="fl">11.6</span></span>
+<span id="cb29-14"><a href="tidying-common-data-formats.html#cb29-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> <span class="dv">10</span>    <span class="dv">1</span>         <span class="dv">86</span>          <span class="dv">2</span>    <span class="fl">0.7</span>     <span class="dv">0</span>      <span class="dv">0</span>     <span class="fl">14.3</span>   <span class="fl">13.1</span></span>
+<span id="cb29-15"><a href="tidying-common-data-formats.html#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> <span class="dv">10</span>    <span class="dv">2</span>         <span class="dv">86</span>          <span class="dv">1</span>    <span class="dv">2</span>       <span class="dv">0</span>      <span class="dv">0</span>     <span class="fl">10.4</span>   <span class="fl">12.7</span></span>
+<span id="cb29-16"><a href="tidying-common-data-formats.html#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="dv">11</span> <span class="dv">10</span>    <span class="dv">2</span>         <span class="dv">86</span>          <span class="dv">2</span>    <span class="dv">1</span>       <span class="dv">0</span>      <span class="dv">0</span>     <span class="fl">11.2</span>   <span class="fl">11.6</span></span>
+<span id="cb29-17"><a href="tidying-common-data-formats.html#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="dv">12</span> <span class="dv">10</span>    <span class="dv">3</span>         <span class="dv">19</span>          <span class="dv">2</span>   <span class="fl">12.2</span>     <span class="dv">0</span>      <span class="fl">4.6</span>    <span class="fl">9.3</span>   <span class="fl">11.8</span></span></code></pre></div>
+<p><img src="images/french_fries.png" /></p>
+<p>What are the variables? Observations?</p>
+</div>
+<div id="contingency-table" class="section level3 hasAnchor" number="4.3.5">
+<h3><span class="header-section-number">4.3.5</span> Contingency table<a href="tidying-common-data-formats.html#contingency-table" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This data is collated from this story: <a href="http://fivethirtyeight.com/datalab/airplane-etiquette-recline-seat/">41% Of Fliers Think You’re Rude If You Recline Your Seat</a></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="tidying-common-data-formats.html#cb30-1" aria-hidden="true" tabindex="-1"></a>fly <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/fly_tbl.csv&quot;</span>)</span>
+<span id="cb30-2"><a href="tidying-common-data-formats.html#cb30-2" aria-hidden="true" tabindex="-1"></a>fly</span>
+<span id="cb30-3"><a href="tidying-common-data-formats.html#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 3 × 6</span></span>
+<span id="cb30-4"><a href="tidying-common-data-formats.html#cb30-4" aria-hidden="true" tabindex="-1"></a>  Is_it_rude_to_recline <span class="st">`</span><span class="at">I_recline_seat:Always</span><span class="st">`</span> <span class="st">`</span><span class="at">I_recline_seat:Usually</span><span class="st">`</span></span>
+<span id="cb30-5"><a href="tidying-common-data-formats.html#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                                   <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>                    <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb30-6"><a href="tidying-common-data-formats.html#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> No, not rude at all                       <span class="dv">124</span>                      <span class="dv">145</span></span>
+<span id="cb30-7"><a href="tidying-common-data-formats.html#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> Yes, somewhat rude                          <span class="dv">9</span>                       <span class="dv">27</span></span>
+<span id="cb30-8"><a href="tidying-common-data-formats.html#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> Yes, very rude                              <span class="dv">3</span>                        <span class="dv">3</span></span>
+<span id="cb30-9"><a href="tidying-common-data-formats.html#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 3 more variables: `I_recline_seat:About half the time` &lt;dbl&gt;,</span></span>
+<span id="cb30-10"><a href="tidying-common-data-formats.html#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   `I_recline_seat:Once in a while` &lt;dbl&gt;, `I_recline_seat:Never` &lt;dbl&gt;</span></span></code></pre></div>
+<p>What are the variables?</p>
+</div>
+</div>
+<div id="abs-datapack" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> ABS Datapack<a href="tidying-common-data-formats.html#abs-datapack" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The Australian Bureau of Statistics (ABS) collects, maintains and delivers data and official statistics on a wide range of economic, social, population and environmental matters of importance to Australia. There are many different access points for data, but primarily aggregated data is the main type available. Examples at accessing the Census data from the ABS can be found in the <code>eechidna</code> package.</p>
+<ol style="list-style-type: decimal">
+<li>The individual <code>csv</code> files must be held locally. They come from a zip file and can be downloaded from: <a href="https://datapacks.censusdata.abs.gov.au/datapacks/" class="uri">https://datapacks.censusdata.abs.gov.au/datapacks/</a></li>
+<li>Select: 2016 Census Datapacks, General Community Profile, Commonwealth Electoral Divisons</li>
+<li>Download for all of Australia</li>
+<li>Unzip the package - its necessary, because the data is delivered in many small csv files. There is also the license information detailing appropriate usage, and detailed information about the formats.</li>
+</ol>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="tidying-common-data-formats.html#cb31-1" aria-hidden="true" tabindex="-1"></a>G1_Main <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data/2016 Census GCP Commonwealth Electoral Divisions for AUST/&quot;</span>, <span class="st">&quot;2016Census_G01_AUS_CED.csv&quot;</span>))</span></code></pre></div>
+</div>
+<div id="messy-vs-tidy" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Messy vs tidy<a href="tidying-common-data-formats.html#messy-vs-tidy" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Messy data is messy in its own way. You can make unique solutions, but then another data set comes along, and you have to again make a unique solution.</p>
+<p>Tidy data can be though of as legos. Once you have this form, you can put it together in so many different ways, to make different analyses and visualizations. <!--Pedantic comment: legos isn't a word. the plural of lego is lego. --></p>
+<p><img src="images/lego.png" /></p>
+</div>
+<div id="tidy-verbs" class="section level2 hasAnchor" number="4.6">
+<h2><span class="header-section-number">4.6</span> Tidy verbs<a href="tidying-common-data-formats.html#tidy-verbs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><code>gather</code>: specify the <strong>keys</strong> (identifiers) and the <strong>values</strong> (measures) to make long form (used to be called melting)</li>
+<li><code>spread</code>: move a variable from a row into columns (used to be called casting)</li>
+<li><code>separate</code>: split a character vector into columns</li>
+</ul>
+</div>
+<div id="tidying-genes-data" class="section level2 hasAnchor" number="4.7">
+<h2><span class="header-section-number">4.7</span> Tidying genes data<a href="tidying-common-data-formats.html#tidying-genes-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="tidying-common-data-formats.html#cb32-1" aria-hidden="true" tabindex="-1"></a>genes</span>
+<span id="cb32-2"><a href="tidying-common-data-formats.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 3 × 12</span></span>
+<span id="cb32-3"><a href="tidying-common-data-formats.html#cb32-3" aria-hidden="true" tabindex="-1"></a>  id     <span class="st">`</span><span class="at">WI-6.R1</span><span class="st">`</span> <span class="st">`</span><span class="at">WI-6.R2</span><span class="st">`</span> <span class="st">`</span><span class="at">WI-6.R4</span><span class="st">`</span> <span class="st">`</span><span class="at">WM-6.R1</span><span class="st">`</span> <span class="st">`</span><span class="at">WM-6.R2</span><span class="st">`</span> <span class="st">`</span><span class="at">WI-12.R1</span><span class="st">`</span> <span class="st">`</span><span class="at">WI-12.R2</span><span class="st">`</span></span>
+<span id="cb32-4"><a href="tidying-common-data-formats.html#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>      <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>      <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>      <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb32-5"><a href="tidying-common-data-formats.html#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> Gene <span class="dv">1</span>      <span class="fl">2.18</span>     <span class="fl">2.20</span>       <span class="fl">4.20</span>     <span class="fl">2.63</span>       <span class="fl">5.06</span>       <span class="fl">4.54</span>       <span class="fl">5.53</span></span>
+<span id="cb32-6"><a href="tidying-common-data-formats.html#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> Gene <span class="dv">2</span>      <span class="fl">1.46</span>     <span class="fl">0.585</span>      <span class="fl">1.86</span>     <span class="fl">0.515</span>      <span class="fl">2.88</span>       <span class="fl">1.36</span>       <span class="fl">2.96</span></span>
+<span id="cb32-7"><a href="tidying-common-data-formats.html#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> Gene <span class="dv">3</span>      <span class="fl">2.03</span>     <span class="fl">0.870</span>      <span class="fl">3.28</span>     <span class="fl">0.533</span>      <span class="fl">4.63</span>       <span class="fl">2.18</span>       <span class="fl">5.56</span></span>
+<span id="cb32-8"><a href="tidying-common-data-formats.html#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 4 more variables: `WI-12.R4` &lt;dbl&gt;, `WM-12.R1` &lt;dbl&gt;, `WM-12.R2` &lt;dbl&gt;,</span></span>
+<span id="cb32-9"><a href="tidying-common-data-formats.html#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   `WM-12.R4` &lt;dbl&gt;</span></span>
+<span id="cb32-10"><a href="tidying-common-data-formats.html#cb32-10" aria-hidden="true" tabindex="-1"></a>genes_long <span class="ot">&lt;-</span> genes <span class="sc">%&gt;%</span> </span>
+<span id="cb32-11"><a href="tidying-common-data-formats.html#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(variable, expr, <span class="sc">-</span>id) </span>
+<span id="cb32-12"><a href="tidying-common-data-formats.html#cb32-12" aria-hidden="true" tabindex="-1"></a>genes_long</span>
+<span id="cb32-13"><a href="tidying-common-data-formats.html#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 33 × 3</span></span>
+<span id="cb32-14"><a href="tidying-common-data-formats.html#cb32-14" aria-hidden="true" tabindex="-1"></a>   id     variable  expr</span>
+<span id="cb32-15"><a href="tidying-common-data-formats.html#cb32-15" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>  <span class="er">&lt;</span>chr<span class="sc">&gt;</span>    <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb32-16"><a href="tidying-common-data-formats.html#cb32-16" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> Gene <span class="dv">1</span> WI<span class="fl">-6.</span>R1  <span class="fl">2.18</span> </span>
+<span id="cb32-17"><a href="tidying-common-data-formats.html#cb32-17" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> Gene <span class="dv">2</span> WI<span class="fl">-6.</span>R1  <span class="fl">1.46</span> </span>
+<span id="cb32-18"><a href="tidying-common-data-formats.html#cb32-18" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> Gene <span class="dv">3</span> WI<span class="fl">-6.</span>R1  <span class="fl">2.03</span> </span>
+<span id="cb32-19"><a href="tidying-common-data-formats.html#cb32-19" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> Gene <span class="dv">1</span> WI<span class="fl">-6.</span>R2  <span class="fl">2.20</span> </span>
+<span id="cb32-20"><a href="tidying-common-data-formats.html#cb32-20" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> Gene <span class="dv">2</span> WI<span class="fl">-6.</span>R2  <span class="fl">0.585</span></span>
+<span id="cb32-21"><a href="tidying-common-data-formats.html#cb32-21" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> Gene <span class="dv">3</span> WI<span class="fl">-6.</span>R2  <span class="fl">0.870</span></span>
+<span id="cb32-22"><a href="tidying-common-data-formats.html#cb32-22" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> Gene <span class="dv">1</span> WI<span class="fl">-6.</span>R4  <span class="fl">4.20</span> </span>
+<span id="cb32-23"><a href="tidying-common-data-formats.html#cb32-23" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> Gene <span class="dv">2</span> WI<span class="fl">-6.</span>R4  <span class="fl">1.86</span> </span>
+<span id="cb32-24"><a href="tidying-common-data-formats.html#cb32-24" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> Gene <span class="dv">3</span> WI<span class="fl">-6.</span>R4  <span class="fl">3.28</span> </span>
+<span id="cb32-25"><a href="tidying-common-data-formats.html#cb32-25" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> Gene <span class="dv">1</span> WM<span class="fl">-6.</span>R1  <span class="fl">2.63</span> </span>
+<span id="cb32-26"><a href="tidying-common-data-formats.html#cb32-26" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 23 more rows</span></span></code></pre></div>
+<p>In this example, we identified the columns as containing expression levels of a gene during different experimental conditions (variables). We have <em>gathered</em> these variables into a single column, with the expression levels in a corresponding column. The <code>-id</code> argument to <code>gather()</code> indicates that we do not want the <code>id</code> column to be gathered; this has the effect of repeating the 3 values of gene for each variable.</p>
+<div id="separate-columns" class="section level3 hasAnchor" number="4.7.1">
+<h3><span class="header-section-number">4.7.1</span> Separate columns<a href="tidying-common-data-formats.html#separate-columns" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The variables in the previous example are a cryptic combination of treatment, timepoint, and replicate. Using <code>separate()</code>, we can separate this information out into a tidy (and much more human friendly) representation of the experimental conditions:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="tidying-common-data-formats.html#cb33-1" aria-hidden="true" tabindex="-1"></a>genes_long <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="tidying-common-data-formats.html#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(variable, <span class="fu">c</span>(<span class="st">&quot;trt&quot;</span>, <span class="st">&quot;leftover&quot;</span>), <span class="st">&quot;-&quot;</span>) </span>
+<span id="cb33-3"><a href="tidying-common-data-formats.html#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 33 × 4</span></span>
+<span id="cb33-4"><a href="tidying-common-data-formats.html#cb33-4" aria-hidden="true" tabindex="-1"></a>   id     trt   leftover  expr</span>
+<span id="cb33-5"><a href="tidying-common-data-formats.html#cb33-5" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>  <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>    <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb33-6"><a href="tidying-common-data-formats.html#cb33-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> Gene <span class="dv">1</span> WI    <span class="fl">6.</span>R1     <span class="fl">2.18</span> </span>
+<span id="cb33-7"><a href="tidying-common-data-formats.html#cb33-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> Gene <span class="dv">2</span> WI    <span class="fl">6.</span>R1     <span class="fl">1.46</span> </span>
+<span id="cb33-8"><a href="tidying-common-data-formats.html#cb33-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> Gene <span class="dv">3</span> WI    <span class="fl">6.</span>R1     <span class="fl">2.03</span> </span>
+<span id="cb33-9"><a href="tidying-common-data-formats.html#cb33-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> Gene <span class="dv">1</span> WI    <span class="fl">6.</span>R2     <span class="fl">2.20</span> </span>
+<span id="cb33-10"><a href="tidying-common-data-formats.html#cb33-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> Gene <span class="dv">2</span> WI    <span class="fl">6.</span>R2     <span class="fl">0.585</span></span>
+<span id="cb33-11"><a href="tidying-common-data-formats.html#cb33-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> Gene <span class="dv">3</span> WI    <span class="fl">6.</span>R2     <span class="fl">0.870</span></span>
+<span id="cb33-12"><a href="tidying-common-data-formats.html#cb33-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> Gene <span class="dv">1</span> WI    <span class="fl">6.</span>R4     <span class="fl">4.20</span> </span>
+<span id="cb33-13"><a href="tidying-common-data-formats.html#cb33-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> Gene <span class="dv">2</span> WI    <span class="fl">6.</span>R4     <span class="fl">1.86</span> </span>
+<span id="cb33-14"><a href="tidying-common-data-formats.html#cb33-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> Gene <span class="dv">3</span> WI    <span class="fl">6.</span>R4     <span class="fl">3.28</span> </span>
+<span id="cb33-15"><a href="tidying-common-data-formats.html#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> Gene <span class="dv">1</span> WM    <span class="fl">6.</span>R1     <span class="fl">2.63</span> </span>
+<span id="cb33-16"><a href="tidying-common-data-formats.html#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 23 more rows</span></span></code></pre></div>
+<p>First, we separate the treatment from the rest of the information.</p>
+<p>Next, we separate the remainder into timepoint and replicate variables.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="tidying-common-data-formats.html#cb34-1" aria-hidden="true" tabindex="-1"></a>genes_long <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="tidying-common-data-formats.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(variable, <span class="fu">c</span>(<span class="st">&quot;trt&quot;</span>, <span class="st">&quot;leftover&quot;</span>), <span class="st">&quot;-&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="tidying-common-data-formats.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(leftover, <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;rep&quot;</span>), <span class="st">&quot;</span><span class="sc">\\</span><span class="st">.&quot;</span>) </span>
+<span id="cb34-4"><a href="tidying-common-data-formats.html#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 33 × 5</span></span>
+<span id="cb34-5"><a href="tidying-common-data-formats.html#cb34-5" aria-hidden="true" tabindex="-1"></a>   id     trt   time  rep    expr</span>
+<span id="cb34-6"><a href="tidying-common-data-formats.html#cb34-6" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>  <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb34-7"><a href="tidying-common-data-formats.html#cb34-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> Gene <span class="dv">1</span> WI    <span class="dv">6</span>     R1    <span class="fl">2.18</span> </span>
+<span id="cb34-8"><a href="tidying-common-data-formats.html#cb34-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> Gene <span class="dv">2</span> WI    <span class="dv">6</span>     R1    <span class="fl">1.46</span> </span>
+<span id="cb34-9"><a href="tidying-common-data-formats.html#cb34-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> Gene <span class="dv">3</span> WI    <span class="dv">6</span>     R1    <span class="fl">2.03</span> </span>
+<span id="cb34-10"><a href="tidying-common-data-formats.html#cb34-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> Gene <span class="dv">1</span> WI    <span class="dv">6</span>     R2    <span class="fl">2.20</span> </span>
+<span id="cb34-11"><a href="tidying-common-data-formats.html#cb34-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> Gene <span class="dv">2</span> WI    <span class="dv">6</span>     R2    <span class="fl">0.585</span></span>
+<span id="cb34-12"><a href="tidying-common-data-formats.html#cb34-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> Gene <span class="dv">3</span> WI    <span class="dv">6</span>     R2    <span class="fl">0.870</span></span>
+<span id="cb34-13"><a href="tidying-common-data-formats.html#cb34-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> Gene <span class="dv">1</span> WI    <span class="dv">6</span>     R4    <span class="fl">4.20</span> </span>
+<span id="cb34-14"><a href="tidying-common-data-formats.html#cb34-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> Gene <span class="dv">2</span> WI    <span class="dv">6</span>     R4    <span class="fl">1.86</span> </span>
+<span id="cb34-15"><a href="tidying-common-data-formats.html#cb34-15" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> Gene <span class="dv">3</span> WI    <span class="dv">6</span>     R4    <span class="fl">3.28</span> </span>
+<span id="cb34-16"><a href="tidying-common-data-formats.html#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> Gene <span class="dv">1</span> WM    <span class="dv">6</span>     R1    <span class="fl">2.63</span> </span>
+<span id="cb34-17"><a href="tidying-common-data-formats.html#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 23 more rows</span></span></code></pre></div>
+<p>This data is tidy, in that observations are in rows and variables are in columns, but it is not as easy to read. We can examine the different features of this data set using <code>spread()</code>.</p>
+</div>
+<div id="now-spread-to-examine-different-aspects" class="section level3 hasAnchor" number="4.7.2">
+<h3><span class="header-section-number">4.7.2</span> Now spread to examine different aspects<a href="tidying-common-data-formats.html#now-spread-to-examine-different-aspects" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>There are several different features of the data which we might want to explore. Each feature requires a slight reconfiguration of the dataset, but these are easily accomplished using <code>spread()</code>.</p>
+<div id="examine-treatments-against-each-other" class="section level4 hasAnchor" number="4.7.2.1">
+<h4><span class="header-section-number">4.7.2.1</span> Examine treatments against each other<a href="tidying-common-data-formats.html#examine-treatments-against-each-other" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="tidying-common-data-formats.html#cb35-1" aria-hidden="true" tabindex="-1"></a>genes_long <span class="ot">&lt;-</span> genes_long <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="tidying-common-data-formats.html#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(variable, <span class="fu">c</span>(<span class="st">&quot;trt&quot;</span>, <span class="st">&quot;leftover&quot;</span>), <span class="st">&quot;-&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="tidying-common-data-formats.html#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(leftover, <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;rep&quot;</span>), <span class="st">&quot;</span><span class="sc">\\</span><span class="st">.&quot;</span>) </span>
+<span id="cb35-4"><a href="tidying-common-data-formats.html#cb35-4" aria-hidden="true" tabindex="-1"></a>genes_long <span class="sc">%&gt;%</span></span>
+<span id="cb35-5"><a href="tidying-common-data-formats.html#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(trt, expr) <span class="sc">%&gt;%</span></span>
+<span id="cb35-6"><a href="tidying-common-data-formats.html#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>WI, <span class="at">y=</span>WM, <span class="at">colour=</span>id, <span class="at">shape =</span> id)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div>
+<p><img src="book_files/figure-html/treatments-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Generally, some negative association within each gene, WM is low if WI is high. <!--Not really... at best, there's a negative association for Gene 2, but even that is pushing it. If you don't consider each gene separately, there's a positive association. --></p>
+<!-- The color scheme is INCREDIBLY difficult to see... -->
+</div>
+<div id="examine-replicates-against-each-other" class="section level4 hasAnchor" number="4.7.2.2">
+<h4><span class="header-section-number">4.7.2.2</span> Examine replicates against each other<a href="tidying-common-data-formats.html#examine-replicates-against-each-other" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="tidying-common-data-formats.html#cb36-1" aria-hidden="true" tabindex="-1"></a>genes_long <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="tidying-common-data-formats.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(rep, expr) <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="tidying-common-data-formats.html#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>R1, <span class="at">y=</span>R4, <span class="at">colour=</span>id)) <span class="sc">+</span> </span>
+<span id="cb36-4"><a href="tidying-common-data-formats.html#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb36-5"><a href="tidying-common-data-formats.html#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>()</span></code></pre></div>
+<p><img src="book_files/figure-html/replicates-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Very roughly, replicate 4 is like replicate 1, eg if one is low, the other is low. That’s a good thing, that the replicates are fairly similar.</p>
+</div>
+</div>
+</div>
+<div id="try-this-yourself" class="section level2 hasAnchor" number="4.8">
+<h2><span class="header-section-number">4.8</span> Try this yourself<a href="tidying-common-data-formats.html#try-this-yourself" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Here is a little data set to practice gather, spread and separate on.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="tidying-common-data-formats.html#cb37-1" aria-hidden="true" tabindex="-1"></a>kb <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/koala_bilby.csv&quot;</span>)</span>
+<span id="cb37-2"><a href="tidying-common-data-formats.html#cb37-2" aria-hidden="true" tabindex="-1"></a>kb</span>
+<span id="cb37-3"><a href="tidying-common-data-formats.html#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 5 × 5</span></span>
+<span id="cb37-4"><a href="tidying-common-data-formats.html#cb37-4" aria-hidden="true" tabindex="-1"></a>  ID    koala_NSW koala_VIC bilby_NSW bilby_VIC</span>
+<span id="cb37-5"><a href="tidying-common-data-formats.html#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb37-6"><a href="tidying-common-data-formats.html#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> grey         <span class="dv">23</span>        <span class="dv">43</span>        <span class="dv">11</span>         <span class="dv">8</span></span>
+<span id="cb37-7"><a href="tidying-common-data-formats.html#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> cream        <span class="dv">56</span>        <span class="dv">89</span>        <span class="dv">22</span>        <span class="dv">17</span></span>
+<span id="cb37-8"><a href="tidying-common-data-formats.html#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> white        <span class="dv">35</span>        <span class="dv">72</span>        <span class="dv">13</span>         <span class="dv">6</span></span>
+<span id="cb37-9"><a href="tidying-common-data-formats.html#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> black        <span class="dv">28</span>        <span class="dv">44</span>        <span class="dv">19</span>        <span class="dv">16</span></span>
+<span id="cb37-10"><a href="tidying-common-data-formats.html#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> taupe        <span class="dv">25</span>        <span class="dv">37</span>        <span class="dv">21</span>        <span class="dv">12</span></span></code></pre></div>
+<p>Try to do these by yourself, but the code is in the Rmd file if you need help.</p>
+<div id="exercise-1" class="section level3 hasAnchor" number="4.8.1">
+<h3><span class="header-section-number">4.8.1</span> Exercise 1<a href="tidying-common-data-formats.html#exercise-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Gather the data into long form, naming the two new variables, <code>label</code> and <code>count</code></p>
+<pre><code># A tibble: 20 × 3
+   ID    label     count
+   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
+ 1 grey  koala_NSW    23
+ 2 cream koala_NSW    56
+ 3 white koala_NSW    35
+ 4 black koala_NSW    28
+ 5 taupe koala_NSW    25
+ 6 grey  koala_VIC    43
+ 7 cream koala_VIC    89
+ 8 white koala_VIC    72
+ 9 black koala_VIC    44
+10 taupe koala_VIC    37
+11 grey  bilby_NSW    11
+12 cream bilby_NSW    22
+13 white bilby_NSW    13
+14 black bilby_NSW    19
+15 taupe bilby_NSW    21
+16 grey  bilby_VIC     8
+17 cream bilby_VIC    17
+18 white bilby_VIC     6
+19 black bilby_VIC    16
+20 taupe bilby_VIC    12</code></pre>
+</div>
+<div id="exercise-2" class="section level3 hasAnchor" number="4.8.2">
+<h3><span class="header-section-number">4.8.2</span> Exercise 2<a href="tidying-common-data-formats.html#exercise-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Separate the labels into two new variables, <code>animal</code>, <code>state</code></p>
+<pre><code># A tibble: 20 × 4
+   ID    animal state count
+   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;
+ 1 grey  koala  NSW      23
+ 2 cream koala  NSW      56
+ 3 white koala  NSW      35
+ 4 black koala  NSW      28
+ 5 taupe koala  NSW      25
+ 6 grey  koala  VIC      43
+ 7 cream koala  VIC      89
+ 8 white koala  VIC      72
+ 9 black koala  VIC      44
+10 taupe koala  VIC      37
+11 grey  bilby  NSW      11
+12 cream bilby  NSW      22
+13 white bilby  NSW      13
+14 black bilby  NSW      19
+15 taupe bilby  NSW      21
+16 grey  bilby  VIC       8
+17 cream bilby  VIC      17
+18 white bilby  VIC       6
+19 black bilby  VIC      16
+20 taupe bilby  VIC      12</code></pre>
+</div>
+<div id="exercise-3" class="section level3 hasAnchor" number="4.8.3">
+<h3><span class="header-section-number">4.8.3</span> Exercise 3<a href="tidying-common-data-formats.html#exercise-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Spread the long form data into wide form, where the columns are the states.</p>
+<pre><code># A tibble: 10 × 4
+   ID    animal   NSW   VIC
+   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
+ 1 black bilby     19    16
+ 2 black koala     28    44
+ 3 cream bilby     22    17
+ 4 cream koala     56    89
+ 5 grey  bilby     11     8
+ 6 grey  koala     23    43
+ 7 taupe bilby     21    12
+ 8 taupe koala     25    37
+ 9 white bilby     13     6
+10 white koala     35    72</code></pre>
+</div>
+<div id="exercise-4" class="section level3 hasAnchor" number="4.8.4">
+<h3><span class="header-section-number">4.8.4</span> Exercise 4<a href="tidying-common-data-formats.html#exercise-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Spread the long form data into wide form, where the columns are the animals.</p>
+<pre><code># A tibble: 10 × 4
+   ID    state bilby koala
+   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 black NSW      19    28
+ 2 black VIC      16    44
+ 3 cream NSW      22    56
+ 4 cream VIC      17    89
+ 5 grey  NSW      11    23
+ 6 grey  VIC       8    43
+ 7 taupe NSW      21    25
+ 8 taupe VIC      12    37
+ 9 white NSW      13    35
+10 white VIC       6    72</code></pre>
+</div>
+</div>
+<div id="tidying-melbourne-weather" class="section level2 hasAnchor" number="4.9">
+<h2><span class="header-section-number">4.9</span> Tidying Melbourne weather<a href="tidying-common-data-formats.html#tidying-melbourne-weather" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This is seriously messy!</p>
+<p>Read the data first, just the columns that we need. The data is in fixed column width format, which means a certain number of columns are designated for the particular records, eg columns 1-11 contains the station id, columns 12-15 contain the year, …</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="tidying-common-data-formats.html#cb42-1" aria-hidden="true" tabindex="-1"></a>melbtemp <span class="ot">&lt;-</span> <span class="fu">read_fwf</span>(<span class="st">&quot;data/ASN00086282.dly&quot;</span>, </span>
+<span id="cb42-2"><a href="tidying-common-data-formats.html#cb42-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">col_positions=</span><span class="fu">fwf_widths</span>(<span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">4</span>, </span>
+<span id="cb42-3"><a href="tidying-common-data-formats.html#cb42-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">31</span>)), </span>
+<span id="cb42-4"><a href="tidying-common-data-formats.html#cb42-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;station&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;month&quot;</span>,</span>
+<span id="cb42-5"><a href="tidying-common-data-formats.html#cb42-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;variable&quot;</span>, <span class="fu">paste0</span>(<span class="st">&quot;X&quot;</span>, <span class="dv">5</span><span class="sc">:</span><span class="dv">128</span>))))</span>
+<span id="cb42-6"><a href="tidying-common-data-formats.html#cb42-6" aria-hidden="true" tabindex="-1"></a>melbtemp</span>
+<span id="cb42-7"><a href="tidying-common-data-formats.html#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 2,267 × 128</span></span>
+<span id="cb42-8"><a href="tidying-common-data-formats.html#cb42-8" aria-hidden="true" tabindex="-1"></a>   station   year month variable    X5 X6    X7    X8       X9 X10   X11   X12  </span>
+<span id="cb42-9"><a href="tidying-common-data-formats.html#cb42-9" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>    <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>    <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span></span>
+<span id="cb42-10"><a href="tidying-common-data-formats.html#cb42-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> ASN0008…  <span class="dv">1970</span> <span class="dv">07</span>    TMAX       <span class="dv">141</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a       <span class="dv">124</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-11"><a href="tidying-common-data-formats.html#cb42-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> ASN0008…  <span class="dv">1970</span> <span class="dv">07</span>    TMIN        <span class="dv">80</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a        <span class="dv">63</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-12"><a href="tidying-common-data-formats.html#cb42-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> ASN0008…  <span class="dv">1970</span> <span class="dv">07</span>    PRCP         <span class="dv">3</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a        <span class="dv">30</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-13"><a href="tidying-common-data-formats.html#cb42-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> ASN0008…  <span class="dv">1970</span> <span class="dv">08</span>    TMAX       <span class="dv">145</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a       <span class="dv">128</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-14"><a href="tidying-common-data-formats.html#cb42-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> ASN0008…  <span class="dv">1970</span> <span class="dv">08</span>    TMIN        <span class="dv">50</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a        <span class="dv">61</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-15"><a href="tidying-common-data-formats.html#cb42-15" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> ASN0008…  <span class="dv">1970</span> <span class="dv">08</span>    PRCP         <span class="dv">0</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a        <span class="dv">66</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-16"><a href="tidying-common-data-formats.html#cb42-16" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> ASN0008…  <span class="dv">1970</span> <span class="dv">09</span>    TMAX       <span class="dv">168</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a       <span class="dv">168</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-17"><a href="tidying-common-data-formats.html#cb42-17" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> ASN0008…  <span class="dv">1970</span> <span class="dv">09</span>    TMIN        <span class="dv">19</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a        <span class="dv">29</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-18"><a href="tidying-common-data-formats.html#cb42-18" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> ASN0008…  <span class="dv">1970</span> <span class="dv">09</span>    PRCP         <span class="dv">0</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a         <span class="dv">0</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-19"><a href="tidying-common-data-formats.html#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> ASN0008…  <span class="dv">1970</span> <span class="dv">10</span>    TMAX       <span class="dv">189</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a       <span class="dv">194</span> <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  <span class="er">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>  a    </span>
+<span id="cb42-20"><a href="tidying-common-data-formats.html#cb42-20" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 2,257 more rows</span></span>
+<span id="cb42-21"><a href="tidying-common-data-formats.html#cb42-21" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 116 more variables: X13 &lt;dbl&gt;, X14 &lt;chr&gt;, X15 &lt;lgl&gt;, X16 &lt;chr&gt;, X17 &lt;dbl&gt;,</span></span>
+<span id="cb42-22"><a href="tidying-common-data-formats.html#cb42-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   X18 &lt;chr&gt;, X19 &lt;lgl&gt;, X20 &lt;chr&gt;, X21 &lt;dbl&gt;, X22 &lt;chr&gt;, X23 &lt;lgl&gt;,</span></span>
+<span id="cb42-23"><a href="tidying-common-data-formats.html#cb42-23" aria-hidden="true" tabindex="-1"></a><span class="co">#   X24 &lt;chr&gt;, X25 &lt;dbl&gt;, X26 &lt;chr&gt;, X27 &lt;lgl&gt;, X28 &lt;chr&gt;, X29 &lt;dbl&gt;,</span></span>
+<span id="cb42-24"><a href="tidying-common-data-formats.html#cb42-24" aria-hidden="true" tabindex="-1"></a><span class="co">#   X30 &lt;chr&gt;, X31 &lt;lgl&gt;, X32 &lt;chr&gt;, X33 &lt;dbl&gt;, X34 &lt;chr&gt;, X35 &lt;lgl&gt;,</span></span>
+<span id="cb42-25"><a href="tidying-common-data-formats.html#cb42-25" aria-hidden="true" tabindex="-1"></a><span class="co">#   X36 &lt;chr&gt;, X37 &lt;dbl&gt;, X38 &lt;chr&gt;, X39 &lt;lgl&gt;, X40 &lt;chr&gt;, X41 &lt;dbl&gt;,</span></span>
+<span id="cb42-26"><a href="tidying-common-data-formats.html#cb42-26" aria-hidden="true" tabindex="-1"></a><span class="co">#   X42 &lt;chr&gt;, X43 &lt;lgl&gt;, X44 &lt;chr&gt;, X45 &lt;dbl&gt;, X46 &lt;chr&gt;, X47 &lt;lgl&gt;, …</span></span></code></pre></div>
+<p>X5, X9, … contain the temperature and precipitation records. The remaining columns have data quality flags. We want to ignore the data quality flags for now, and select every fourth variable.</p>
+<div id="sometime-easier-to-index-select" class="section level3 hasAnchor" number="4.9.1">
+<h3><span class="header-section-number">4.9.1</span> Sometime easier to index select<a href="tidying-common-data-formats.html#sometime-easier-to-index-select" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><code>[...]</code> allows indexing of elements of a vector, or collection of numbers</li>
+<li><code>c(1:4, seq(5,128,4))</code> means collect items 1 through 4, and then every 4th item until the 128’th</li>
+</ul>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="tidying-common-data-formats.html#cb43-1" aria-hidden="true" tabindex="-1"></a>melbtemp <span class="ot">&lt;-</span> melbtemp[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">128</span>, <span class="dv">4</span>))] </span>
+<span id="cb43-2"><a href="tidying-common-data-formats.html#cb43-2" aria-hidden="true" tabindex="-1"></a>melbtemp</span>
+<span id="cb43-3"><a href="tidying-common-data-formats.html#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 2,267 × 35</span></span>
+<span id="cb43-4"><a href="tidying-common-data-formats.html#cb43-4" aria-hidden="true" tabindex="-1"></a>   station   year month variable    X5    X9   X13   X17   X21   X25   X29   X33</span>
+<span id="cb43-5"><a href="tidying-common-data-formats.html#cb43-5" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>    <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>    <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb43-6"><a href="tidying-common-data-formats.html#cb43-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> ASN0008…  <span class="dv">1970</span> <span class="dv">07</span>    TMAX       <span class="dv">141</span>   <span class="dv">124</span>   <span class="dv">113</span>   <span class="dv">123</span>   <span class="dv">148</span>   <span class="dv">149</span>   <span class="dv">139</span>   <span class="dv">153</span></span>
+<span id="cb43-7"><a href="tidying-common-data-formats.html#cb43-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> ASN0008…  <span class="dv">1970</span> <span class="dv">07</span>    TMIN        <span class="dv">80</span>    <span class="dv">63</span>    <span class="dv">36</span>    <span class="dv">57</span>    <span class="dv">69</span>    <span class="dv">47</span>    <span class="dv">84</span>    <span class="dv">78</span></span>
+<span id="cb43-8"><a href="tidying-common-data-formats.html#cb43-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> ASN0008…  <span class="dv">1970</span> <span class="dv">07</span>    PRCP         <span class="dv">3</span>    <span class="dv">30</span>     <span class="dv">0</span>     <span class="dv">0</span>    <span class="dv">36</span>     <span class="dv">3</span>     <span class="dv">0</span>     <span class="dv">0</span></span>
+<span id="cb43-9"><a href="tidying-common-data-formats.html#cb43-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> ASN0008…  <span class="dv">1970</span> <span class="dv">08</span>    TMAX       <span class="dv">145</span>   <span class="dv">128</span>   <span class="dv">150</span>   <span class="dv">122</span>   <span class="dv">109</span>   <span class="dv">112</span>   <span class="dv">116</span>   <span class="dv">142</span></span>
+<span id="cb43-10"><a href="tidying-common-data-formats.html#cb43-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> ASN0008…  <span class="dv">1970</span> <span class="dv">08</span>    TMIN        <span class="dv">50</span>    <span class="dv">61</span>    <span class="dv">75</span>    <span class="dv">67</span>    <span class="dv">41</span>    <span class="dv">51</span>    <span class="dv">48</span>    <span class="sc">-</span><span class="dv">7</span></span>
+<span id="cb43-11"><a href="tidying-common-data-formats.html#cb43-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> ASN0008…  <span class="dv">1970</span> <span class="dv">08</span>    PRCP         <span class="dv">0</span>    <span class="dv">66</span>     <span class="dv">0</span>    <span class="dv">53</span>    <span class="dv">13</span>     <span class="dv">3</span>     <span class="dv">8</span>     <span class="dv">0</span></span>
+<span id="cb43-12"><a href="tidying-common-data-formats.html#cb43-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> ASN0008…  <span class="dv">1970</span> <span class="dv">09</span>    TMAX       <span class="dv">168</span>   <span class="dv">168</span>   <span class="dv">162</span>   <span class="dv">162</span>   <span class="dv">162</span>   <span class="dv">150</span>   <span class="dv">184</span>   <span class="dv">179</span></span>
+<span id="cb43-13"><a href="tidying-common-data-formats.html#cb43-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> ASN0008…  <span class="dv">1970</span> <span class="dv">09</span>    TMIN        <span class="dv">19</span>    <span class="dv">29</span>    <span class="dv">62</span>    <span class="dv">81</span>    <span class="dv">81</span>    <span class="dv">55</span>    <span class="dv">73</span>    <span class="dv">97</span></span>
+<span id="cb43-14"><a href="tidying-common-data-formats.html#cb43-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> ASN0008…  <span class="dv">1970</span> <span class="dv">09</span>    PRCP         <span class="dv">0</span>     <span class="dv">0</span>     <span class="dv">0</span>     <span class="dv">0</span>     <span class="dv">3</span>     <span class="dv">5</span>     <span class="dv">0</span>    <span class="dv">38</span></span>
+<span id="cb43-15"><a href="tidying-common-data-formats.html#cb43-15" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> ASN0008…  <span class="dv">1970</span> <span class="dv">10</span>    TMAX       <span class="dv">189</span>   <span class="dv">194</span>   <span class="dv">204</span>   <span class="dv">267</span>   <span class="dv">256</span>   <span class="dv">228</span>   <span class="dv">237</span>   <span class="dv">144</span></span>
+<span id="cb43-16"><a href="tidying-common-data-formats.html#cb43-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 2,257 more rows</span></span>
+<span id="cb43-17"><a href="tidying-common-data-formats.html#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 23 more variables: X37 &lt;dbl&gt;, X41 &lt;dbl&gt;, X45 &lt;dbl&gt;, X49 &lt;dbl&gt;, X53 &lt;dbl&gt;,</span></span>
+<span id="cb43-18"><a href="tidying-common-data-formats.html#cb43-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   X57 &lt;dbl&gt;, X61 &lt;dbl&gt;, X65 &lt;dbl&gt;, X69 &lt;dbl&gt;, X73 &lt;dbl&gt;, X77 &lt;dbl&gt;,</span></span>
+<span id="cb43-19"><a href="tidying-common-data-formats.html#cb43-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   X81 &lt;dbl&gt;, X85 &lt;dbl&gt;, X89 &lt;dbl&gt;, X93 &lt;dbl&gt;, X97 &lt;dbl&gt;, X101 &lt;dbl&gt;,</span></span>
+<span id="cb43-20"><a href="tidying-common-data-formats.html#cb43-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   X105 &lt;dbl&gt;, X109 &lt;dbl&gt;, X113 &lt;dbl&gt;, X117 &lt;dbl&gt;, X121 &lt;dbl&gt;, X125 &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div id="make-long-form" class="section level3 hasAnchor" number="4.9.2">
+<h3><span class="header-section-number">4.9.2</span> Make long form<a href="tidying-common-data-formats.html#make-long-form" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="tidying-common-data-formats.html#cb44-1" aria-hidden="true" tabindex="-1"></a>melbtemp_long <span class="ot">&lt;-</span> melbtemp <span class="sc">%&gt;%</span> </span>
+<span id="cb44-2"><a href="tidying-common-data-formats.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(day, value, X5<span class="sc">:</span>X125)</span>
+<span id="cb44-3"><a href="tidying-common-data-formats.html#cb44-3" aria-hidden="true" tabindex="-1"></a>melbtemp_long</span>
+<span id="cb44-4"><a href="tidying-common-data-formats.html#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 70,277 × 6</span></span>
+<span id="cb44-5"><a href="tidying-common-data-formats.html#cb44-5" aria-hidden="true" tabindex="-1"></a>   station      year month variable day   value</span>
+<span id="cb44-6"><a href="tidying-common-data-formats.html#cb44-6" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>    <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb44-7"><a href="tidying-common-data-formats.html#cb44-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> ASN00086282  <span class="dv">1970</span> <span class="dv">07</span>    TMAX     X5      <span class="dv">141</span></span>
+<span id="cb44-8"><a href="tidying-common-data-formats.html#cb44-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> ASN00086282  <span class="dv">1970</span> <span class="dv">07</span>    TMIN     X5       <span class="dv">80</span></span>
+<span id="cb44-9"><a href="tidying-common-data-formats.html#cb44-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> ASN00086282  <span class="dv">1970</span> <span class="dv">07</span>    PRCP     X5        <span class="dv">3</span></span>
+<span id="cb44-10"><a href="tidying-common-data-formats.html#cb44-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> ASN00086282  <span class="dv">1970</span> <span class="dv">08</span>    TMAX     X5      <span class="dv">145</span></span>
+<span id="cb44-11"><a href="tidying-common-data-formats.html#cb44-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> ASN00086282  <span class="dv">1970</span> <span class="dv">08</span>    TMIN     X5       <span class="dv">50</span></span>
+<span id="cb44-12"><a href="tidying-common-data-formats.html#cb44-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> ASN00086282  <span class="dv">1970</span> <span class="dv">08</span>    PRCP     X5        <span class="dv">0</span></span>
+<span id="cb44-13"><a href="tidying-common-data-formats.html#cb44-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> ASN00086282  <span class="dv">1970</span> <span class="dv">09</span>    TMAX     X5      <span class="dv">168</span></span>
+<span id="cb44-14"><a href="tidying-common-data-formats.html#cb44-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> ASN00086282  <span class="dv">1970</span> <span class="dv">09</span>    TMIN     X5       <span class="dv">19</span></span>
+<span id="cb44-15"><a href="tidying-common-data-formats.html#cb44-15" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> ASN00086282  <span class="dv">1970</span> <span class="dv">09</span>    PRCP     X5        <span class="dv">0</span></span>
+<span id="cb44-16"><a href="tidying-common-data-formats.html#cb44-16" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> ASN00086282  <span class="dv">1970</span> <span class="dv">10</span>    TMAX     X5      <span class="dv">189</span></span>
+<span id="cb44-17"><a href="tidying-common-data-formats.html#cb44-17" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 70,267 more rows</span></span></code></pre></div>
+<p>This is basically what we need. The day variable doesn’t have the right values in it, but we can fix this later.</p>
+</div>
+<div id="use-spread-to-look-at-different-things" class="section level3 hasAnchor" number="4.9.3">
+<h3><span class="header-section-number">4.9.3</span> Use spread to look at different things<a href="tidying-common-data-formats.html#use-spread-to-look-at-different-things" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>But there are a couple of things that I need to fix to make it possible to do these plots. We will discuss these operations next week. <!-- Next week? --></p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="tidying-common-data-formats.html#cb45-1" aria-hidden="true" tabindex="-1"></a>melbtemp_long <span class="ot">&lt;-</span> melbtemp_long <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="tidying-common-data-formats.html#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(variable <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;TMIN&quot;</span>, <span class="st">&quot;TMAX&quot;</span>, <span class="st">&quot;PRCP&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-3"><a href="tidying-common-data-formats.html#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">ifelse</span>(value <span class="sc">==</span> <span class="sc">-</span><span class="dv">9999</span>, <span class="cn">NA</span>, value))</span></code></pre></div>
+</div>
+<div id="what-are-the-numbers" class="section level3 hasAnchor" number="4.9.4">
+<h3><span class="header-section-number">4.9.4</span> What are the numbers?<a href="tidying-common-data-formats.html#what-are-the-numbers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>What is the range of temperature and precipitation?</li>
+<li>What units could this be in?</li>
+<li>Why are some values -9999?</li>
+</ul>
+<p>Go to the data source: <a href="https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt">https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt</a></p>
+</div>
+<div id="now-use-spread" class="section level3 hasAnchor" number="4.9.5">
+<h3><span class="header-section-number">4.9.5</span> Now use spread<a href="tidying-common-data-formats.html#now-use-spread" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="max-vs-min" class="section level4 hasAnchor" number="4.9.5.1">
+<h4><span class="header-section-number">4.9.5.1</span> Max vs Min<a href="tidying-common-data-formats.html#max-vs-min" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="tidying-common-data-formats.html#cb46-1" aria-hidden="true" tabindex="-1"></a>melbtemp_long <span class="sc">%&gt;%</span> <span class="fu">spread</span>(variable, value) <span class="sc">%&gt;%</span></span>
+<span id="cb46-2"><a href="tidying-common-data-formats.html#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>TMIN, <span class="at">y=</span>TMAX)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb46-3"><a href="tidying-common-data-formats.html#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span> <span class="fu">geom_abline</span>(<span class="at">slope=</span><span class="dv">1</span>, <span class="at">intercept=</span><span class="dv">0</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/practicemelb5-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Oh, TMAX is always higher than TMIN. This is a good thing.</p>
+</div>
+<div id="winter-vs-summer" class="section level4 hasAnchor" number="4.9.5.2">
+<h4><span class="header-section-number">4.9.5.2</span> Winter vs Summer<a href="tidying-common-data-formats.html#winter-vs-summer" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="tidying-common-data-formats.html#cb47-1" aria-hidden="true" tabindex="-1"></a>melbtemp_long <span class="sc">%&gt;%</span> </span>
+<span id="cb47-2"><a href="tidying-common-data-formats.html#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(variable <span class="sc">==</span> <span class="st">&quot;TMAX&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-3"><a href="tidying-common-data-formats.html#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(month, value) <span class="sc">%&gt;%</span></span>
+<span id="cb47-4"><a href="tidying-common-data-formats.html#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">07</span><span class="st">`</span>, <span class="at">y=</span><span class="st">`</span><span class="at">01</span><span class="st">`</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb47-5"><a href="tidying-common-data-formats.html#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;July&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;Jan&quot;</span>) <span class="sc">+</span></span>
+<span id="cb47-6"><a href="tidying-common-data-formats.html#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span> <span class="fu">geom_abline</span>(<span class="at">slope=</span><span class="dv">1</span>, <span class="at">intercept=</span><span class="dv">0</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/practicemelb6-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Same day of the month, same year, January has higher maximum temperatures than July. Except two days, the July max exceeded the January max. (This comparison is a bit whacky, though right?)</p>
+</div>
+</div>
+</div>
+<div id="exercises" class="section level2 hasAnchor" number="4.10">
+<h2><span class="header-section-number">4.10</span> Exercises<a href="tidying-common-data-formats.html#exercises" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li><a href="http://fivethirtyeight.com/datalab/airplane-etiquette-recline-seat/">41% Of Fliers Think You’re Rude If You Recline Your Seat</a>. In the following table, V1 is a response to the question “Is it rude to recline your seat on a plane?”, and V2 is the response to the question “Do you ever recline your seat when you fly?”. The data is in the form of a contingency table.</li>
+</ol>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="tidying-common-data-formats.html#cb48-1" aria-hidden="true" tabindex="-1"></a>fly_tbl <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/fly_tbl.csv&quot;</span>)</span>
+<span id="cb48-2"><a href="tidying-common-data-formats.html#cb48-2" aria-hidden="true" tabindex="-1"></a>fly_tbl</span>
+<span id="cb48-3"><a href="tidying-common-data-formats.html#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 3 × 6</span></span>
+<span id="cb48-4"><a href="tidying-common-data-formats.html#cb48-4" aria-hidden="true" tabindex="-1"></a>  Is_it_rude_to_recline <span class="st">`</span><span class="at">I_recline_seat:Always</span><span class="st">`</span> <span class="st">`</span><span class="at">I_recline_seat:Usually</span><span class="st">`</span></span>
+<span id="cb48-5"><a href="tidying-common-data-formats.html#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                                   <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>                    <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb48-6"><a href="tidying-common-data-formats.html#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> No, not rude at all                       <span class="dv">124</span>                      <span class="dv">145</span></span>
+<span id="cb48-7"><a href="tidying-common-data-formats.html#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> Yes, somewhat rude                          <span class="dv">9</span>                       <span class="dv">27</span></span>
+<span id="cb48-8"><a href="tidying-common-data-formats.html#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> Yes, very rude                              <span class="dv">3</span>                        <span class="dv">3</span></span>
+<span id="cb48-9"><a href="tidying-common-data-formats.html#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 3 more variables: `I_recline_seat:About half the time` &lt;dbl&gt;,</span></span>
+<span id="cb48-10"><a href="tidying-common-data-formats.html#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   `I_recline_seat:Once in a while` &lt;dbl&gt;, `I_recline_seat:Never` &lt;dbl&gt;</span></span></code></pre></div>
+<ol style="list-style-type: lower-alpha">
+<li>What are the variables and observations in this data?</li>
+<li>Put the data in tidy long form (using the names <code>V2</code> as the key variable, and <code>count</code> as the value).</li>
+</ol>
+<p>You can get the data from <a href="http://dmac.dicook.org/lectures/data/fly_tbl.csv">data/fly_tbl.csv</a></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Your job is to tidy the TB incidence data.</li>
+</ol>
+<ul>
+<li>Write down the steps that will be needed go from raw data to tidy</li>
+<li>Write the code piece by piece</li>
+</ul>
+<p>You can get the data from <a href="http://dmac.dicook.org/lectures/data/TB_notifications_2018-03-18.csv">TB_notifications_2018-03-18.csv</a></p>
+<ol start="3" style="list-style-type: decimal">
+<li>For the data set, <code>rates.csv</code>,</li>
+</ol>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="tidying-common-data-formats.html#cb49-1" aria-hidden="true" tabindex="-1"></a>rates <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/rates.csv&quot;</span>)</span>
+<span id="cb49-2"><a href="tidying-common-data-formats.html#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rates)</span>
+<span id="cb49-3"><a href="tidying-common-data-formats.html#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 6 × 169</span></span>
+<span id="cb49-4"><a href="tidying-common-data-formats.html#cb49-4" aria-hidden="true" tabindex="-1"></a>  date         AED   AFN   ALL   AMD   ANG   AOA   ARS   AUD   AWG   AZN   BAM</span>
+<span id="cb49-5"><a href="tidying-common-data-formats.html#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>date<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb49-6"><a href="tidying-common-data-formats.html#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">2017-06-20</span>  <span class="fl">3.67</span>  <span class="fl">68.1</span>  <span class="fl">119.</span>  <span class="fl">481.</span>  <span class="fl">1.78</span>  <span class="fl">166.</span>  <span class="fl">16.1</span>  <span class="fl">1.32</span>  <span class="fl">1.80</span>   <span class="fl">1.7</span>  <span class="fl">1.76</span></span>
+<span id="cb49-7"><a href="tidying-common-data-formats.html#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">2017-06-21</span>  <span class="fl">3.67</span>  <span class="fl">68.1</span>  <span class="fl">119.</span>  <span class="fl">480.</span>  <span class="fl">1.78</span>  <span class="fl">166.</span>  <span class="fl">16.2</span>  <span class="fl">1.32</span>  <span class="fl">1.79</span>   <span class="fl">1.7</span>  <span class="fl">1.75</span></span>
+<span id="cb49-8"><a href="tidying-common-data-formats.html#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">2017-06-22</span>  <span class="fl">3.67</span>  <span class="fl">68.1</span>  <span class="fl">119.</span>  <span class="fl">481.</span>  <span class="fl">1.78</span>  <span class="fl">166.</span>  <span class="fl">16.1</span>  <span class="fl">1.33</span>  <span class="fl">1.79</span>   <span class="fl">1.7</span>  <span class="fl">1.75</span></span>
+<span id="cb49-9"><a href="tidying-common-data-formats.html#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">2017-06-23</span>  <span class="fl">3.67</span>  <span class="fl">68.1</span>  <span class="fl">118.</span>  <span class="fl">479.</span>  <span class="fl">1.78</span>  <span class="fl">166.</span>  <span class="fl">16.2</span>  <span class="fl">1.32</span>  <span class="fl">1.80</span>   <span class="fl">1.7</span>  <span class="fl">1.75</span></span>
+<span id="cb49-10"><a href="tidying-common-data-formats.html#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="dv">2017-06-24</span>  <span class="fl">3.67</span>  <span class="fl">68.1</span>  <span class="fl">118.</span>  <span class="fl">479.</span>  <span class="fl">1.78</span>  <span class="fl">166.</span>  <span class="fl">16.2</span>  <span class="fl">1.32</span>  <span class="fl">1.80</span>   <span class="fl">1.7</span>  <span class="fl">1.75</span></span>
+<span id="cb49-11"><a href="tidying-common-data-formats.html#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> <span class="dv">2017-06-25</span>  <span class="fl">3.67</span>  <span class="fl">67.9</span>  <span class="fl">118.</span>  <span class="fl">479.</span>  <span class="fl">1.78</span>  <span class="fl">166.</span>  <span class="fl">16.1</span>  <span class="fl">1.32</span>  <span class="fl">1.80</span>   <span class="fl">1.7</span>  <span class="fl">1.75</span></span>
+<span id="cb49-12"><a href="tidying-common-data-formats.html#cb49-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 157 more variables: BBD &lt;dbl&gt;, BDT &lt;dbl&gt;, BGN &lt;dbl&gt;, BHD &lt;dbl&gt;, BIF &lt;dbl&gt;,</span></span>
+<span id="cb49-13"><a href="tidying-common-data-formats.html#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   BMD &lt;dbl&gt;, BND &lt;dbl&gt;, BOB &lt;dbl&gt;, BRL &lt;dbl&gt;, BSD &lt;dbl&gt;, BTC &lt;dbl&gt;,</span></span>
+<span id="cb49-14"><a href="tidying-common-data-formats.html#cb49-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   BTN &lt;dbl&gt;, BWP &lt;dbl&gt;, BYN &lt;dbl&gt;, BZD &lt;dbl&gt;, CAD &lt;dbl&gt;, CDF &lt;dbl&gt;,</span></span>
+<span id="cb49-15"><a href="tidying-common-data-formats.html#cb49-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   CHF &lt;dbl&gt;, CLF &lt;dbl&gt;, CLP &lt;dbl&gt;, CNH &lt;dbl&gt;, CNY &lt;dbl&gt;, COP &lt;dbl&gt;,</span></span>
+<span id="cb49-16"><a href="tidying-common-data-formats.html#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   CRC &lt;dbl&gt;, CUC &lt;dbl&gt;, CUP &lt;dbl&gt;, CVE &lt;dbl&gt;, CZK &lt;dbl&gt;, DJF &lt;dbl&gt;,</span></span>
+<span id="cb49-17"><a href="tidying-common-data-formats.html#cb49-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   DKK &lt;dbl&gt;, DOP &lt;dbl&gt;, DZD &lt;dbl&gt;, EGP &lt;dbl&gt;, ERN &lt;dbl&gt;, ETB &lt;dbl&gt;,</span></span>
+<span id="cb49-18"><a href="tidying-common-data-formats.html#cb49-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   EUR &lt;dbl&gt;, FJD &lt;dbl&gt;, FKP &lt;dbl&gt;, GBP &lt;dbl&gt;, GEL &lt;dbl&gt;, GGP &lt;dbl&gt;, …</span></span></code></pre></div>
+<ol style="list-style-type: lower-alpha">
+<li>What are the variables and observations?</li>
+<li>Gather the five currencies, AUD, GBP, JPY, CNY, CAD, make it into tidy long form.</li>
+<li>Make line plots of the currencies, like the plot below, and describe the similarities and differences between the currencies.</li>
+</ol>
+<p>You can get the data from <a href="http://dmac.netlify.com/lectures/data/rates.csv">rates.csv</a></p>
+<p><img src="book_files/figure-html/practicerates2-1.png" width="576" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>This is tough! From the web site <a href="https://bitre.gov.au/publications/ongoing/airport_traffic_data.aspx">Department of Infrastructure, Regional Development and Cities</a> download the latest “Airport Traffic Data 1985–86 to …”. It is reasonably small.</li>
+</ol>
+<p>Extract the “Airport Passengers” table into R with this code</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="tidying-common-data-formats.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb50-2"><a href="tidying-common-data-formats.html#cb50-2" aria-hidden="true" tabindex="-1"></a>passengers <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;WebAirport_FY_1986-2019.xlsx&quot;</span>), <span class="at">sheet=</span><span class="dv">3</span>, <span class="at">skip=</span><span class="dv">6</span>)</span>
+<span id="cb50-3"><a href="tidying-common-data-formats.html#cb50-3" aria-hidden="true" tabindex="-1"></a>passengers</span>
+<span id="cb50-4"><a href="tidying-common-data-formats.html#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 3,468 × 14</span></span>
+<span id="cb50-5"><a href="tidying-common-data-formats.html#cb50-5" aria-hidden="true" tabindex="-1"></a>   ...<span class="dv">1</span>       AIRPORT Year  Rank  INBOUND...<span class="dv">5</span> OUTBOUND...<span class="dv">6</span> TOTAL...<span class="dv">7</span> INBOUND...<span class="dv">8</span></span>
+<span id="cb50-6"><a href="tidying-common-data-formats.html#cb50-6" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>      <span class="er">&lt;</span>chr<span class="sc">&gt;</span>   <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>        <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb50-7"><a href="tidying-common-data-formats.html#cb50-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> TOTAL AUS… TOTAL … 1985… <span class="sc">-</span>        <span class="dv">14543928</span>     <span class="dv">14543928</span>  <span class="dv">29087856</span>     <span class="dv">2767413</span></span>
+<span id="cb50-8"><a href="tidying-common-data-formats.html#cb50-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> TOTAL AUS… TOTAL … 1986… <span class="sc">-</span>        <span class="dv">15001877</span>     <span class="dv">15001877</span>  <span class="dv">30003754</span>     <span class="dv">3154920</span></span>
+<span id="cb50-9"><a href="tidying-common-data-formats.html#cb50-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> TOTAL AUS… TOTAL … 1987… <span class="sc">-</span>        <span class="dv">16181355</span>     <span class="dv">16181355</span>  <span class="dv">32362710</span>     <span class="dv">3692976</span></span>
+<span id="cb50-10"><a href="tidying-common-data-formats.html#cb50-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> TOTAL AUS… TOTAL … 1988… <span class="sc">-</span>        <span class="dv">16497749</span>     <span class="dv">16497826</span>  <span class="dv">32995575</span>     <span class="dv">4022634</span></span>
+<span id="cb50-11"><a href="tidying-common-data-formats.html#cb50-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> TOTAL AUS… TOTAL … 1989… <span class="sc">-</span>        <span class="dv">11861519</span>     <span class="dv">11861644</span>  <span class="dv">23723163</span>     <span class="dv">4175315</span></span>
+<span id="cb50-12"><a href="tidying-common-data-formats.html#cb50-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> TOTAL AUS… TOTAL … 1990… <span class="sc">-</span>        <span class="dv">16536767</span>     <span class="dv">16536767</span>  <span class="dv">33073534</span>     <span class="dv">4257165</span></span>
+<span id="cb50-13"><a href="tidying-common-data-formats.html#cb50-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> TOTAL AUS… TOTAL … 1991… <span class="sc">-</span>        <span class="dv">20525193</span>     <span class="dv">20525193</span>  <span class="dv">41050386</span>     <span class="dv">4539042</span></span>
+<span id="cb50-14"><a href="tidying-common-data-formats.html#cb50-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> TOTAL AUS… TOTAL … 1992… <span class="sc">-</span>        <span class="dv">20923187</span>     <span class="dv">20923187</span>  <span class="dv">41846374</span>     <span class="dv">4902693</span></span>
+<span id="cb50-15"><a href="tidying-common-data-formats.html#cb50-15" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> TOTAL AUS… TOTAL … 1993… <span class="sc">-</span>        <span class="dv">22668912</span>     <span class="dv">22668912</span>  <span class="dv">45337824</span>     <span class="dv">5340017</span></span>
+<span id="cb50-16"><a href="tidying-common-data-formats.html#cb50-16" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> TOTAL AUS… TOTAL … 1994… <span class="sc">-</span>        <span class="dv">25091352</span>     <span class="dv">25091227</span>  <span class="dv">50182579</span>     <span class="dv">5830311</span></span>
+<span id="cb50-17"><a href="tidying-common-data-formats.html#cb50-17" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 3,458 more rows</span></span>
+<span id="cb50-18"><a href="tidying-common-data-formats.html#cb50-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ℹ 6 more variables: OUTBOUND...9 &lt;dbl&gt;, TOTAL...10 &lt;dbl&gt;, INBOUND...11 &lt;dbl&gt;,</span></span>
+<span id="cb50-19"><a href="tidying-common-data-formats.html#cb50-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   OUTBOUND...12 &lt;dbl&gt;, TOTAL...13 &lt;dbl&gt;, ...14 &lt;lgl&gt;</span></span></code></pre></div>
+<p>Tidy the data, to produce a data set with these columns
+- airport: all of the airports.
+- year
+- type_of_flight: DOMESTIC, INTERNATIONAL
+- bound: IN or OUT</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="accessing-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="wrangling-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/heike/data-technologies/edit/master/03a-tidying-data.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": false
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

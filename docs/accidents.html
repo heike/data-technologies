@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 25 Accidents | Data Science and Statistical Thinking: With Wild-Caught Data and R</title>
+  <meta name="description" content="Chapter 25 Accidents | Data Science and Statistical Thinking: With Wild-Caught Data and R" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 25 Accidents | Data Science and Statistical Thinking: With Wild-Caught Data and R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 25 Accidents | Data Science and Statistical Thinking: With Wild-Caught Data and R" />
+  
+  
+  
+
+<meta name="author" content="Heike Hofmann, Dianne Cook, Susan Vanderplas and Earo Wang" />
+
+
+<meta name="date" content="2023-06-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="climate-change.html"/>
+<link rel="next" href="monitoring-polls.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.27/datatables.js"></script>
+<link href="libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/plotly-binding-4.10.1.9000/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Science and Statistical Thinking</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preamble</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#what-is-exploratory-data-analysis"><i class="fa fa-check"></i><b>2.1</b> What is exploratory data analysis?</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#what-is-wild-data"><i class="fa fa-check"></i><b>2.2</b> What is <strong>wild</strong> data?</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#what-is-computational-statistical-thinking"><i class="fa fa-check"></i><b>2.3</b> What is computational statistical thinking?</a></li>
+<li class="chapter" data-level="2.4" data-path="intro.html"><a href="intro.html#workflow"><i class="fa fa-check"></i><b>2.4</b> Workflow</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="accessing-data.html"><a href="accessing-data.html"><i class="fa fa-check"></i><b>3</b> Accessing Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="accessing-data.html"><a href="accessing-data.html#flat-files"><i class="fa fa-check"></i><b>3.1</b> Flat files</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="accessing-data.html"><a href="accessing-data.html#example-tuberculosis"><i class="fa fa-check"></i><b>3.1.1</b> Example: tuberculosis</a></li>
+<li class="chapter" data-level="3.1.2" data-path="accessing-data.html"><a href="accessing-data.html#your-turn-atmospheric-carbon-dioxide"><i class="fa fa-check"></i><b>3.1.2</b> Your turn: atmospheric carbon dioxide</a></li>
+<li class="chapter" data-level="3.1.3" data-path="accessing-data.html"><a href="accessing-data.html#example-standardised-test-scores-for-reading-science-and-math"><i class="fa fa-check"></i><b>3.1.3</b> Example: standardised test scores for reading, science and math</a></li>
+<li class="chapter" data-level="3.1.4" data-path="accessing-data.html"><a href="accessing-data.html#your-turn-land-surface-weather-station-data"><i class="fa fa-check"></i><b>3.1.4</b> Your turn: land surface weather station data</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="accessing-data.html"><a href="accessing-data.html#proprietary-formats"><i class="fa fa-check"></i><b>3.2</b> Proprietary formats</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="accessing-data.html"><a href="accessing-data.html#example-australia-air-traffic-data"><i class="fa fa-check"></i><b>3.2.1</b> Example: Australia air traffic data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="accessing-data.html"><a href="accessing-data.html#your-turn-munging-spreadsheets"><i class="fa fa-check"></i><b>3.2.2</b> Your turn: Munging spreadsheets</a></li>
+<li class="chapter" data-level="3.2.3" data-path="accessing-data.html"><a href="accessing-data.html#example-spss-binary"><i class="fa fa-check"></i><b>3.2.3</b> Example: SPSS binary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="accessing-data.html"><a href="accessing-data.html#reading-multiple-files-from-a-website"><i class="fa fa-check"></i><b>3.3</b> Reading multiple files from a website</a></li>
+<li class="chapter" data-level="3.4" data-path="accessing-data.html"><a href="accessing-data.html#json"><i class="fa fa-check"></i><b>3.4</b> JSON</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="accessing-data.html"><a href="accessing-data.html#example-crossrates"><i class="fa fa-check"></i><b>3.4.1</b> Example: Crossrates</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="accessing-data.html"><a href="accessing-data.html#shapefiles"><i class="fa fa-check"></i><b>3.5</b> Shapefiles</a></li>
+<li class="chapter" data-level="3.6" data-path="accessing-data.html"><a href="accessing-data.html#apis"><i class="fa fa-check"></i><b>3.6</b> APIs</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="accessing-data.html"><a href="accessing-data.html#melbourne-pedestrian-traffic-rwalkr"><i class="fa fa-check"></i><b>3.6.1</b> Melbourne pedestrian traffic: <code>rwalkr</code></a></li>
+<li class="chapter" data-level="3.6.2" data-path="accessing-data.html"><a href="accessing-data.html#australian-weather-bomrang"><i class="fa fa-check"></i><b>3.6.2</b> Australian weather: <code>bomrang</code></a></li>
+<li class="chapter" data-level="3.6.3" data-path="accessing-data.html"><a href="accessing-data.html#atlas-of-living-austraila-ala4r"><i class="fa fa-check"></i><b>3.6.3</b> Atlas of Living Austraila: <code>ala4R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="accessing-data.html"><a href="accessing-data.html#images-as-data"><i class="fa fa-check"></i><b>3.7</b> Images as data</a></li>
+<li class="chapter" data-level="3.8" data-path="accessing-data.html"><a href="accessing-data.html#databases"><i class="fa fa-check"></i><b>3.8</b> Databases</a></li>
+<li class="chapter" data-level="3.9" data-path="accessing-data.html"><a href="accessing-data.html#working-with-text"><i class="fa fa-check"></i><b>3.9</b> Working with text</a></li>
+<li class="chapter" data-level="3.10" data-path="accessing-data.html"><a href="accessing-data.html#scraping-data"><i class="fa fa-check"></i><b>3.10</b> Scraping Data</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="accessing-data.html"><a href="accessing-data.html#examples"><i class="fa fa-check"></i><b>3.10.1</b> Examples</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html"><i class="fa fa-check"></i><b>4</b> Tidying Common Data Formats</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#terminology"><i class="fa fa-check"></i><b>4.1</b> Terminology</a></li>
+<li class="chapter" data-level="4.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidy-tabular-form"><i class="fa fa-check"></i><b>4.2</b> Tidy tabular form</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#wide-format"><i class="fa fa-check"></i><b>4.2.1</b> Wide format</a></li>
+<li class="chapter" data-level="4.2.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#long-format"><i class="fa fa-check"></i><b>4.2.2</b> Long format</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#raw-data-examples"><i class="fa fa-check"></i><b>4.3</b> Raw data examples</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#gene-expression-experiment"><i class="fa fa-check"></i><b>4.3.1</b> Gene expression experiment</a></li>
+<li class="chapter" data-level="4.3.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#melbourne-weather"><i class="fa fa-check"></i><b>4.3.2</b> Melbourne weather</a></li>
+<li class="chapter" data-level="4.3.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tb-incidence"><i class="fa fa-check"></i><b>4.3.3</b> TB incidence</a></li>
+<li class="chapter" data-level="4.3.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#french-fries"><i class="fa fa-check"></i><b>4.3.4</b> French fries</a></li>
+<li class="chapter" data-level="4.3.5" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#contingency-table"><i class="fa fa-check"></i><b>4.3.5</b> Contingency table</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#abs-datapack"><i class="fa fa-check"></i><b>4.4</b> ABS Datapack</a></li>
+<li class="chapter" data-level="4.5" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#messy-vs-tidy"><i class="fa fa-check"></i><b>4.5</b> Messy vs tidy</a></li>
+<li class="chapter" data-level="4.6" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidy-verbs"><i class="fa fa-check"></i><b>4.6</b> Tidy verbs</a></li>
+<li class="chapter" data-level="4.7" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidying-genes-data"><i class="fa fa-check"></i><b>4.7</b> Tidying genes data</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#separate-columns"><i class="fa fa-check"></i><b>4.7.1</b> Separate columns</a></li>
+<li class="chapter" data-level="4.7.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#now-spread-to-examine-different-aspects"><i class="fa fa-check"></i><b>4.7.2</b> Now spread to examine different aspects</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#try-this-yourself"><i class="fa fa-check"></i><b>4.8</b> Try this yourself</a>
+<ul>
+<li class="chapter" data-level="4.8.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-1"><i class="fa fa-check"></i><b>4.8.1</b> Exercise 1</a></li>
+<li class="chapter" data-level="4.8.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-2"><i class="fa fa-check"></i><b>4.8.2</b> Exercise 2</a></li>
+<li class="chapter" data-level="4.8.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-3"><i class="fa fa-check"></i><b>4.8.3</b> Exercise 3</a></li>
+<li class="chapter" data-level="4.8.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercise-4"><i class="fa fa-check"></i><b>4.8.4</b> Exercise 4</a></li>
+</ul></li>
+<li class="chapter" data-level="4.9" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#tidying-melbourne-weather"><i class="fa fa-check"></i><b>4.9</b> Tidying Melbourne weather</a>
+<ul>
+<li class="chapter" data-level="4.9.1" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#sometime-easier-to-index-select"><i class="fa fa-check"></i><b>4.9.1</b> Sometime easier to index select</a></li>
+<li class="chapter" data-level="4.9.2" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#make-long-form"><i class="fa fa-check"></i><b>4.9.2</b> Make long form</a></li>
+<li class="chapter" data-level="4.9.3" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#use-spread-to-look-at-different-things"><i class="fa fa-check"></i><b>4.9.3</b> Use spread to look at different things</a></li>
+<li class="chapter" data-level="4.9.4" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#what-are-the-numbers"><i class="fa fa-check"></i><b>4.9.4</b> What are the numbers?</a></li>
+<li class="chapter" data-level="4.9.5" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#now-use-spread"><i class="fa fa-check"></i><b>4.9.5</b> Now use spread</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="tidying-common-data-formats.html"><a href="tidying-common-data-formats.html#exercises"><i class="fa fa-check"></i><b>4.10</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="wrangling-data.html"><a href="wrangling-data.html"><i class="fa fa-check"></i><b>5</b> Wrangling Data</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="wrangling-data.html"><a href="wrangling-data.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="wrangling-data.html"><a href="wrangling-data.html#side-note-package-system"><i class="fa fa-check"></i><b>5.2</b> Side-note: Package system</a></li>
+<li class="chapter" data-level="5.3" data-path="wrangling-data.html"><a href="wrangling-data.html#example-french-fries"><i class="fa fa-check"></i><b>5.3</b> Example: french fries</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="wrangling-data.html"><a href="wrangling-data.html#the-story-of-the-french-fries-data."><i class="fa fa-check"></i><b>5.3.1</b> The story of the french fries data….</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="wrangling-data.html"><a href="wrangling-data.html#filter-choose-observations"><i class="fa fa-check"></i><b>5.4</b> filter: choose observations</a></li>
+<li class="chapter" data-level="5.5" data-path="wrangling-data.html"><a href="wrangling-data.html#select"><i class="fa fa-check"></i><b>5.5</b> select</a></li>
+<li class="chapter" data-level="5.6" data-path="wrangling-data.html"><a href="wrangling-data.html#mutate"><i class="fa fa-check"></i><b>5.6</b> mutate</a></li>
+<li class="chapter" data-level="5.7" data-path="wrangling-data.html"><a href="wrangling-data.html#summarise-and-group_by"><i class="fa fa-check"></i><b>5.7</b> summarise and group_by</a></li>
+<li class="chapter" data-level="5.8" data-path="wrangling-data.html"><a href="wrangling-data.html#arrange"><i class="fa fa-check"></i><b>5.8</b> arrange</a></li>
+<li class="chapter" data-level="5.9" data-path="wrangling-data.html"><a href="wrangling-data.html#count-tally"><i class="fa fa-check"></i><b>5.9</b> count, tally</a></li>
+<li class="chapter" data-level="5.10" data-path="wrangling-data.html"><a href="wrangling-data.html#putting-it-together-to-problem-solve"><i class="fa fa-check"></i><b>5.10</b> Putting it together to problem solve</a>
+<ul>
+<li class="chapter" data-level="5.10.1" data-path="wrangling-data.html"><a href="wrangling-data.html#are-ratings-similar"><i class="fa fa-check"></i><b>5.10.1</b> Are ratings similar?</a></li>
+<li class="chapter" data-level="5.10.2" data-path="wrangling-data.html"><a href="wrangling-data.html#are-reps-like-each-other"><i class="fa fa-check"></i><b>5.10.2</b> Are reps like each other</a></li>
+<li class="chapter" data-level="5.10.3" data-path="wrangling-data.html"><a href="wrangling-data.html#replicates-by-rating-type"><i class="fa fa-check"></i><b>5.10.3</b> Replicates by rating type</a></li>
+</ul></li>
+<li class="chapter" data-level="5.11" data-path="wrangling-data.html"><a href="wrangling-data.html#exercise"><i class="fa fa-check"></i><b>5.11</b> Exercise</a></li>
+<li class="chapter" data-level="5.12" data-path="wrangling-data.html"><a href="wrangling-data.html#relational-data-and-joins"><i class="fa fa-check"></i><b>5.12</b> Relational data, and joins</a>
+<ul>
+<li class="chapter" data-level="5.12.1" data-path="wrangling-data.html"><a href="wrangling-data.html#keys"><i class="fa fa-check"></i><b>5.12.1</b> Keys</a></li>
+<li class="chapter" data-level="5.12.2" data-path="wrangling-data.html"><a href="wrangling-data.html#joins"><i class="fa fa-check"></i><b>5.12.2</b> Joins</a></li>
+<li class="chapter" data-level="5.12.3" data-path="wrangling-data.html"><a href="wrangling-data.html#airline-travel-ontime-data"><i class="fa fa-check"></i><b>5.12.3</b> Airline travel, ontime data</a></li>
+</ul></li>
+<li class="chapter" data-level="5.13" data-path="wrangling-data.html"><a href="wrangling-data.html#exercise-5"><i class="fa fa-check"></i><b>5.13</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="handling-missings.html"><a href="handling-missings.html"><i class="fa fa-check"></i><b>6</b> Handling Missings</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="handling-missings.html"><a href="handling-missings.html#overview-1"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="handling-missings.html"><a href="handling-missings.html#a-story-of-missing-flights"><i class="fa fa-check"></i><b>6.2</b> A story of missing flights</a></li>
+<li class="chapter" data-level="6.3" data-path="handling-missings.html"><a href="handling-missings.html#data-set-overview"><i class="fa fa-check"></i><b>6.3</b> Data set overview</a></li>
+<li class="chapter" data-level="6.4" data-path="handling-missings.html"><a href="handling-missings.html#missing-value-patterns"><i class="fa fa-check"></i><b>6.4</b> Missing value patterns</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="handling-missings.html"><a href="handling-missings.html#missingness-map"><i class="fa fa-check"></i><b>6.4.1</b> Missingness map</a></li>
+<li class="chapter" data-level="6.4.2" data-path="handling-missings.html"><a href="handling-missings.html#numerical-summaries"><i class="fa fa-check"></i><b>6.4.2</b> Numerical summaries</a></li>
+<li class="chapter" data-level="6.4.3" data-path="handling-missings.html"><a href="handling-missings.html#tend-to-get-ignored-by-most-software"><i class="fa fa-check"></i><b>6.4.3</b> Tend to get ignored by most software</a></li>
+<li class="chapter" data-level="6.4.4" data-path="handling-missings.html"><a href="handling-missings.html#add-them-to-plot"><i class="fa fa-check"></i><b>6.4.4</b> Add them to plot</a></li>
+<li class="chapter" data-level="6.4.5" data-path="handling-missings.html"><a href="handling-missings.html#understanding-missing-dependencies"><i class="fa fa-check"></i><b>6.4.5</b> Understanding missing dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="handling-missings.html"><a href="handling-missings.html#shadow-matrix"><i class="fa fa-check"></i><b>6.5</b> Shadow matrix</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="handling-missings.html"><a href="handling-missings.html#relationship-with-other-variables"><i class="fa fa-check"></i><b>6.5.1</b> Relationship with other variables</a></li>
+<li class="chapter" data-level="6.5.2" data-path="handling-missings.html"><a href="handling-missings.html#two-minute-challenge"><i class="fa fa-check"></i><b>6.5.2</b> Two minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="handling-missings.html"><a href="handling-missings.html#strategy"><i class="fa fa-check"></i><b>6.6</b> Strategy</a></li>
+<li class="chapter" data-level="6.7" data-path="handling-missings.html"><a href="handling-missings.html#common-ways-to-impute-values"><i class="fa fa-check"></i><b>6.7</b> Common ways to impute values</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="handling-missings.html"><a href="handling-missings.html#mean"><i class="fa fa-check"></i><b>6.7.1</b> Mean</a></li>
+<li class="chapter" data-level="6.7.2" data-path="handling-missings.html"><a href="handling-missings.html#by-year"><i class="fa fa-check"></i><b>6.7.2</b> by year</a></li>
+<li class="chapter" data-level="6.7.3" data-path="handling-missings.html"><a href="handling-missings.html#two-minute-challenge-1"><i class="fa fa-check"></i><b>6.7.3</b> Two minute challenge</a></li>
+<li class="chapter" data-level="6.7.4" data-path="handling-missings.html"><a href="handling-missings.html#nearest-neighbors-imputation"><i class="fa fa-check"></i><b>6.7.4</b> Nearest neighbors imputation</a></li>
+<li class="chapter" data-level="6.7.5" data-path="handling-missings.html"><a href="handling-missings.html#by-year-1"><i class="fa fa-check"></i><b>6.7.5</b> by year</a></li>
+<li class="chapter" data-level="6.7.6" data-path="handling-missings.html"><a href="handling-missings.html#two-minute-challenge-2"><i class="fa fa-check"></i><b>6.7.6</b> Two minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="handling-missings.html"><a href="handling-missings.html#exercise-6"><i class="fa fa-check"></i><b>6.8</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>7</b> Data Visualization</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="data-visualization.html"><a href="data-visualization.html#a-grammar-of-graphics"><i class="fa fa-check"></i><b>7.1</b> A grammar of graphics</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="data-visualization.html"><a href="data-visualization.html#what-is-a-data-plot"><i class="fa fa-check"></i><b>7.1.1</b> What is a data plot?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="data-visualization.html"><a href="data-visualization.html#why"><i class="fa fa-check"></i><b>7.1.2</b> Why?</a></li>
+<li class="chapter" data-level="7.1.3" data-path="data-visualization.html"><a href="data-visualization.html#elements-of-the-grammar"><i class="fa fa-check"></i><b>7.1.3</b> Elements of the grammar</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="data-visualization.html"><a href="data-visualization.html#example-tuberculosis-data"><i class="fa fa-check"></i><b>7.2</b> Example: Tuberculosis data</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="data-visualization.html"><a href="data-visualization.html#charts"><i class="fa fa-check"></i><b>7.2.1</b> 100% charts</a></li>
+<li class="chapter" data-level="7.2.2" data-path="data-visualization.html"><a href="data-visualization.html#bar-charts"><i class="fa fa-check"></i><b>7.2.2</b> Bar charts</a></li>
+<li class="chapter" data-level="7.2.3" data-path="data-visualization.html"><a href="data-visualization.html#side-by-side-barcharts"><i class="fa fa-check"></i><b>7.2.3</b> Side-by-side barcharts</a></li>
+<li class="chapter" data-level="7.2.4" data-path="data-visualization.html"><a href="data-visualization.html#separate-bar-charts"><i class="fa fa-check"></i><b>7.2.4</b> Separate bar charts</a></li>
+<li class="chapter" data-level="7.2.5" data-path="data-visualization.html"><a href="data-visualization.html#pie-charts"><i class="fa fa-check"></i><b>7.2.5</b> Pie charts?</a></li>
+<li class="chapter" data-level="7.2.6" data-path="data-visualization.html"><a href="data-visualization.html#rainbow-charts"><i class="fa fa-check"></i><b>7.2.6</b> Rainbow charts?</a></li>
+<li class="chapter" data-level="7.2.7" data-path="data-visualization.html"><a href="data-visualization.html#pie-charts-1"><i class="fa fa-check"></i><b>7.2.7</b> Pie charts</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="data-visualization.html"><a href="data-visualization.html#variable-types-and-mapping"><i class="fa fa-check"></i><b>7.3</b> Variable types and mapping</a></li>
+<li class="chapter" data-level="7.4" data-path="data-visualization.html"><a href="data-visualization.html#coordinate-systems"><i class="fa fa-check"></i><b>7.4</b> Coordinate systems</a></li>
+<li class="chapter" data-level="7.5" data-path="data-visualization.html"><a href="data-visualization.html#layering"><i class="fa fa-check"></i><b>7.5</b> Layering</a></li>
+<li class="chapter" data-level="7.6" data-path="data-visualization.html"><a href="data-visualization.html#colour-palettes"><i class="fa fa-check"></i><b>7.6</b> Colour palettes</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="data-visualization.html"><a href="data-visualization.html#choropleth-map"><i class="fa fa-check"></i><b>7.6.1</b> Choropleth map</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="data-visualization.html"><a href="data-visualization.html#colour-blindness"><i class="fa fa-check"></i><b>7.7</b> Colour blindness</a></li>
+<li class="chapter" data-level="7.8" data-path="data-visualization.html"><a href="data-visualization.html#pre-attentive"><i class="fa fa-check"></i><b>7.8</b> Pre-attentive</a></li>
+<li class="chapter" data-level="7.9" data-path="data-visualization.html"><a href="data-visualization.html#proximity"><i class="fa fa-check"></i><b>7.9</b> Proximity</a></li>
+<li class="chapter" data-level="7.10" data-path="data-visualization.html"><a href="data-visualization.html#hierarchy-of-mappings"><i class="fa fa-check"></i><b>7.10</b> Hierarchy of mappings</a></li>
+<li class="chapter" data-level="7.11" data-path="data-visualization.html"><a href="data-visualization.html#adding-interactivity-to-plots"><i class="fa fa-check"></i><b>7.11</b> Adding interactivity to plots</a></li>
+<li class="chapter" data-level="7.12" data-path="data-visualization.html"><a href="data-visualization.html#themes"><i class="fa fa-check"></i><b>7.12</b> Themes</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html"><i class="fa fa-check"></i><b>8</b> Text data and strings</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#why-1"><i class="fa fa-check"></i><b>8.1</b> Why?</a></li>
+<li class="chapter" data-level="8.2" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#process"><i class="fa fa-check"></i><b>8.2</b> Process</a></li>
+<li class="chapter" data-level="8.3" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#resource"><i class="fa fa-check"></i><b>8.3</b> Resource</a></li>
+<li class="chapter" data-level="8.4" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#getting-some-books-to-study"><i class="fa fa-check"></i><b>8.4</b> Getting some books to study</a></li>
+<li class="chapter" data-level="8.5" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#tokenize"><i class="fa fa-check"></i><b>8.5</b> Tokenize</a></li>
+<li class="chapter" data-level="8.6" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#your-turn-9"><i class="fa fa-check"></i><b>8.6</b> Your turn</a></li>
+<li class="chapter" data-level="8.7" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#compare-the-word-frequency"><i class="fa fa-check"></i><b>8.7</b> Compare the word frequency</a></li>
+<li class="chapter" data-level="8.8" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#book-comparison"><i class="fa fa-check"></i><b>8.8</b> Book comparison</a></li>
+<li class="chapter" data-level="8.9" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#exercise-7"><i class="fa fa-check"></i><b>8.9</b> Exercise</a></li>
+<li class="chapter" data-level="8.10" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#sentiment-analysis"><i class="fa fa-check"></i><b>8.10</b> Sentiment Analysis</a>
+<ul>
+<li class="chapter" data-level="8.10.1" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#lexicons"><i class="fa fa-check"></i><b>8.10.1</b> Lexicons</a></li>
+<li class="chapter" data-level="8.10.2" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#analysis"><i class="fa fa-check"></i><b>8.10.2</b> Analysis</a></li>
+<li class="chapter" data-level="8.10.3" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#comparing-lexicons"><i class="fa fa-check"></i><b>8.10.3</b> Comparing lexicons</a></li>
+<li class="chapter" data-level="8.10.4" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#example-simpsons"><i class="fa fa-check"></i><b>8.10.4</b> Example: Simpsons</a></li>
+<li class="chapter" data-level="8.10.5" data-path="text-data-and-strings.html"><a href="text-data-and-strings.html#example-afl-finals-tweets"><i class="fa fa-check"></i><b>8.10.5</b> Example: AFL Finals tweets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="dates-and-time.html"><a href="dates-and-time.html"><i class="fa fa-check"></i><b>9</b> Dates and time</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="dates-and-time.html"><a href="dates-and-time.html#overview-2"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
+<li class="chapter" data-level="9.2" data-path="dates-and-time.html"><a href="dates-and-time.html#working-with-dates"><i class="fa fa-check"></i><b>9.2</b> Working with dates</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="dates-and-time.html"><a href="dates-and-time.html#parsing-dates-with-time-zones"><i class="fa fa-check"></i><b>9.2.1</b> Parsing dates with time zones</a></li>
+<li class="chapter" data-level="9.2.2" data-path="dates-and-time.html"><a href="dates-and-time.html#parsing-date-with-times"><i class="fa fa-check"></i><b>9.2.2</b> Parsing date with times</a></li>
+<li class="chapter" data-level="9.2.3" data-path="dates-and-time.html"><a href="dates-and-time.html#extracting-temporal-elements"><i class="fa fa-check"></i><b>9.2.3</b> Extracting temporal elements</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="dates-and-time.html"><a href="dates-and-time.html#example-pedestrian-sensor"><i class="fa fa-check"></i><b>9.3</b> Example: pedestrian sensor</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="dates-and-time.html"><a href="dates-and-time.html#make-some-plots"><i class="fa fa-check"></i><b>9.3.1</b> Make some plots</a></li>
+<li class="chapter" data-level="9.3.2" data-path="dates-and-time.html"><a href="dates-and-time.html#what-might-be-wrong-with-these-interpretations"><i class="fa fa-check"></i><b>9.3.2</b> What might be wrong with these interpretations?</a></li>
+<li class="chapter" data-level="9.3.3" data-path="dates-and-time.html"><a href="dates-and-time.html#to-think-about"><i class="fa fa-check"></i><b>9.3.3</b> To think about</a></li>
+<li class="chapter" data-level="9.3.4" data-path="dates-and-time.html"><a href="dates-and-time.html#beyond-aggregation"><i class="fa fa-check"></i><b>9.3.4</b> Beyond aggregation</a></li>
+<li class="chapter" data-level="9.3.5" data-path="dates-and-time.html"><a href="dates-and-time.html#incorporating-time"><i class="fa fa-check"></i><b>9.3.5</b> Incorporating time</a></li>
+<li class="chapter" data-level="9.3.6" data-path="dates-and-time.html"><a href="dates-and-time.html#on-a-calendar"><i class="fa fa-check"></i><b>9.3.6</b> On a calendar</a></li>
+<li class="chapter" data-level="9.3.7" data-path="dates-and-time.html"><a href="dates-and-time.html#holidays"><i class="fa fa-check"></i><b>9.3.7</b> Holidays</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="dates-and-time.html"><a href="dates-and-time.html#exercise-8"><i class="fa fa-check"></i><b>9.4</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="spatial-data.html"><a href="spatial-data.html"><i class="fa fa-check"></i><b>10</b> Spatial data</a></li>
+<li class="chapter" data-level="11" data-path="networks.html"><a href="networks.html"><i class="fa fa-check"></i><b>11</b> Networks</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="networks.html"><a href="networks.html#example-madmen"><i class="fa fa-check"></i><b>11.1</b> Example: Madmen</a>
+<ul>
+<li class="chapter" data-level="11.1.1" data-path="networks.html"><a href="networks.html#generate-a-network-view"><i class="fa fa-check"></i><b>11.1.1</b> Generate a network view</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="networks.html"><a href="networks.html#example-american-college-football"><i class="fa fa-check"></i><b>11.2</b> Example: American college football</a></li>
+<li class="chapter" data-level="11.3" data-path="networks.html"><a href="networks.html#example-harry-potter-characters"><i class="fa fa-check"></i><b>11.3</b> Example: Harry Potter characters</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="variation-and-inference.html"><a href="variation-and-inference.html"><i class="fa fa-check"></i><b>12</b> Variation and inference</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="variation-and-inference.html"><a href="variation-and-inference.html#what-is-variation-and-uncertainty"><i class="fa fa-check"></i><b>12.1</b> What is variation and uncertainty?</a></li>
+<li class="chapter" data-level="12.2" data-path="variation-and-inference.html"><a href="variation-and-inference.html#ways-of-sampling-the-data"><i class="fa fa-check"></i><b>12.2</b> Ways of sampling the data</a></li>
+<li class="chapter" data-level="12.3" data-path="variation-and-inference.html"><a href="variation-and-inference.html#what-is-inference"><i class="fa fa-check"></i><b>12.3</b> What is inference?</a></li>
+<li class="chapter" data-level="12.4" data-path="variation-and-inference.html"><a href="variation-and-inference.html#collecting-data"><i class="fa fa-check"></i><b>12.4</b> Collecting data</a></li>
+<li class="chapter" data-level="12.5" data-path="variation-and-inference.html"><a href="variation-and-inference.html#randomization-tests"><i class="fa fa-check"></i><b>12.5</b> Randomization tests</a></li>
+<li class="chapter" data-level="12.6" data-path="variation-and-inference.html"><a href="variation-and-inference.html#visual-inference"><i class="fa fa-check"></i><b>12.6</b> Visual inference</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="statistical-distributions.html"><a href="statistical-distributions.html"><i class="fa fa-check"></i><b>13</b> Statistical distributions</a></li>
+<li class="chapter" data-level="14" data-path="randomization-methods.html"><a href="randomization-methods.html"><i class="fa fa-check"></i><b>14</b> Randomization methods</a></li>
+<li class="chapter" data-level="15" data-path="variation-and-inference-1.html"><a href="variation-and-inference-1.html"><i class="fa fa-check"></i><b>15</b> Variation and inference</a></li>
+<li class="chapter" data-level="16" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html"><i class="fa fa-check"></i><b>16</b> Model fitting and optimisation</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#overview-3"><i class="fa fa-check"></i><b>16.1</b> Overview</a></li>
+<li class="chapter" data-level="16.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#why-models"><i class="fa fa-check"></i><b>16.2</b> Why models?</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#example"><i class="fa fa-check"></i><b>16.2.1</b> Example</a></li>
+<li class="chapter" data-level="16.2.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-families"><i class="fa fa-check"></i><b>16.2.2</b> Model families</a></li>
+<li class="chapter" data-level="16.2.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-15"><i class="fa fa-check"></i><b>16.2.3</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#linear-models"><i class="fa fa-check"></i><b>16.3</b> Linear models</a>
+<ul>
+<li class="chapter" data-level="16.3.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#correlation-vs-linear-model"><i class="fa fa-check"></i><b>16.3.1</b> Correlation vs linear model</a></li>
+<li class="chapter" data-level="16.3.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#correlation"><i class="fa fa-check"></i><b>16.3.2</b> Correlation</a></li>
+<li class="chapter" data-level="16.3.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#simple-regression"><i class="fa fa-check"></i><b>16.3.3</b> Simple regression</a></li>
+<li class="chapter" data-level="16.3.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#multiple-regression-model"><i class="fa fa-check"></i><b>16.3.4</b> Multiple regression model</a></li>
+<li class="chapter" data-level="16.3.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#what-a-model-says"><i class="fa fa-check"></i><b>16.3.5</b> What a model says</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#lets-fit-a-model-to-co2"><i class="fa fa-check"></i><b>16.4</b> Let’s fit a model to CO2</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#try-a-linear-fit"><i class="fa fa-check"></i><b>16.4.1</b> Try a linear fit</a></li>
+<li class="chapter" data-level="16.4.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#predict-from-the-model"><i class="fa fa-check"></i><b>16.4.2</b> Predict from the model</a></li>
+<li class="chapter" data-level="16.4.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-the-model"><i class="fa fa-check"></i><b>16.4.3</b> Plot the model</a></li>
+<li class="chapter" data-level="16.4.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#examine-residuals"><i class="fa fa-check"></i><b>16.4.4</b> Examine residuals</a></li>
+<li class="chapter" data-level="16.4.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#assessment-of-fit"><i class="fa fa-check"></i><b>16.4.5</b> Assessment of fit</a></li>
+<li class="chapter" data-level="16.4.6" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-16"><i class="fa fa-check"></i><b>16.4.6</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-basics-in-r"><i class="fa fa-check"></i><b>16.5</b> Model basics in R</a></li>
+<li class="chapter" data-level="16.6" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#seasonality"><i class="fa fa-check"></i><b>16.6</b> Seasonality</a>
+<ul>
+<li class="chapter" data-level="16.6.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-17"><i class="fa fa-check"></i><b>16.6.1</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.7" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#predict-co2-at-another-location"><i class="fa fa-check"></i><b>16.7</b> Predict co2 at another location</a>
+<ul>
+<li class="chapter" data-level="16.7.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-18"><i class="fa fa-check"></i><b>16.7.1</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.8" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#using-optimisation-to-get-a-good-fit"><i class="fa fa-check"></i><b>16.8</b> Using optimisation to get a good fit</a>
+<ul>
+<li class="chapter" data-level="16.8.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#typical-distances"><i class="fa fa-check"></i><b>16.8.1</b> Typical distances</a></li>
+<li class="chapter" data-level="16.8.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-19"><i class="fa fa-check"></i><b>16.8.2</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="16.9" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#components-of-variation"><i class="fa fa-check"></i><b>16.9</b> Components of variation</a></li>
+<li class="chapter" data-level="16.10" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-goodness-of-fit-statistics"><i class="fa fa-check"></i><b>16.10</b> Model goodness of fit statistics</a>
+<ul>
+<li class="chapter" data-level="16.10.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#your-turn-20"><i class="fa fa-check"></i><b>16.10.1</b> Your turn:</a></li>
+</ul></li>
+<li class="chapter" data-level="16.11" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#beyond-a-single-model"><i class="fa fa-check"></i><b>16.11</b> Beyond a single model</a></li>
+<li class="chapter" data-level="16.12" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#gapminder"><i class="fa fa-check"></i><b>16.12</b> Gapminder</a>
+<ul>
+<li class="chapter" data-level="16.12.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#r-package"><i class="fa fa-check"></i><b>16.12.1</b> R package</a></li>
+</ul></li>
+<li class="chapter" data-level="16.13" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#fit-linear-models"><i class="fa fa-check"></i><b>16.13</b> Fit linear models</a>
+<ul>
+<li class="chapter" data-level="16.13.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#mutate-year"><i class="fa fa-check"></i><b>16.13.1</b> Mutate year</a></li>
+</ul></li>
+<li class="chapter" data-level="16.14" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#australia"><i class="fa fa-check"></i><b>16.14</b> Australia</a></li>
+<li class="chapter" data-level="16.15" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#fit-all-countries"><i class="fa fa-check"></i><b>16.15</b> Fit all countries</a>
+<ul>
+<li class="chapter" data-level="16.15.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge"><i class="fa fa-check"></i><b>16.15.1</b> Five minute challenge</a></li>
+<li class="chapter" data-level="16.15.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-all-the-models"><i class="fa fa-check"></i><b>16.15.2</b> Plot all the models</a></li>
+<li class="chapter" data-level="16.15.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-all-the-model-coefficients"><i class="fa fa-check"></i><b>16.15.3</b> Plot all the model coefficients</a></li>
+</ul></li>
+<li class="chapter" data-level="16.16" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-diagnostics-by-country"><i class="fa fa-check"></i><b>16.16</b> Model diagnostics by country</a>
+<ul>
+<li class="chapter" data-level="16.16.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#plot-the-r2-values-as-a-histogram."><i class="fa fa-check"></i><b>16.16.1</b> Plot the <span class="math inline">\(R^2\)</span> values as a histogram.</a></li>
+<li class="chapter" data-level="16.16.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#countries-with-worst-fit"><i class="fa fa-check"></i><b>16.16.2</b> Countries with worst fit</a></li>
+<li class="chapter" data-level="16.16.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge-1"><i class="fa fa-check"></i><b>16.16.3</b> Five minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="16.17" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#lab-exercise"><i class="fa fa-check"></i><b>16.17</b> Lab exercise</a></li>
+<li class="chapter" data-level="16.18" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#transformations"><i class="fa fa-check"></i><b>16.18</b> Transformations</a>
+<ul>
+<li class="chapter" data-level="16.18.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#power-transformation"><i class="fa fa-check"></i><b>16.18.1</b> Power transformation</a></li>
+<li class="chapter" data-level="16.18.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#transforming-categorical-variables"><i class="fa fa-check"></i><b>16.18.2</b> Transforming categorical variables</a></li>
+</ul></li>
+<li class="chapter" data-level="16.19" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#adding-interactions-to-the-model"><i class="fa fa-check"></i><b>16.19</b> Adding interactions to the model</a>
+<ul>
+<li class="chapter" data-level="16.19.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#interaction-between-quantitative-and-categorical-variables"><i class="fa fa-check"></i><b>16.19.1</b> Interaction between quantitative and categorical variables</a></li>
+<li class="chapter" data-level="16.19.2" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge-2"><i class="fa fa-check"></i><b>16.19.2</b> Five minute challenge</a></li>
+<li class="chapter" data-level="16.19.3" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#which-is-the-better-model"><i class="fa fa-check"></i><b>16.19.3</b> Which is the better model?</a></li>
+<li class="chapter" data-level="16.19.4" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#interaction-between-quantitative-variables"><i class="fa fa-check"></i><b>16.19.4</b> Interaction between quantitative variables</a></li>
+<li class="chapter" data-level="16.19.5" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#five-minute-challenge-3"><i class="fa fa-check"></i><b>16.19.5</b> Five minute challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="16.20" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#model-building"><i class="fa fa-check"></i><b>16.20</b> Model building</a>
+<ul>
+<li class="chapter" data-level="16.20.1" data-path="model-fitting-and-optimisation.html"><a href="model-fitting-and-optimisation.html#lab-exercise-1"><i class="fa fa-check"></i><b>16.20.1</b> Lab exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="generalied-linear-models.html"><a href="generalied-linear-models.html"><i class="fa fa-check"></i><b>17</b> Generalied linear models</a></li>
+<li class="chapter" data-level="18" data-path="hierarchical-models.html"><a href="hierarchical-models.html"><i class="fa fa-check"></i><b>18</b> Hierarchical models</a></li>
+<li class="chapter" data-level="19" data-path="ensembles-of-models.html"><a href="ensembles-of-models.html"><i class="fa fa-check"></i><b>19</b> Ensembles of models</a></li>
+<li class="chapter" data-level="20" data-path="boosted-models.html"><a href="boosted-models.html"><i class="fa fa-check"></i><b>20</b> Boosted models</a></li>
+<li class="chapter" data-level="21" data-path="bayesian-models.html"><a href="bayesian-models.html"><i class="fa fa-check"></i><b>21</b> Bayesian models</a></li>
+<li class="chapter" data-level="22" data-path="decision-making-with-data.html"><a href="decision-making-with-data.html"><i class="fa fa-check"></i><b>22</b> Decision making with data</a></li>
+<li class="chapter" data-level="23" data-path="us-flights.html"><a href="us-flights.html"><i class="fa fa-check"></i><b>23</b> US flights</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="us-flights.html"><a href="us-flights.html#flight-delays"><i class="fa fa-check"></i><b>23.1</b> Flight delays</a>
+<ul>
+<li class="chapter" data-level="23.1.1" data-path="us-flights.html"><a href="us-flights.html#cancellations"><i class="fa fa-check"></i><b>23.1.1</b> Cancellations?</a></li>
+<li class="chapter" data-level="23.1.2" data-path="us-flights.html"><a href="us-flights.html#fuel"><i class="fa fa-check"></i><b>23.1.2</b> Fuel</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="climate-change.html"><a href="climate-change.html"><i class="fa fa-check"></i><b>24</b> Climate change</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="climate-change.html"><a href="climate-change.html#carbon-dioxide"><i class="fa fa-check"></i><b>24.1</b> Carbon dioxide</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="climate-change.html"><a href="climate-change.html#about-the-data"><i class="fa fa-check"></i><b>24.1.1</b> About the data</a></li>
+<li class="chapter" data-level="24.1.2" data-path="climate-change.html"><a href="climate-change.html#temporal-trend"><i class="fa fa-check"></i><b>24.1.2</b> Temporal trend</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="accidents.html"><a href="accidents.html"><i class="fa fa-check"></i><b>25</b> Accidents</a>
+<ul>
+<li class="chapter" data-level="25.1" data-path="accidents.html"><a href="accidents.html#when-do-people-die-on-the-roads"><i class="fa fa-check"></i><b>25.1</b> When do people die on the roads?</a></li>
+<li class="chapter" data-level="25.2" data-path="accidents.html"><a href="accidents.html#what-contributes-to-fatal-accidents"><i class="fa fa-check"></i><b>25.2</b> What contributes to fatal accidents?</a></li>
+<li class="chapter" data-level="25.3" data-path="accidents.html"><a href="accidents.html#who-is-involved-in-fatal-accidents"><i class="fa fa-check"></i><b>25.3</b> Who is involved in fatal accidents?</a></li>
+<li class="chapter" data-level="25.4" data-path="accidents.html"><a href="accidents.html#are-roads-getting-safer"><i class="fa fa-check"></i><b>25.4</b> Are roads getting safer?</a></li>
+<li class="chapter" data-level="25.5" data-path="accidents.html"><a href="accidents.html#your-turn-21"><i class="fa fa-check"></i><b>25.5</b> Your Turn</a></li>
+<li class="chapter" data-level="25.6" data-path="accidents.html"><a href="accidents.html#solutions"><i class="fa fa-check"></i><b>25.6</b> Solutions</a></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="monitoring-polls.html"><a href="monitoring-polls.html"><i class="fa fa-check"></i><b>26</b> Monitoring polls</a></li>
+<li class="chapter" data-level="27" data-path="vandalism.html"><a href="vandalism.html"><i class="fa fa-check"></i><b>27</b> Vandalism</a></li>
+<li class="chapter" data-level="28" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html"><i class="fa fa-check"></i><b>28</b> PISA: Programme for International Student Assessment</a>
+<ul>
+<li class="chapter" data-level="28.1" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#data-access"><i class="fa fa-check"></i><b>28.1</b> Data access</a></li>
+<li class="chapter" data-level="28.2" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#data-pre-processing"><i class="fa fa-check"></i><b>28.2</b> Data pre-processing</a></li>
+<li class="chapter" data-level="28.3" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#examining-the-gender-gap-across-countries"><i class="fa fa-check"></i><b>28.3</b> Examining the gender gap across countries</a>
+<ul>
+<li class="chapter" data-level="28.3.1" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#clean-up-country-codes"><i class="fa fa-check"></i><b>28.3.1</b> Clean up country codes</a></li>
+<li class="chapter" data-level="28.3.2" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#compute-weighted-means-by-country-and-gender"><i class="fa fa-check"></i><b>28.3.2</b> Compute weighted means by country and gender</a></li>
+<li class="chapter" data-level="28.3.3" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#examine-the-math-gap-by-country"><i class="fa fa-check"></i><b>28.3.3</b> Examine the math gap by country</a></li>
+<li class="chapter" data-level="28.3.4" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#what-we-learn"><i class="fa fa-check"></i><b>28.3.4</b> What we learn</a></li>
+</ul></li>
+<li class="chapter" data-level="28.4" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#your-turn-22"><i class="fa fa-check"></i><b>28.4</b> Your turn</a></li>
+<li class="chapter" data-level="28.5" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#mapping-the-scores"><i class="fa fa-check"></i><b>28.5</b> Mapping the scores</a></li>
+<li class="chapter" data-level="28.6" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#your-turn-23"><i class="fa fa-check"></i><b>28.6</b> Your turn</a></li>
+<li class="chapter" data-level="28.7" data-path="pisa-programme-for-international-student-assessment.html"><a href="pisa-programme-for-international-student-assessment.html#change-in-scores-over-time"><i class="fa fa-check"></i><b>28.7</b> Change in scores over time</a></li>
+</ul></li>
+<li class="chapter" data-level="29" data-path="wages.html"><a href="wages.html"><i class="fa fa-check"></i><b>29</b> Wages</a>
+<ul>
+<li class="chapter" data-level="29.1" data-path="wages.html"><a href="wages.html#new-wages-data"><i class="fa fa-check"></i><b>29.1</b> New wages data</a></li>
+</ul></li>
+<li class="chapter" data-level="30" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html"><i class="fa fa-check"></i><b>30</b> Pedestrian counting sensor data</a>
+<ul>
+<li class="chapter" data-level="30.1" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#overview-4"><i class="fa fa-check"></i><b>30.1</b> Overview</a></li>
+<li class="chapter" data-level="30.2" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#different-temporal-patterns"><i class="fa fa-check"></i><b>30.2</b> Different temporal patterns</a></li>
+<li class="chapter" data-level="30.3" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#does-the-weather-make-a-difference-to-the-number-of-people-walking-out"><i class="fa fa-check"></i><b>30.3</b> Does the weather make a difference to the number of people walking out?</a></li>
+<li class="chapter" data-level="30.4" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#if-setting-up-a-coffee-business"><i class="fa fa-check"></i><b>30.4</b> If setting up a coffee business</a></li>
+<li class="chapter" data-level="30.5" data-path="pedestrian-counting-sensor-data.html"><a href="pedestrian-counting-sensor-data.html#your-turn-24"><i class="fa fa-check"></i><b>30.5</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="31" data-path="government-surveys.html"><a href="government-surveys.html"><i class="fa fa-check"></i><b>31</b> Government surveys</a></li>
+<li class="chapter" data-level="32" data-path="reproducible-documents.html"><a href="reproducible-documents.html"><i class="fa fa-check"></i><b>32</b> Reproducible documents</a></li>
+<li class="chapter" data-level="33" data-path="collaborative-projects.html"><a href="collaborative-projects.html"><i class="fa fa-check"></i><b>33</b> Collaborative projects</a></li>
+<li class="chapter" data-level="34" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>34</b> References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/heike/data-technologies" target="blank">Published with Github.</a></li>
+<li><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Science and Statistical Thinking: With Wild-Caught Data and R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="accidents" class="section level1 hasAnchor" number="25">
+<h1><span class="header-section-number">Chapter 25</span> Accidents<a href="accidents.html#accidents" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The US Department of transportation is keeping a detailed track of every accident that results in a fatality. This data are part of FARS, the <a href="http://www.nhtsa.gov/FARS">Fatality Analysis Reporting System</a>. Data is available in annual releases going back to 1975.
+Accident forms change over time, and the corresponding databases with them - e.g. cell phones as a potential contributor to an accident were not on the list back in the 80s. This often makes an analysis of trends over time a bit tricky.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:map-2014"></span>
+<img src="book_files/figure-html/map-2014-1.png" alt="Overview of where fatal accidents occurred in 2014" width="80%" />
+<p class="caption">
+Figure 25.1: Overview of where fatal accidents occurred in 2014
+</p>
+</div>
+<p>Here, we first focus on a single year’s worth of data. The data is released in different formats. Besides SAS, DBF seems to be a staple at the DOT. DBF stands for ‘data base format’, and in R we can read files in this format using the function <code>read.dbf</code>, which is part of the package <code>foreign</code> <span class="citation">(<a href="#ref-R-foreign" role="doc-biblioref">R Core Team 2022</a>)</span>. Files in SAS format can be read with package <code>sas7bdat</code> <span class="citation">(<a href="#ref-R-sas7bdat" role="doc-biblioref"><strong>R-sas7bdat?</strong></a>)</span>. Generally, files in SAS format are a bit smaller than the ones in DBF, but the <code>read.dbf</code> function is much faster than the <code>read.sas7bdat</code> function. However, the SAS files come with a file called <code>Format.sas</code>, which contains a translation of numerical codes to string values, making results much easier to interpret. Using a bit of our magical text skills, we can get the relevant information out of this file (see Your Turn question #1).
+<strong><em>the annoying thing about this database is that in Format14.sas the SAS variable names are used, which have not much to do with the DBF variable names, so the applicability of the getLevels function is a bit limited here. </em></strong></p>
+<p><strong><em>Give some idea of the complexity of the data files</em></strong></p>
+<p>Figure <a href="accidents.html#fig:map-2014">25.1</a> gives an overview of all geographical locations where an accident resulting in at least one fatality was recording in 2014. A pretty detailed roadmap of the US is the result.</p>
+<div id="when-do-people-die-on-the-roads" class="section level2 hasAnchor" number="25.1">
+<h2><span class="header-section-number">25.1</span> When do people die on the roads?<a href="accidents.html#when-do-people-die-on-the-roads" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Figure <a href="accidents.html#fig:when">25.2</a> gives an overview of when fatal accidents happen on the road: on weekdays, the number of deaths peaks twice a day during times when people commute. During the morning commute the number of deaths shows a small peak with a mode around 6am. A second, much bigger mode follows the afternoon commute with a peak at around 6pm. These peaks in the number of detahs is by far outdone by the number of deaths from fatal accidents on weekend nights and early mornings starting with Friday afternoon and lasting until Sunday around 10pm.</p>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="accidents.html#cb237-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb237-2"><a href="accidents.html#cb237-2" aria-hidden="true" tabindex="-1"></a>drunk_by_day <span class="ot">&lt;-</span> accidents <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(DAY_WEEK, HOUR) <span class="sc">%&gt;%</span> </span>
+<span id="cb237-3"><a href="accidents.html#cb237-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb237-4"><a href="accidents.html#cb237-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">accidents =</span> <span class="fu">n</span>(),</span>
+<span id="cb237-5"><a href="accidents.html#cb237-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">deaths =</span> <span class="fu">sum</span>(FATALS),</span>
+<span id="cb237-6"><a href="accidents.html#cb237-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">drunk =</span> <span class="fu">sum</span>(DRUNK_DR<span class="sc">*</span>FATALS <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb237-7"><a href="accidents.html#cb237-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb237-8"><a href="accidents.html#cb237-8" aria-hidden="true" tabindex="-1"></a>drunk_by_day<span class="sc">$</span>drunkPerc <span class="ot">&lt;-</span> <span class="fu">with</span>(drunk_by_day, drunk<span class="sc">/</span>deaths<span class="sc">*</span><span class="dv">100</span>)</span>
+<span id="cb237-9"><a href="accidents.html#cb237-9" aria-hidden="true" tabindex="-1"></a>drunk_by_day<span class="sc">$</span>HOUR[drunk_by_day<span class="sc">$</span>HOUR <span class="sc">==</span> <span class="dv">99</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb237-10"><a href="accidents.html#cb237-10" aria-hidden="true" tabindex="-1"></a>drunk_by_day<span class="sc">$</span>DAY_WEEK <span class="ot">&lt;-</span> <span class="fu">factor</span>(drunk_by_day<span class="sc">$</span>DAY_WEEK)</span>
+<span id="cb237-11"><a href="accidents.html#cb237-11" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(drunk_by_day<span class="sc">$</span>DAY_WEEK) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Sunday&quot;</span>, <span class="st">&quot;Monday&quot;</span>, <span class="st">&quot;Tuesday&quot;</span>, <span class="st">&quot;Wednesday&quot;</span>, <span class="st">&quot;Thursday&quot;</span>, <span class="st">&quot;Friday&quot;</span>, <span class="st">&quot;Saturday&quot;</span>)</span>
+<span id="cb237-12"><a href="accidents.html#cb237-12" aria-hidden="true" tabindex="-1"></a>drunk_by_day<span class="sc">$</span>DAY_WEEK <span class="ot">&lt;-</span> <span class="fu">factor</span>(drunk_by_day<span class="sc">$</span>DAY_WEEK, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">&quot;Monday&quot;</span>, <span class="st">&quot;Tuesday&quot;</span>, <span class="st">&quot;Wednesday&quot;</span>, <span class="st">&quot;Thursday&quot;</span>, <span class="st">&quot;Friday&quot;</span>, <span class="st">&quot;Saturday&quot;</span>, <span class="st">&quot;Sunday&quot;</span>))</span>
+<span id="cb237-13"><a href="accidents.html#cb237-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> drunk_by_day) <span class="sc">+</span> </span>
+<span id="cb237-14"><a href="accidents.html#cb237-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> HOUR, <span class="at">weight =</span> deaths), <span class="at">colour =</span> <span class="cn">NA</span>) <span class="sc">+</span> </span>
+<span id="cb237-15"><a href="accidents.html#cb237-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>DAY_WEEK, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:when"></span>
+<img src="book_files/figure-html/when-1.png" alt="Number of fatalities from car accidents by time of the day and hour of the week." width="100%" />
+<p class="caption">
+Figure 25.2: Number of fatalities from car accidents by time of the day and hour of the week.
+</p>
+</div>
+<p>The variable <code>DRUNK_DR</code> is the number of drivers involved in the crash who tested as being above the legal limit of alcohol, i.e. were legally drunk.
+Days of the week are encoded as 1 for Sunday through 7 for Saturday, the dots in Figure <a href="accidents.html#fig:drunk">25.3</a> show the percentage of accidents in which at least one of the drivers was drunk. On Saturdays and Sundays the percentage of drunk drivers is generally higher, but on all days of the week, fatal accidents that occur after 8 pm and before 5 am have an over 30% chance of involving a drunk driver. During the very early hours of the morning this rate spikes to well over 50% even on weekdays!</p>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="accidents.html#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> drunk_by_day, <span class="fu">aes</span>(<span class="at">x =</span> HOUR, <span class="at">y =</span> drunkPerc, <span class="at">group =</span> DAY_WEEK, <span class="at">colour =</span> DAY_WEEK)) <span class="sc">+</span> </span>
+<span id="cb238-2"><a href="accidents.html#cb238-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb238-3"><a href="accidents.html#cb238-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb238-4"><a href="accidents.html#cb238-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:drunk"></span>
+<img src="book_files/figure-html/drunk-1.png" alt="Percentage of accidents where at least one of the drivers was legally drunk by day of the week and time of the day. Late nights and early mornings have particularly high frequencies." width="80%" />
+<p class="caption">
+Figure 25.3: Percentage of accidents where at least one of the drivers was legally drunk by day of the week and time of the day. Late nights and early mornings have particularly high frequencies.
+</p>
+</div>
+</div>
+<div id="what-contributes-to-fatal-accidents" class="section level2 hasAnchor" number="25.2">
+<h2><span class="header-section-number">25.2</span> What contributes to fatal accidents?<a href="accidents.html#what-contributes-to-fatal-accidents" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>CF</code> is a variable encoding contributing factors. For more than 90% of all accidents no contributing factors are recorded, but for the remainder, the most frequent factors are (14) falling cargo followed by (20) police pursuit (see Figure <a href="accidents.html#fig:what">25.4</a> ).</p>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="accidents.html#cb239-1" aria-hidden="true" tabindex="-1"></a>enc <span class="ot">&lt;-</span> <span class="fu">getLevels</span>(<span class="st">&quot;ARF14F&quot;</span>, <span class="st">&quot;data/FARS2014-DBF/Format14.sas&quot;</span>)</span>
+<span id="cb239-2"><a href="accidents.html#cb239-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(enc) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;CF1&quot;</span>, <span class="st">&quot;Label&quot;</span>)</span>
+<span id="cb239-3"><a href="accidents.html#cb239-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> accidents, </span>
+<span id="cb239-4"><a href="accidents.html#cb239-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(CF1, CF1, length))) <span class="sc">+</span> </span>
+<span id="cb239-5"><a href="accidents.html#cb239-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span> </span>
+<span id="cb239-6"><a href="accidents.html#cb239-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb239-7"><a href="accidents.html#cb239-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> Label), </span>
+<span id="cb239-8"><a href="accidents.html#cb239-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="dv">1000</span>, <span class="at">data =</span> enc, <span class="at">hjust =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:what"></span>
+<img src="book_files/figure-html/what-1.png" alt="Number of accidents by contributing factor. Contributing factor 0 stands for &quot;none&quot;." width="80%" />
+<p class="caption">
+Figure 25.4: Number of accidents by contributing factor. Contributing factor 0 stands for “none”.
+</p>
+</div>
+<p>Was the driver distracted? - The answer to this question is recorded in the variable <code>MDRDSTRD</code> and summarised in Figure @(fig:MDRDSTRD).</p>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="accidents.html#cb240-1" aria-hidden="true" tabindex="-1"></a>distract <span class="ot">&lt;-</span> <span class="fu">read.dbf</span>(<span class="st">&quot;data/FARS2014-DBF/Distract.dbf&quot;</span>)</span>
+<span id="cb240-2"><a href="accidents.html#cb240-2" aria-hidden="true" tabindex="-1"></a>enc2 <span class="ot">&lt;-</span> <span class="fu">getLevels</span>(<span class="st">&quot;DRDIS14F&quot;</span>, <span class="st">&quot;data/FARS2014-DBF/Format14.sas&quot;</span>)</span>
+<span id="cb240-3"><a href="accidents.html#cb240-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(enc2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MDRDSTRD&quot;</span>, <span class="st">&quot;Label&quot;</span>)</span>
+<span id="cb240-4"><a href="accidents.html#cb240-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb240-5"><a href="accidents.html#cb240-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> distract, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(MDRDSTRD, MDRDSTRD, length))) <span class="sc">+</span></span>
+<span id="cb240-6"><a href="accidents.html#cb240-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> MDRDSTRD <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;05&quot;</span>, <span class="st">&quot;06&quot;</span>, <span class="st">&quot;15&quot;</span>))) <span class="sc">+</span> </span>
+<span id="cb240-7"><a href="accidents.html#cb240-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb240-8"><a href="accidents.html#cb240-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="st">&quot;Cell phone related distraction&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb240-9"><a href="accidents.html#cb240-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> Label), <span class="at">y =</span> <span class="dv">1000</span>, <span class="at">data =</span> enc2, <span class="at">hjust =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:MDRDSTRD"></span>
+<img src="book_files/figure-html/MDRDSTRD-1.png" alt="Number of accidents by factors distracting the driver" width="80%" />
+<p class="caption">
+Figure 25.5: Number of accidents by factors distracting the driver
+</p>
+</div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="accidents.html#cb241-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This is really hard to see... </span></span></code></pre></div>
+<p>0 stands for ‘Not distracted’. 99 is code for ‘unknown’,
+96 is a non-report, and 93 stands for a non-specific ‘inattention’.</p>
+</div>
+<div id="who-is-involved-in-fatal-accidents" class="section level2 hasAnchor" number="25.3">
+<h2><span class="header-section-number">25.3</span> Who is involved in fatal accidents?<a href="accidents.html#who-is-involved-in-fatal-accidents" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Assuming, individuals on the front left seat are drivers, we see in Figure <a href="accidents.html#fig:drivers">25.6</a> that on weekdays there is not a big difference in the drunk driving pattern between male and female drivers, but starting Friday afternoon and early evening a gap opens up: a higher percentage of men involved in a fata accident are driving drunk than women in the evenings and early morning hours until during Monday mornings the gap closes again.</p>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="accidents.html#cb242-1" aria-hidden="true" tabindex="-1"></a>person <span class="ot">&lt;-</span> <span class="fu">read.dbf</span>(<span class="st">&quot;data/FARS2014-DBF/person.dbf&quot;</span>)</span>
+<span id="cb242-2"><a href="accidents.html#cb242-2" aria-hidden="true" tabindex="-1"></a>driver <span class="ot">&lt;-</span> <span class="fu">subset</span>(person, SEAT_POS <span class="sc">==</span> <span class="dv">11</span>) <span class="co"># front left seat</span></span>
+<span id="cb242-3"><a href="accidents.html#cb242-3" aria-hidden="true" tabindex="-1"></a>driver<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">with</span>(driver, <span class="fu">as.Date</span>(<span class="fu">sprintf</span>(<span class="st">&quot;2014/%s/%s&quot;</span>, MONTH, DAY)))</span>
+<span id="cb242-4"><a href="accidents.html#cb242-4" aria-hidden="true" tabindex="-1"></a>driver<span class="sc">$</span>DAY_WEEK <span class="ot">&lt;-</span> lubridate<span class="sc">::</span><span class="fu">wday</span>(driver<span class="sc">$</span>Date, <span class="at">label=</span><span class="cn">TRUE</span>)</span>
+<span id="cb242-5"><a href="accidents.html#cb242-5" aria-hidden="true" tabindex="-1"></a>drunk <span class="ot">&lt;-</span> driver <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(HOUR, SEX, DAY_WEEK) <span class="sc">%&gt;%</span></span>
+<span id="cb242-6"><a href="accidents.html#cb242-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb242-7"><a href="accidents.html#cb242-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb242-8"><a href="accidents.html#cb242-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">drunk =</span> <span class="fu">sum</span>(DRINKING<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb242-9"><a href="accidents.html#cb242-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb242-10"><a href="accidents.html#cb242-10" aria-hidden="true" tabindex="-1"></a>drunk<span class="sc">$</span>HOUR[drunk<span class="sc">$</span>HOUR<span class="sc">==</span><span class="dv">99</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb242-11"><a href="accidents.html#cb242-11" aria-hidden="true" tabindex="-1"></a>drunk<span class="sc">$</span>drunkPerc <span class="ot">&lt;-</span> <span class="fu">with</span>(drunk, drunk<span class="sc">/</span>n<span class="sc">*</span><span class="dv">100</span>)</span>
+<span id="cb242-12"><a href="accidents.html#cb242-12" aria-hidden="true" tabindex="-1"></a>drunk<span class="sc">$</span>SEX[drunk<span class="sc">$</span>SEX <span class="sc">&gt;</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb242-13"><a href="accidents.html#cb242-13" aria-hidden="true" tabindex="-1"></a>drunk<span class="sc">$</span>SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(drunk<span class="sc">$</span>SEX)</span>
+<span id="cb242-14"><a href="accidents.html#cb242-14" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(drunk<span class="sc">$</span>SEX) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>)</span>
+<span id="cb242-15"><a href="accidents.html#cb242-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb242-16"><a href="accidents.html#cb242-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">na.omit</span>(drunk), </span>
+<span id="cb242-17"><a href="accidents.html#cb242-17" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> HOUR, <span class="at">y =</span> drunkPerc, <span class="at">colour =</span> <span class="fu">factor</span>(SEX), </span>
+<span id="cb242-18"><a href="accidents.html#cb242-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">group =</span> <span class="fu">interaction</span>(SEX, DAY_WEEK))) <span class="sc">+</span> </span>
+<span id="cb242-19"><a href="accidents.html#cb242-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb242-20"><a href="accidents.html#cb242-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb242-21"><a href="accidents.html#cb242-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> F) <span class="sc">+</span> </span>
+<span id="cb242-22"><a href="accidents.html#cb242-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>DAY_WEEK)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:drivers"></span>
+<img src="book_files/figure-html/drivers-1.png" alt="Percentages of drunk drivers involved in a fatal accident by gender, time of the day and day of the week." width="80%" />
+<p class="caption">
+Figure 25.6: Percentages of drunk drivers involved in a fatal accident by gender, time of the day and day of the week.
+</p>
+</div>
+<p>Do we see this gap between genders because women are more sensible with alcohol or do they just let somebody else drive?
+Figure <a href="accidents.html#fig:seats">25.7</a> gives a comparison of the number of men and women involved in fatal accidents. Overall, there are about twice as many men involved in a fatal accident than there are women. On the driver seat, this difference is even more pronounced: if there is only one person in the car, the odds of that person being a man are about 3:1. When there are two people in the car, the ratio changes again. On the driver seat the odds of male:female change to about 2:1, while on the passenger seat more women are found than man.</p>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="accidents.html#cb243-1" aria-hidden="true" tabindex="-1"></a>person <span class="ot">&lt;-</span> <span class="fu">read.dbf</span>(<span class="st">&quot;data/FARS2014-DBF/person.dbf&quot;</span>)</span>
+<span id="cb243-2"><a href="accidents.html#cb243-2" aria-hidden="true" tabindex="-1"></a>frontseats <span class="ot">&lt;-</span> <span class="fu">subset</span>(person, SEAT_POS <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">13</span>))</span>
+<span id="cb243-3"><a href="accidents.html#cb243-3" aria-hidden="true" tabindex="-1"></a>frontseats<span class="sc">$</span>SEX[frontseats<span class="sc">$</span>SEX <span class="sc">&gt;</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb243-4"><a href="accidents.html#cb243-4" aria-hidden="true" tabindex="-1"></a>frontseats<span class="sc">$</span>SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(frontseats<span class="sc">$</span>SEX)</span>
+<span id="cb243-5"><a href="accidents.html#cb243-5" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(frontseats<span class="sc">$</span>SEX) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>)</span>
+<span id="cb243-6"><a href="accidents.html#cb243-6" aria-hidden="true" tabindex="-1"></a>enc4 <span class="ot">&lt;-</span> <span class="fu">getLevels</span>(<span class="st">&quot;DRINK14F&quot;</span>, <span class="st">&quot;data/FARS2014-DBF/Format14.sas&quot;</span>)</span>
+<span id="cb243-7"><a href="accidents.html#cb243-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(enc4) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;DRINKING&quot;</span>, <span class="st">&quot;DRINKINGR&quot;</span>)</span>
+<span id="cb243-8"><a href="accidents.html#cb243-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-9"><a href="accidents.html#cb243-9" aria-hidden="true" tabindex="-1"></a>frontseats <span class="ot">&lt;-</span> frontseats <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(ST_CASE, VEH_NO) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">PERSON=</span><span class="fu">n</span>())</span>
+<span id="cb243-10"><a href="accidents.html#cb243-10" aria-hidden="true" tabindex="-1"></a>frontseats <span class="ot">&lt;-</span> <span class="fu">subset</span>(frontseats, PERSON <span class="sc">&lt;</span> <span class="dv">3</span>)</span>
+<span id="cb243-11"><a href="accidents.html#cb243-11" aria-hidden="true" tabindex="-1"></a>frontseats <span class="ot">&lt;-</span> <span class="fu">subset</span>(frontseats, SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>))</span>
+<span id="cb243-12"><a href="accidents.html#cb243-12" aria-hidden="true" tabindex="-1"></a>frontseats <span class="ot">&lt;-</span> <span class="fu">subset</span>(frontseats, (SEAT_POS <span class="sc">==</span> <span class="dv">11</span>) <span class="sc">|</span> (PERSON <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> SEAT_POS <span class="sc">==</span><span class="dv">13</span>) )</span>
+<span id="cb243-13"><a href="accidents.html#cb243-13" aria-hidden="true" tabindex="-1"></a>frontseats<span class="sc">$</span>SEAT_POS <span class="ot">&lt;-</span> <span class="fu">factor</span>(frontseats<span class="sc">$</span>SEAT_POS)</span>
+<span id="cb243-14"><a href="accidents.html#cb243-14" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(frontseats<span class="sc">$</span>SEAT_POS) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Driver&quot;</span>, <span class="st">&quot;Passenger&quot;</span>)</span>
+<span id="cb243-15"><a href="accidents.html#cb243-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-16"><a href="accidents.html#cb243-16" aria-hidden="true" tabindex="-1"></a>frontseats<span class="sc">$</span>DRINKING <span class="ot">&lt;-</span> <span class="fu">factor</span>(frontseats<span class="sc">$</span>DRINKING)</span>
+<span id="cb243-17"><a href="accidents.html#cb243-17" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(frontseats<span class="sc">$</span>DRINKING) <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(enc4<span class="sc">$</span>DRINKINGR)</span>
+<span id="cb243-18"><a href="accidents.html#cb243-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-19"><a href="accidents.html#cb243-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>frontseats) <span class="sc">+</span></span>
+<span id="cb243-20"><a href="accidents.html#cb243-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> DRINKING, <span class="at">fill=</span> SEX), <span class="at">position=</span><span class="st">&quot;dodge&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb243-21"><a href="accidents.html#cb243-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(PERSON<span class="sc">~</span>SEAT_POS, <span class="at">labeller=</span><span class="st">&quot;label_both&quot;</span>) <span class="sc">+</span></span>
+<span id="cb243-22"><a href="accidents.html#cb243-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">vjust=</span><span class="fl">0.5</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:seats"></span>
+<img src="book_files/figure-html/seats-1.png" alt="Number of men and women involved in fatal accidents grouped by number of people in the car and seat." width="100%" />
+<p class="caption">
+Figure 25.7: Number of men and women involved in fatal accidents grouped by number of people in the car and seat.
+</p>
+</div>
+<p>Figure <a href="accidents.html#fig:seats-perc">25.8</a> shows the percentages of men involved in fatal accidents by position in the car and number of persons. In all three situations, the odds of men versus women change towards a higher percentage of men if alcohol is involved.</p>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="accidents.html#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>frontseats) <span class="sc">+</span></span>
+<span id="cb244-2"><a href="accidents.html#cb244-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> DRINKING, <span class="at">fill=</span> SEX), <span class="at">position=</span><span class="st">&quot;fill&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb244-3"><a href="accidents.html#cb244-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(PERSON<span class="sc">~</span>SEAT_POS, <span class="at">labeller=</span><span class="st">&quot;label_both&quot;</span>) <span class="sc">+</span></span>
+<span id="cb244-4"><a href="accidents.html#cb244-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">vjust=</span><span class="fl">0.5</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:seats-perc"></span>
+<img src="book_files/figure-html/seats-perc-1.png" alt="Number of men and women involved in fatal accidents grouped by number of people in the car and seat." width="100%" />
+<p class="caption">
+Figure 25.8: Number of men and women involved in fatal accidents grouped by number of people in the car and seat.
+</p>
+</div>
+<p>When we further investigate the demographics of persons involved in fatal accidents, we find some more imbalances between the genders. Figure <a href="accidents.html#fig:age">25.9</a> shows the marginal distributions of people involved by age. Once somebody can get a licens (at around age 18), there are huge spikes in the numbers for both genders. A secondary spike at around age 50 is much more pronounced in men than women.</p>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="accidents.html#cb245-1" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>Alive <span class="ot">&lt;-</span> person<span class="sc">$</span>DEATH_YR <span class="sc">&gt;</span> <span class="dv">2015</span></span>
+<span id="cb245-2"><a href="accidents.html#cb245-2" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>SEX[person<span class="sc">$</span>SEX <span class="sc">&gt;</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb245-3"><a href="accidents.html#cb245-3" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>AGE[person<span class="sc">$</span>AGE <span class="sc">&gt;</span> <span class="dv">199</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb245-4"><a href="accidents.html#cb245-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb245-5"><a href="accidents.html#cb245-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb245-6"><a href="accidents.html#cb245-6" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>GenderAlive <span class="ot">&lt;-</span> <span class="fu">with</span>(person, <span class="fu">interaction</span>(SEX,Alive))</span>
+<span id="cb245-7"><a href="accidents.html#cb245-7" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(person<span class="sc">$</span>GenderAlive) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Male/died&quot;</span>, <span class="st">&quot;Female/died&quot;</span>, <span class="st">&quot;Male/alive&quot;</span>, <span class="st">&quot;Female/alive&quot;</span>)</span>
+<span id="cb245-8"><a href="accidents.html#cb245-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb245-9"><a href="accidents.html#cb245-9" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>SEX <span class="ot">&lt;-</span> <span class="fu">factor</span>(person<span class="sc">$</span>SEX)</span>
+<span id="cb245-10"><a href="accidents.html#cb245-10" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(person<span class="sc">$</span>SEX) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>)</span>
+<span id="cb245-11"><a href="accidents.html#cb245-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb245-12"><a href="accidents.html#cb245-12" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n=</span><span class="dv">6</span>, <span class="at">name=</span><span class="st">&quot;Paired&quot;</span>)</span>
+<span id="cb245-13"><a href="accidents.html#cb245-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(AGE, <span class="at">fill=</span>GenderAlive), <span class="at">data=</span><span class="fu">subset</span>(person, <span class="sc">!</span><span class="fu">is.na</span>(GenderAlive))) <span class="sc">+</span> </span>
+<span id="cb245-14"><a href="accidents.html#cb245-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">binwidth=</span><span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb245-15"><a href="accidents.html#cb245-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>cols[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">6</span>,<span class="dv">1</span>,<span class="dv">5</span>)]) <span class="sc">+</span> </span>
+<span id="cb245-16"><a href="accidents.html#cb245-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">&quot;none&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb245-17"><a href="accidents.html#cb245-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="fl">0.5</span>, <span class="at">colour=</span><span class="st">&quot;white&quot;</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>SEX)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:age"></span>
+<img src="book_files/figure-html/age-1.png" alt="Age of persons involved in fatal accidents. Color shows gender and outcome. Both genders show a huge spike in numbers at around age 18. The second spike around age 50 is more pronounced in men than in women. " width="80%" />
+<p class="caption">
+Figure 25.9: Age of persons involved in fatal accidents. Color shows gender and outcome. Both genders show a huge spike in numbers at around age 18. The second spike around age 50 is more pronounced in men than in women.
+</p>
+</div>
+<p>Figure <a href="accidents.html#fig:age-b">25.10</a> shows essentially the same picture, but focuses on outcome of the accident. Light colors indicate survival. Death rates vary a lot by age, and there are some interesting differences between genders: for the first 17 years, death rates for both genders are low and very similar (and probably related to position in the car). Rates then jump to much higher rates: for men aged between 20 and 60 the chance of dying in the car accident when involved in a fatal car crash is almost 50%. For women this probability is about 40%. After age 60 the rates go up steeply. Rates for men stay above the rates for women up to about age 80, when the gender differences disappear again (but there is also not much data to support this statement).</p>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="accidents.html#cb246-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(AGE, <span class="at">fill=</span>GenderAlive), <span class="at">data=</span><span class="fu">subset</span>(person, <span class="sc">!</span><span class="fu">is.na</span>(GenderAlive))) <span class="sc">+</span> </span>
+<span id="cb246-2"><a href="accidents.html#cb246-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">binwidth=</span><span class="dv">1</span>, <span class="at">position=</span><span class="st">&quot;fill&quot;</span>, <span class="at">alpha=</span><span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb246-3"><a href="accidents.html#cb246-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>cols[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">6</span>,<span class="dv">1</span>,<span class="dv">5</span>)]) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;proportion&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb246-4"><a href="accidents.html#cb246-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">&quot;none&quot;</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>SEX) </span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:age-b"></span>
+<img src="book_files/figure-html/age-b-1.png" alt="Death rates of persons involved in fatal accidents by age and gender. For both genders there is a huge increase in the rate at age 18. Starting around age 50 the rates of death increase. Generally, the rate for a man dying are higher than for a woman." width="80%" />
+<p class="caption">
+Figure 25.10: Death rates of persons involved in fatal accidents by age and gender. For both genders there is a huge increase in the rate at age 18. Starting around age 50 the rates of death increase. Generally, the rate for a man dying are higher than for a woman.
+</p>
+</div>
+<p>Figure <a href="accidents.html#fig:age-c">25.11</a> puts all of these percentages together. The figure gives an overview of the multinomial distributions conditioned on age. Between ages 20 and 50 men are by far overrepresented in fatal accidents.</p>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="accidents.html#cb247-1" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>GenderAlive <span class="ot">&lt;-</span> <span class="fu">factor</span>(person<span class="sc">$</span>GenderAlive, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">&quot;Male/died&quot;</span>,  <span class="st">&quot;Male/alive&quot;</span>, <span class="st">&quot;Female/alive&quot;</span>, <span class="st">&quot;Female/died&quot;</span>))</span>
+<span id="cb247-2"><a href="accidents.html#cb247-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb247-3"><a href="accidents.html#cb247-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(AGE, <span class="at">fill=</span>GenderAlive), <span class="at">data=</span>person) <span class="sc">+</span> </span>
+<span id="cb247-4"><a href="accidents.html#cb247-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position=</span><span class="st">&quot;fill&quot;</span>, <span class="at">binwidth=</span><span class="dv">1</span>, <span class="at">alpha=</span><span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb247-5"><a href="accidents.html#cb247-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>cols[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">6</span>)]) <span class="sc">+</span> </span>
+<span id="cb247-6"><a href="accidents.html#cb247-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">&quot;none&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;proportion&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb247-7"><a href="accidents.html#cb247-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="fl">0.5</span>, <span class="at">colour=</span><span class="st">&quot;white&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:age-c"></span>
+<img src="book_files/figure-html/age-c-1.png" alt="Age of persons involved in fatal accidents. Color shows gender and outcome." width="80%" />
+<p class="caption">
+Figure 25.11: Age of persons involved in fatal accidents. Color shows gender and outcome.
+</p>
+</div>
+</div>
+<div id="are-roads-getting-safer" class="section level2 hasAnchor" number="25.4">
+<h2><span class="header-section-number">25.4</span> Are roads getting safer?<a href="accidents.html#are-roads-getting-safer" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>First we read in data at five year intervals starting with 1975. In 2000, we switch to yearly updates, because, as can be seen in Figure <a href="accidents.html#fig:fatalities-trend">25.12</a> during this time frame things change most dramatically in terms of the number of accidents. At the same time (see Figure <a href="accidents.html#fig:fatalities-rates">25.13</a>), the rate at which people die in fatal accidents drops as well.</p>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="accidents.html#cb248-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(foreign)</span>
+<span id="cb248-2"><a href="accidents.html#cb248-2" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">dir</span>(<span class="st">&quot;data/FARS-allyears/&quot;</span>, <span class="at">pattern=</span><span class="st">&quot;dbf&quot;</span>, <span class="at">ignore.case=</span><span class="cn">TRUE</span>)</span>
+<span id="cb248-3"><a href="accidents.html#cb248-3" aria-hidden="true" tabindex="-1"></a>accidents <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb248-4"><a href="accidents.html#cb248-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (fidx <span class="cf">in</span> <span class="fu">seq_along</span>(files)) {</span>
+<span id="cb248-5"><a href="accidents.html#cb248-5" aria-hidden="true" tabindex="-1"></a>  accidents[[fidx]] <span class="ot">&lt;-</span> <span class="fu">read.dbf</span>(<span class="fu">file.path</span>(<span class="st">&quot;data/FARS-allyears&quot;</span>, files[fidx]))</span>
+<span id="cb248-6"><a href="accidents.html#cb248-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb248-7"><a href="accidents.html#cb248-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb248-8"><a href="accidents.html#cb248-8" aria-hidden="true" tabindex="-1"></a>accidents[[<span class="fu">length</span>(accidents)<span class="sc">+</span><span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">read.dbf</span>(<span class="st">&quot;data/FARS2014-DBF/accident.dbf&quot;</span>)</span>
+<span id="cb248-9"><a href="accidents.html#cb248-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb248-10"><a href="accidents.html#cb248-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb248-11"><a href="accidents.html#cb248-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb248-12"><a href="accidents.html#cb248-12" aria-hidden="true" tabindex="-1"></a>numbers <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb248-13"><a href="accidents.html#cb248-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> accidents <span class="sc">%&gt;%</span> purrr<span class="sc">::</span><span class="fu">map_int</span>(<span class="at">.f =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb248-14"><a href="accidents.html#cb248-14" aria-hidden="true" tabindex="-1"></a>    year <span class="ot">&lt;-</span> x<span class="sc">$</span>YEAR[<span class="dv">1</span>]</span>
+<span id="cb248-15"><a href="accidents.html#cb248-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (year <span class="sc">&lt;</span> <span class="dv">2000</span>) <span class="fu">return</span>(<span class="fu">as.integer</span>(<span class="dv">1900</span><span class="sc">+</span>year[<span class="dv">1</span>]))</span>
+<span id="cb248-16"><a href="accidents.html#cb248-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.integer</span>(year)</span>
+<span id="cb248-17"><a href="accidents.html#cb248-17" aria-hidden="true" tabindex="-1"></a>  }),</span>
+<span id="cb248-18"><a href="accidents.html#cb248-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">fatalities =</span> accidents <span class="sc">%&gt;%</span> purrr<span class="sc">::</span><span class="fu">map_dbl</span>(<span class="at">.f =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb248-19"><a href="accidents.html#cb248-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(x<span class="sc">$</span>FATALS)</span>
+<span id="cb248-20"><a href="accidents.html#cb248-20" aria-hidden="true" tabindex="-1"></a>  }),</span>
+<span id="cb248-21"><a href="accidents.html#cb248-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> accidents <span class="sc">%&gt;%</span> purrr<span class="sc">::</span><span class="fu">map_dbl</span>(nrow) </span>
+<span id="cb248-22"><a href="accidents.html#cb248-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb248-23"><a href="accidents.html#cb248-23" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(numbers, <span class="st">&quot;data/numbers.csv&quot;</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="accidents.html#cb249-1" aria-hidden="true" tabindex="-1"></a>numbers <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/numbers.csv&quot;</span>)</span>
+<span id="cb249-2"><a href="accidents.html#cb249-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> numbers) <span class="sc">+</span> </span>
+<span id="cb249-3"><a href="accidents.html#cb249-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n)) <span class="sc">+</span> </span>
+<span id="cb249-4"><a href="accidents.html#cb249-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> fatalities), <span class="at">colour =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:fatalities-trend"></span>
+<img src="book_files/figure-html/fatalities-trend-1.png" alt="Number of accidents (black points) and fatalities (red points) over time." width="80%" />
+<p class="caption">
+Figure 25.12: Number of accidents (black points) and fatalities (red points) over time.
+</p>
+</div>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="accidents.html#cb250-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> numbers) <span class="sc">+</span> </span>
+<span id="cb250-2"><a href="accidents.html#cb250-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> fatalities<span class="sc">/</span>n))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:fatalities-rates"></span>
+<img src="book_files/figure-html/fatalities-rates-1.png" alt="Rate of fatalities per accident in which at least one fatality occurred. The rate decreases over time." width="80%" />
+<p class="caption">
+Figure 25.13: Rate of fatalities per accident in which at least one fatality occurred. The rate decreases over time.
+</p>
+</div>
+<p>The drop in both numbers of fatal accidents over time and the rates of fatalities is even more dramatic, when put into the perspective of how many more cars are on the roads. This kind of information is made available by RITA.</p>
+<p>RITA got renamed to BTS - none of the websites below exist any more. Need to find them again.</p>
+<!--  The [table of the number of cars on US roads](http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/publications/national_transportation_statistics/html/table_01_11.html) is available online.  -->
+<!-- While we can read in the data (see below), it is in a fairly awful shape: -->
+<!-- ```{r} -->
+<!-- rita <- read.table("http://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/table_01_11_3.csv", skip=1, header=TRUE, sep=",", na.strings="NA") -->
+<!-- head(rita[,1:10]) -->
+<!-- ``` -->
+<!-- But after some basic cleaning, we can extract the number of vehicles registered annually: -->
+<!-- ```{r} -->
+<!-- library(tidyr) -->
+<!-- names(rita)[1] <- "mode" -->
+<!-- rm <- gather(rita, key=year, value=number, -mode, na.rm=TRUE) -->
+<!-- rm$year <- as.numeric(gsub("X","", rm$year)) -->
+<!-- rm$number <- gsub(",","", rm$number) # get rid of all the comma -->
+<!-- rm$number <- trimws(gsub("(R)", "", rm$number, fixed=TRUE)) -->
+<!-- rm$number <- as.numeric(rm$number) -->
+<!-- rm <- subset(rm, !is.na(rm$number)) -->
+<!-- vehicles <- subset(rm, mode %in% "Highway, total (registered vehicles)") -->
+<!-- ``` -->
+<p>Figure @(fig:registration) shows the number (in millions) of registered vehicles over time. Between 1965 and 1993 the number of annual registrations doubles from 100 million to 200 million. Until most recently, the number of registrations increases linearly with an average of about 3.5 Million more vehicles registered each year. Unfortunately, this does not tell us eaxactly how many cars are on the roads each year - for that we would need to also take into account, for how many years people use the same vehicle on average. For the most meaningful measure we would also need to take the number of miles into account that people drive each year. This number would allow us to estimate a rate of fatal accidents per miles driven.
+*** we could follow up on this, there are a number of interesting sites that deal with estimating the number of annually driven miles - e.g. the travel monitoring at <a href="https://www.fhwa.dot.gov/policyinformation/travel_monitoring/tvt.cfm">https://www.fhwa.dot.gov/policyinformation/travel_monitoring/tvt.cfm</a>
+and the federal reserve bank of St Louis <a href="https://research.stlouisfed.org/fred2/release?rid=254">https://research.stlouisfed.org/fred2/release?rid=254</a>
+***</p>
+<!-- ```{r registration, fig.cap="Number of registered vehicles (in Millions) by year. The number of registered cars increases linearly over time.", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE} -->
+<!-- ggplot(aes(x=year, y=number/10^6), data=vehicles) +  -->
+<!--   geom_smooth(method="lm") + -->
+<!--   geom_point() +  -->
+<!--   ylab("Number of registered vehicles (in Millions)") -->
+<!-- ``` -->
+<p>Figure <a href="#fig:adjusted-rates"><strong>??</strong></a> shows the rate of accident fatalities per million registered vehicles over time. Since 1975 this rate has been cut into less than half from over 300 to just over 125 fatalities per million registrations. However, since about 2009 not much progress was made to further reduce the rate (which might go hand in hand with the sub-linear increase in the number of registrations for that same timeframe).</p>
+<!-- ```{r adjusted-rates, fig.cap="Rate of accident fatalities by million of registered vehicles. ", out.width='80%', fig.asp=.75, fig.align='center', message=FALSE, warning = FALSE} -->
+<!-- numbers <- merge(numbers, vehicles, by="year", all.x=TRUE) -->
+<!-- qplot(year, fatalities/number*10^6, data=numbers) + ylab("Rate of accident fatalities per million registered vehicles.") -->
+<!-- ``` -->
+</div>
+<div id="your-turn-21" class="section level2 hasAnchor" number="25.5">
+<h2><span class="header-section-number">25.5</span> Your Turn<a href="accidents.html#your-turn-21" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><p>Use the structure you find in file <a href="data/FARS2014-DBF/Format14.sas">Format14.sas</a> as the basis to write a function <code>getLevels(varname, file)</code> that takes a variable name and a sas file, and returns a dataframe with all levels of the variable in a numeric format and the level names as strings.</p></li>
+<li><p>Was there something wrong with the vehicle? Investigate variable <code>MFACTOR</code> in the <code>Factor.dbf</code>. Make sure to re-code the numbers to strings.</p></li>
+<li><p>Include gender in the discussion of Figure <a href="accidents.html#fig:when">25.2</a>. (Warning! This question looks harmless, but requires some work.)</p></li>
+<li><p>Where people are when they get involved in an accident matters a lot. Investigate numbers and rates of death by seat position (<code>SEAT_POS</code>). How do age and gender factor into this? Make sure to investigate only combinations with enough data support.</p></li>
+<li><p>Fatal accidents by state over time:
+This is a two-part question. First, look at the code below and explain the pieces of the data processing pipeline:</p></li>
+</ul>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="accidents.html#cb251-1" aria-hidden="true" tabindex="-1"></a>state.numbers <span class="ot">&lt;-</span> accidents <span class="sc">%&gt;%</span> purrr<span class="sc">:::</span><span class="fu">map_df</span>(</span>
+<span id="cb251-2"><a href="accidents.html#cb251-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> <span class="cf">function</span>(x) x <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(STATE) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(</span>
+<span id="cb251-3"><a href="accidents.html#cb251-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">year=</span> YEAR[<span class="dv">1</span>],</span>
+<span id="cb251-4"><a href="accidents.html#cb251-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fatalities =</span> <span class="fu">sum</span>(FATALS),</span>
+<span id="cb251-5"><a href="accidents.html#cb251-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">accidents =</span> <span class="fu">n</span>()</span>
+<span id="cb251-6"><a href="accidents.html#cb251-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb251-7"><a href="accidents.html#cb251-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb251-8"><a href="accidents.html#cb251-8" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">which</span>(state.numbers<span class="sc">$</span>year <span class="sc">&lt;</span> <span class="dv">1900</span>)</span>
+<span id="cb251-9"><a href="accidents.html#cb251-9" aria-hidden="true" tabindex="-1"></a>state.numbers<span class="sc">$</span>year[idx] <span class="ot">&lt;-</span> <span class="dv">1900</span><span class="sc">+</span>state.numbers<span class="sc">$</span>year[idx]</span>
+<span id="cb251-10"><a href="accidents.html#cb251-10" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(numbers, <span class="st">&quot;data/state-numbers.csv&quot;</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<p>Second, load the data set <code>state-numbers.csv</code> into your R session and investigate. For interpretation, it will be much easier to change the fips codes to state names. What is the dominant pattern in this plot? How would it be possible to reveal the actual rates of fatalities in each state over time? Try to find a source and investigate how rates of fatalities change for each state over time.</p>
+</div>
+<div id="solutions" class="section level2 hasAnchor" number="25.6">
+<h2><span class="header-section-number">25.6</span> Solutions<a href="accidents.html#solutions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><p><code>getLevels()</code> included above but not shown.</p></li>
+<li><p>Figure <a href="accidents.html#fig:MFACTOR">25.14</a> shows the most common contributing factors. Besides 0 ‘none’ and 99 ‘unkown’, the most factors are defects to the tires (1).</p></li>
+</ul>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="accidents.html#cb252-1" aria-hidden="true" tabindex="-1"></a>factor <span class="ot">&lt;-</span> <span class="fu">read.dbf</span>(<span class="st">&quot;data/FARS2014-DBF/Factor.dbf&quot;</span>)</span>
+<span id="cb252-2"><a href="accidents.html#cb252-2" aria-hidden="true" tabindex="-1"></a>enc3 <span class="ot">&lt;-</span> <span class="fu">getLevels</span>(<span class="st">&quot;FACTR14F&quot;</span>, <span class="st">&quot;data/FARS2014-DBF/Format14.sas&quot;</span>)</span>
+<span id="cb252-3"><a href="accidents.html#cb252-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(enc3) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MFACTOR&quot;</span>, <span class="st">&quot;Label&quot;</span>)</span>
+<span id="cb252-4"><a href="accidents.html#cb252-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb252-5"><a href="accidents.html#cb252-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> factor, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(MFACTOR, MFACTOR, length))) <span class="sc">+</span> </span>
+<span id="cb252-6"><a href="accidents.html#cb252-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span> </span>
+<span id="cb252-7"><a href="accidents.html#cb252-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb252-8"><a href="accidents.html#cb252-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> Label), <span class="at">y =</span> <span class="dv">1000</span>, <span class="at">data =</span> enc3, <span class="at">hjust =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:MFACTOR"></span>
+<img src="book_files/figure-html/MFACTOR-1.png" alt="Number of accidents by pre-existing conditions pertaining the vehicles involved" width="80%" />
+<p class="caption">
+Figure 25.14: Number of accidents by pre-existing conditions pertaining the vehicles involved
+</p>
+</div>
+<ul>
+<li><strong><em>Where people are when they get involved in an accident matters a lot. Investigate numbers and rates of death by seat position (<code>SEAT_POS</code>). How do age and gender factor into this? Make sure to investigate only combinations with enough data support.</em></strong></li>
+</ul>
+<p>Investigating seat position first:</p>
+<pre><code>- change encoding to text
+- reduce the number of categories
+- include deaths</code></pre>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="accidents.html#cb254-1" aria-hidden="true" tabindex="-1"></a>enc5 <span class="ot">&lt;-</span> <span class="fu">getLevels</span>(<span class="st">&quot;SEATP14F&quot;</span>, <span class="st">&quot;data/FARS2014-DBF/Format14.sas&quot;</span>)</span>
+<span id="cb254-2"><a href="accidents.html#cb254-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(enc5) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;SEAT_POS&quot;</span>, <span class="st">&quot;Seat&quot;</span>)</span>
+<span id="cb254-3"><a href="accidents.html#cb254-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb254-4"><a href="accidents.html#cb254-4" aria-hidden="true" tabindex="-1"></a>person <span class="ot">&lt;-</span> <span class="fu">merge</span>(person, enc5, <span class="at">by=</span><span class="st">&quot;SEAT_POS&quot;</span>, <span class="at">all.x=</span><span class="cn">TRUE</span>)</span>
+<span id="cb254-5"><a href="accidents.html#cb254-5" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>SEAT_POS <span class="ot">&lt;-</span> <span class="fu">with</span>(person, <span class="fu">reorder</span>(SEAT_POS, SEAT_POS, length))</span>
+<span id="cb254-6"><a href="accidents.html#cb254-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb254-7"><a href="accidents.html#cb254-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> person) <span class="sc">+</span> </span>
+<span id="cb254-8"><a href="accidents.html#cb254-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb254-9"><a href="accidents.html#cb254-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> SEAT_POS)) <span class="sc">+</span> </span>
+<span id="cb254-10"><a href="accidents.html#cb254-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> SEAT_POS, <span class="at">label =</span> Seat), <span class="at">y =</span> <span class="dv">1000</span>,</span>
+<span id="cb254-11"><a href="accidents.html#cb254-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> <span class="fu">unique</span>(person[,<span class="fu">c</span>(<span class="st">&quot;SEAT_POS&quot;</span>, <span class="st">&quot;Seat&quot;</span>)]), </span>
+<span id="cb254-12"><a href="accidents.html#cb254-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-164-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>We will require each category of <code>SEAT_POS</code> to have at least 500 records:</p>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="accidents.html#cb255-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SEAT_POS is already ordered by number </span></span>
+<span id="cb255-2"><a href="accidents.html#cb255-2" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>SEAT_POS_cat <span class="ot">&lt;-</span> <span class="fu">as.character</span>(person<span class="sc">$</span>Seat)</span>
+<span id="cb255-3"><a href="accidents.html#cb255-3" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>SEAT_POS_cat[<span class="fu">as.numeric</span>(person<span class="sc">$</span>SEAT_POS) <span class="sc">&lt;</span> <span class="dv">20</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Other&quot;</span></span>
+<span id="cb255-4"><a href="accidents.html#cb255-4" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>SEAT_POS_cat <span class="ot">&lt;-</span> <span class="fu">with</span>(person, <span class="fu">reorder</span>(SEAT_POS_cat, SEAT_POS_cat, length))</span></code></pre></div>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="accidents.html#cb256-1" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>Alive <span class="ot">&lt;-</span> person<span class="sc">$</span>DEATH_YR <span class="sc">&gt;</span> <span class="dv">2015</span></span>
+<span id="cb256-2"><a href="accidents.html#cb256-2" aria-hidden="true" tabindex="-1"></a><span class="co"># qplot(data=person, SEAT_POS_cat, fill=Alive) + coord_flip()</span></span>
+<span id="cb256-3"><a href="accidents.html#cb256-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>person, <span class="fu">aes</span>(<span class="at">x=</span>SEAT_POS_cat, <span class="at">fill=</span>Alive)) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb256-4"><a href="accidents.html#cb256-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position=</span><span class="st">&quot;fill&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-166-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="accidents.html#cb257-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb257-2"><a href="accidents.html#cb257-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>person, <span class="fu">aes</span>(<span class="at">x=</span>SEX, <span class="at">fill=</span>Alive)) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb257-3"><a href="accidents.html#cb257-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position=</span><span class="st">&quot;fill&quot;</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>SEAT_POS_cat) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;proportion&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-166-2.png" width="768" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="accidents.html#cb258-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb258-2"><a href="accidents.html#cb258-2" aria-hidden="true" tabindex="-1"></a>person<span class="sc">$</span>AGE_cat <span class="ot">&lt;-</span> <span class="fu">cut</span>(person<span class="sc">$</span>AGE, <span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">18</span>, <span class="dv">60</span>, <span class="dv">105</span>))</span>
+<span id="cb258-3"><a href="accidents.html#cb258-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>person, <span class="fu">aes</span>(<span class="at">x=</span>AGE_cat, <span class="at">fill=</span>Alive)) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb258-4"><a href="accidents.html#cb258-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position=</span><span class="st">&quot;fill&quot;</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>SEAT_POS_cat) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;proportion&quot;</span>)</span></code></pre></div>
+<p><img src="book_files/figure-html/unnamed-chunk-166-3.png" width="768" style="display: block; margin: auto;" /></p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-R-foreign" class="csl-entry">
+———. 2022. <em>Foreign: Read Data Stored by Minitab, s, SAS, SPSS, Stata, Systat, Weka, dBase, ...</em> <a href="https://svn.r-project.org/R-packages/trunk/foreign/">https://svn.r-project.org/R-packages/trunk/foreign/</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="climate-change.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="monitoring-polls.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/heike/data-technologies/edit/master/08-case-study-accidents.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": false
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
