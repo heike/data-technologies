@@ -4,5 +4,42 @@ knit: bookdown::preview_chapter
 
 # Wages
 
-Longitudinal
+The main purpose of this chapter is to describe working with longitudinal data. Here's the outline:
 
+- Using old wages data
+    - Making the standard plots, to examine overall trend, focus on policy decisions
+    - Computing features for each subject, focus on the individual, and opportunity for a person to see how they fit  in the story
+    - GLM  fit and diagnostics
+
+- New wages data ()
+    - Data collection process and choices: can refer to yowie package
+    - Finding errors in data?
+    - Repeat some oof earlier plots with this new data, maybe with complete cases
+
+```{r}
+library(brolgar)
+wages %>%
+  sample_n_keys(size = 5) %>%
+  ggplot(aes(x = xp,
+             y = ln_wages,
+             group = id)) + 
+  geom_line()
+```
+
+## New  wages data
+
+```{r}
+load("data/wages_hs2020_complete.rda")
+wages_hs2020_complete %>%
+  ggplot() +
+  geom_line(aes(x = year,
+                y = mean_hourly_wage,
+                group = id)) +
+  facet_wrap(~race) +
+  geom_smooth(aes(x = year,
+              y = mean_hourly_wage))
+wages_hs2020_complete %>%
+  ggplot() +
+  geom_smooth(aes(x = year,
+                  y = mean_hourly_wage, colour=race), se=FALSE)
+```

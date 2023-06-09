@@ -36,6 +36,7 @@ You can either download the text directly or use the `gutenbergr` package. To us
 # install.packages("tidytext")
 library(tidyverse)
 library(tidytext)
+library(textdata)
 # The tm package is needed because the book has numbers 
 # in the text, that need to be removed, and the
 # tidytext package doesn't have a function to do that
@@ -231,7 +232,7 @@ tidy_books <- austen_books() %>%
 
 Let's look at the most frequent joyful words in "Emma". 
 
-```{r}
+```{r eval=FALSE}
 nrc_joy <- get_sentiments("nrc") %>% 
   filter(sentiment == "joy")
 
@@ -270,7 +271,7 @@ tidy_books %>%
 
 All of the lexicons have a measure of positive or negative. We can tag the words in Emma by each lexicon, and see if they agree. 
 
-```{r}
+```{r eval=FALSE}
 nrc_pn <- get_sentiments("nrc") %>% 
   filter(sentiment %in% c("positive", "negative"))
 
@@ -293,7 +294,7 @@ emma_afinn %>% mutate(sentiment = ifelse(value>0, "positive", "negative")) %>% c
 - Using your choice of lexicon (nrc, bing, or afinn) compute the proportion of postive words in each of Austen's books.
 - Which book is the most positive? negative?
 
-```{r}
+```{r eval=FALSE}
 pos_nrc <- tidy_books %>%
   #filter(book == "Emma") %>%
   group_by(book) %>%

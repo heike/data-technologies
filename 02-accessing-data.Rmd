@@ -47,7 +47,7 @@ Every three years the OECD's Programme for International Student Assessment meas
 Let's take a look at the 2006 student data. Download the file from the OECD web site -- you should find that it is named `INT_Stu06_Dec07.txt`, or work with the subset of the first 2000 rows that is provided here. 
 
 ```{r}
-# This is a previously generated data object of the coolumn widths of variables 
+# This is a previously generated data object of the column widths of variables 
 load(here::here("data", "PISA_student_2006_varwidths.rda"))
 # To work with the full data set, use the downloaded file, INT_Sch06_Dec07.zip
 # instead of INT_Stu06_Dec07_25k.txt

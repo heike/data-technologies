@@ -206,7 +206,7 @@ quiz(
 
 ```{r CO2read}
 library(lubridate)
-CO2.spo <- read_csv("https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+CO2.spo <- read_csv("https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=71) %>%
   mutate(lat = -90.0, lon = 0, stn = "spo") %>%
   filter(flg==0) %>%
   mutate(date = ymd(date))
@@ -508,7 +508,7 @@ All of these statistics indicate the model 2 is substantially a better fit than 
 library(tidyverse)
 library(lubridate)
 library(broom)
-CO2.spo <- read_csv("https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+CO2.spo <- read_csv("https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=71) %>%
   mutate(lat = -90.0, lon = 0, stn = "spo") %>%
   filter(flg==0) %>%
   mutate(date = ymd(date))

@@ -21,7 +21,8 @@ library(ggplot2)
 library(lubridate)
 library(rworldmap)
 library(ggmap)
-library(wilydata) # devtools::install_github("heike/wilydata")
+library(wilydata) 
+# remotes::install_github("heike/wilydata")
 ```
 
 Get the data:

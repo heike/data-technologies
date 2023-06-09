@@ -12,32 +12,62 @@ library(tidyverse)
 
 The City of Melbourne has sensors set up in strategic locations across the inner city to keep hourly tallies of pedestrians. The data is updated on a monthly basis and available for download from [Melbourne Open Data Portal](https://data.melbourne.vic.gov.au/Transport/Pedestrian-Counting-System-2009-to-Present-counts-/b2ak-trbp). The **rwalkr** package provides an API in R to easily access sensor counts and geographic locations. In this case study, we focus on the foot traffic of 2018 at 4 sensors.
 
-```{r ped-data}
+```{r ped-data, eval=FALSE}
 library(rwalkr)
-sensors <- c("Southern Cross Station", "Melbourne Central",
-  "Flinders Street Station Underpass", "Birrarung Marr")
-peds <- melb_walk_fast(year = 2018, sensor = sensors)
+library(lubridate)
+library(purrr)
+library(dplyr)
+sensors <- c("Southern Cross Station", 
+  "Melbourne Central",
+  "Flinders Street Station Underpass", 
+  "Birrarung Marr")
+start_date <- make_date(2018, 1:12)
+end_date <- rollforward(start_date)
+peds_2018 <- map2_dfr(start_date, end_date, melb_walk, .progress = TRUE) %>%
+  filter(Sensor %in% sensors) %>%
+  mutate(Count = as.numeric(Count))
+save(peds_2018, file="data/peds_2018.rda")
 ```
 
-```{r ped-sensor, echo = FALSE}
-library(ggmap)
+```{r ped-locations}
+library(readr)
 library(lubridate)
-ped_loc <- pull_sensor() %>% 
-  filter(year(installation_date) < 2019, status == "A")
-melb_bbox <- c(min(ped_loc$longitude) - .001, min(ped_loc$latitude) - 0.001,
-  max(ped_loc$longitude) + .001, max(ped_loc$latitude) + 0.001)
-melb_map <- get_map(location = melb_bbox, source = "osm")
+library(dplyr)
+sensors <- c("Southern Cross Station", 
+  "Melbourne Central",
+  "Flinders Street Station Underpass", 
+  "Birrarung Marr")
+
+# Data from https://data.melbourne.vic.gov.au/explore/dataset/pedestrian-counting-system-sensor-locations/export/
+ped_loc <- read_csv("data/pedestrian-counting-system-sensor-locations.csv") %>% 
+  dplyr::filter(year(Installation_date) < 2019, 
+         Status == "A")
+```
+
+```{r ped-sensor, eval=FALSE}
+library(ggmap)
+melb_bbox <- c(min(ped_loc$Longitude) - .001, min(ped_loc$Latitude) - 0.001,
+  max(ped_loc$Longitude) + .001, max(ped_loc$Latitude) + 0.001)
+melb_map <- get_map(location = melb_bbox,
+                    source="osm")
+```
+
+```{r ped-loc-map, echo=FALSE}
+library(ggmap)
+library(ggplot2)
+load("data/peds_2018.rda")
+ped_map <- readRDS(here::here("data/ped_map.rds"))
 selected <- ped_loc %>% 
-  filter(sensor %in% sensors)
+  dplyr::filter(Sensor_description %in% sensors)
 nonselected <- ped_loc %>% 
-  filter(!(sensor %in% sensors))
-ggmap(melb_map) +
+  dplyr::filter(!(Sensor_description %in% sensors))
+ggmap(ped_map) +
   geom_point(
-    data = nonselected, aes(x = longitude, y = latitude),
+    data = nonselected, aes(x = Longitude, y = Latitude),
     colour = "#2b8cbe", alpha = 0.6, size = 3
   ) +
   geom_point(
-    data = selected, aes(x = longitude, y = latitude, colour = sensor),
+    data = selected, aes(x = Longitude, y = Latitude, colour = Sensor_description),
     size = 4, shape = 17
   ) +
   xlab("Longitude") +
@@ -52,7 +82,7 @@ The map above gives a snapshot of `r nrow(ped_loc)` active sensors in 2018 with 
 ## Different temporal patterns
 
 ```{r eval = FALSE}
-peds %>% 
+peds_2018 %>% 
   ggplot(aes(x = Date_Time, y = Count)) +
   geom_line(size = 0.3) +
   facet_grid(Sensor ~ ., labeller = labeller(Sensor = label_wrap_gen(20))) +
@@ -63,7 +93,7 @@ peds %>%
 We're primarily interested in exploiting pedestrian patterns at various time resolutions and across different locations. In light of people's daily schedules, we plot the counts against time of the day, shown in Figure \@ref(fig:ped-lineplots). At these train stations, two distinct clusters pop out to the viewers.
 
 ```{r ped-lineplots, fig.cap = "Counts plotted against time of the day, faceted by sensors."}
-peds %>% 
+peds_2018 %>% 
   ggplot(aes(x = Time, y = Count, group = Date, colour = Sensor)) +
   geom_line(size = 0.3, alpha = 0.3) +
   facet_wrap(~ Sensor, labeller = labeller(Sensor = label_wrap_gen(20))) +
@@ -75,10 +105,12 @@ We further tease out work versus non-work days to explain variations arisen from
 However, non-typical days are yet to be discovered.
 
 ```{r}
+library(lubridate)
+library(tsibble)
 hol2018 <- tsibble::holiday_aus(2018, state = "VIC") %>% 
   bind_rows(tibble(holiday = "AFL", date = ymd("20180929")))
 workday <- fct_inorder(c("Work day", "Non-work day"))
-peds <- peds %>% 
+peds_2018 <- peds_2018 %>% 
   mutate(
     Day = wday(Date_Time, label = TRUE, week_start = 1),
     Workday = if_else(
@@ -88,7 +120,7 @@ peds <- peds %>%
 ```
 
 ```{r}
-peds %>% 
+peds_2018 %>% 
   ggplot(aes(x = Time, y = Count, group = Date, colour = Sensor)) +
   geom_line(size = 0.3, alpha = 0.3) +
   facet_grid(Sensor ~ Workday, labeller = labeller(Sensor = label_wrap_gen(20))) +
@@ -100,8 +132,8 @@ To locate those unusual moments, Flinders Street Station data is calendarised on
 
 ```{r}
 library(sugrrants)
-flinders <- peds %>% 
-  filter(Sensor == "Flinders Street Station Underpass")
+flinders <- peds_2018 %>% 
+  dplyr::filter(Sensor == "Flinders Street Station Underpass")
 flinders_cal <- flinders %>% 
   frame_calendar(x = Time, y = Count, date = Date)
 gg_cal <- flinders_cal %>% 
@@ -132,18 +164,18 @@ ggplot(oz, aes(x = long, y = lat)) +
 #     lon > min(ped_loc$longitude), lon < max(ped_loc$longitude), 
 #     lat > min(ped_loc$latitude), lat < max(ped_loc$latitude))
 melb_stns <- stations %>% 
-  filter(state == "MELBOURNE AIRPORT")
+  filter(ID == "ASN00086282") # Melbourne airport
 library(vroom)
 ghcn2018 <- vroom(
   "https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/2018.csv.gz",
   col_names = FALSE, col_select = 1:4)
 melb_ghcn <- ghcn2018 %>% 
-  filter(X1 == melb_stns$ID, X3 %in% c("PRCP", "TMAX", "TMIN")) %>% 
+  dplyr::filter(X1 == melb_stns$ID, X3 %in% c("PRCP", "TMAX", "TMIN")) %>% 
   rename_all(~ c("station", "date", "variable", "value")) %>% 
   mutate(date = ymd(date), value = value / 10) %>% 
   pivot_wider(names_from = variable, values_from = value) %>% 
   rename_all(tolower)
-write_rds(melb_ghcn, path = "data/melb_ghcn.rds", compress = "gz")
+write_rds(melb_ghcn, file = "data/melb_ghcn.rds", compress = "gz")
 ```
 
 Time of day and day of week are the predominant driving force of the number of pedestrian, depicted in the previous data plots. Apart from these temporal factors, the weather condition could possibly affect how many people are walking in the city. In particular, people are likely to stay indoors, when the day is too hot or too cold, or raining hard. Daily meteorological data as a separate source, available on [National Climatic Data Center](https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/), is used and joined to the main pedestrian data table using common dates. Binary variables are created to serve as the tipping points and avoid multicollinearity issues for modelling later, rather than the original numerics.
@@ -152,14 +184,14 @@ Time of day and day of week are the predominant driving force of the number of p
 melb_ghcn <- read_rds("data/melb_ghcn.rds")
 high_prcp_fct <- fct_inorder(c("none", "rain"))
 high_temp_fct <- fct_inorder(c("not", "hot"))
-low_temp_fct = fct_inorder(c("not", "cold"))
+low_temp_fct <- fct_inorder(c("not", "cold"))
 melb_ghcn <- melb_ghcn %>% 
   mutate(
     high_prcp = ifelse(prcp > 5, high_prcp_fct[2], high_prcp_fct[1]), 
     high_temp = ifelse(tmax > 33, high_temp_fct[2], high_temp_fct[1]), 
     low_temp = ifelse(tmin < 6, low_temp_fct[2], low_temp_fct[1])
   )
-peds_weather <- peds %>% 
+peds_weather <- peds_2018 %>% 
   left_join(melb_ghcn, by = c("Date" = "date"))
 ```
 
@@ -170,13 +202,14 @@ peds_fit <- peds_weather %>%
   mutate(Time = as_factor(Time)) %>% 
   glm(Count ~ Time * Workday * Sensor + high_prcp + high_temp + low_temp,
     data = ., family = poisson(link = "log"))
-coef(peds_fit)[c("high_prcprain", "high_temphot", "low_tempcold")]
+coef(peds_fit)[c("high_prcp", "high_temp", "low_temp")]
 ```
 
 To examine the goodness of fit for the model, we plot the fitted values against the observed values for the Flinders Street Station, laid out on the calendar again. The pink lines indicate the fitted data. The model performs well in general, excepting for a couple of misfits due to the unusual events we spotted earlier.
 
-```{r echo = FALSE}
-peds_aug <- broom::augment(peds_fit, data = peds_weather,
+```{r echo = FALSE, eval=FALSE}
+peds_aug <- broom::augment(peds_fit, 
+                           data = peds_weather,
   type.predict = "response")
 flinders_aug <- peds_aug %>% 
   filter(Sensor == "Flinders Street Station Underpass")
